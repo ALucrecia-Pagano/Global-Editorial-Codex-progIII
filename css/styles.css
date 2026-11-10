@@ -1005,6 +1005,31 @@ html.js .tema-alternar {
   color: var(--color-text);
 }
 
+/* Portada ilustrada: caja 2:3 que reserva el alto y contiene la imagen o, como
+   respaldo, la tapa CSS (DD-16). */
+.tarjeta__portada {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: var(--radio-s);
+}
+
+.tarjeta__portada-imagen {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tarjeta__portada .tapa {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+}
+
 /* Tapas generadas con CSS (sin imágenes). Texto sobre degradés oscuros. */
 .tapa {
   display: flex;

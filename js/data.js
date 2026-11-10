@@ -41,7 +41,8 @@ let libros = [
     precio: 1500,
     editorialId: 'ed-1',
     generoId: 'ge-1',
-    autorIds: ['au-1']
+    autorIds: ['au-1'],
+    portada: 'assets/img/portadas/li-1.webp'
   },
   {
     id: 'li-2',
@@ -50,7 +51,8 @@ let libros = [
     precio: 2000,
     editorialId: 'ed-2',
     generoId: 'ge-2',
-    autorIds: ['au-2']
+    autorIds: ['au-2'],
+    portada: 'assets/img/portadas/li-2.webp'
   },
   {
     id: 'li-3',
@@ -59,7 +61,8 @@ let libros = [
     precio: 1800,
     editorialId: 'ed-1',
     generoId: 'ge-1',
-    autorIds: ['au-3']
+    autorIds: ['au-3'],
+    portada: 'assets/img/portadas/li-3.webp'
   },
   {
     id: 'li-4',
@@ -68,7 +71,8 @@ let libros = [
     precio: 2500,
     editorialId: 'ed-2',
     generoId: 'ge-2',
-    autorIds: ['au-1', 'au-2']
+    autorIds: ['au-1', 'au-2'],
+    portada: 'assets/img/portadas/li-4.webp'
   },
   {
     id: 'li-5',
@@ -77,7 +81,8 @@ let libros = [
     precio: 2750,
     editorialId: 'ed-1',
     generoId: null,
-    autorIds: ['au-3']
+    autorIds: ['au-3'],
+    portada: 'assets/img/portadas/li-5.webp'
   },
   {
     id: 'li-6',
@@ -86,7 +91,8 @@ let libros = [
     precio: 1200,
     editorialId: 'ed-2',
     generoId: 'ge-1',
-    autorIds: ['au-2']
+    autorIds: ['au-2'],
+    portada: 'assets/img/portadas/li-6.webp'
   }
 ];
 

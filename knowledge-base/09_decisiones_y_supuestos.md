@@ -32,7 +32,7 @@
 **Decisión**: se guarda `toISOString()`; se muestra como `dd/mm/aaaa hh:mm` (hora local).
 
 ### DD-12 — Tema oscuro inspirado en BookNest, tapas en CSS
-**Estado**: Reemplazada parcialmente por DD-15 — solo la parte "inspirado en BookNest"; las tapas en CSS, el contraste WCAG AA y la foto decorativa del banner siguen vigentes.
+**Estado**: Reemplazada parcialmente por DD-15 — solo la parte "inspirado en BookNest" — y por DD-16 — las tapas en CSS pasan a ser solo respaldo de la portada ilustrada (ver [DD-16](#dd-16--portadas-ilustradas-opcionales-con-respaldo-css)); el contraste WCAG AA y la foto decorativa del banner siguen vigentes.
 **Decisión**: tema oscuro con acentos violeta/índigo inspirado en BookNest, con **contraste suficiente** en todos los textos (objetivo WCAG AA: 4.5:1 en texto normal). **Sin imágenes de portadas**: cada tapa se genera con CSS (degradé + título y autor como texto). **Actualización (2026-10-14, DD-14):** tampoco hay imágenes de fondo; el fondo galáctico también es solo CSS. **Ajuste final de diseño (2026-10-14):** el proyecto suma **una única imagen decorativa**, la foto del banner «Hola, lector» del Catálogo (`assets/img/banner-biblioteca.jpg`), aplicada solo por CSS (sin `<img>`); las tapas siguen siendo solo CSS y su procedencia se registra en el README. **Uso adicional (mismo día):** esa misma foto, muy difuminada y oscurecida, se usa también como fondo de la página en el tema oscuro (detrás del velo galáctico, por CSS); en el tema claro el fondo es el mismo (foto incluida).
 **Justificación**: identidad visual propia; sin recursos externos y con una sola imagen cuya procedencia se documenta en el README (el banner).
 **Trade-offs**: el tema oscuro exige verificar contraste y foco visible.
@@ -63,6 +63,16 @@
 **Justificación**: un único punto de referencia (`docs/inspo/README.md`), trazabilidad conservada y sin tocar el código.
 **Aclaración**: las capturas muestran portadas reales, pero el proyecto **sigue usando tapas generadas con CSS**; la nota de créditos de `docs/inspo/README.md` cubre solo las capturas y no habilita imágenes de portadas en la página.
 **Reemplaza a**: DD-04 (total) y DD-12 (parcial: solo "inspirado en BookNest"; el resto de DD-12 sigue vigente).
+
+### DD-16 — Portadas ilustradas opcionales con respaldo CSS
+**Decisión** (change `portadas-ilustradas`): un libro puede declarar el campo **opcional** `portada` con la **ruta relativa** a una imagen local (`assets/img/portadas/li-N.webp`). Los 6 libros del seed lo declaran; los libros nuevos dados de alta no. La tarjeta muestra la imagen en una **caja 2:3** con `object-fit: cover` y usa la **tapa CSS solo como respaldo** cuando falta la portada o la imagen no carga (evento `error`, sin ícono de imagen rota ni salto de alto). Los datos guardados sin el campo se resuelven con un **mapa de ids conocidos** (`li-1`…`li-6` → su archivo); un id desconocido cae a la tapa CSS, sin reescribir `libreria.libros`.
+**Contexto**: la cátedra habilitó modificar el proyecto y el grupo generó seis portadas ilustradas (600×900 px, 2:3, con el título dibujado) para mejorar la identidad visual del Catálogo sin agregar funcionalidad de dominio.
+**Alternativas**: (a) derivar `assets/img/portadas/<id>.webp` para cualquier id (descartada: los libros nuevos pedirían archivos inexistentes y darían 404 en cada render); (b) migrar `localStorage` al arrancar para agregar el campo (descartada: reescribe datos del usuario); (c) seguir solo con la tapa CSS (descartada: desaprovecha las portadas ya generadas).
+**Justificación**: mejora visual con recursos locales, sin dependencias ni `fetch`, y compatible con los datos ya guardados en versiones anteriores.
+**Accesibilidad**: la imagen lleva `alt="Portada de «<título>»"`; el título, el autor, el ISBN, la editorial, el género y el precio siguen como **texto** (`textContent`), de modo que el filtro y los lectores de pantalla no dependen de la imagen. La tapa CSS de respaldo conserva `aria-hidden="true"` para no duplicar el título.
+**Procedencia de las imágenes**: las seis portadas WebP son ilustraciones **generadas con IA (Gemini)** para este proyecto, guardadas localmente y de **uso educativo**; su procedencia se registra en el README («Recursos y procedencia»).
+**Reemplaza parcialmente a**: DD-12 (la tapa CSS deja de ser la única presentación y pasa a ser respaldo).
+**Trade-offs**: las tarjetas son más altas al imponer la proporción 2:3; una ruta inválida produce un 404 en consola (esperado) y la tarjeta se recupera con la tapa CSS.
 
 ### DD-02 — División en dos etapas por responsable
 **Decisión**: Etapa 1 (Amanda): Ej. 1 + Ej. 2 + filtro por título. Etapa 2 (compañeros): Ej. 3 a 6.

@@ -375,6 +375,35 @@ function obtenerNombresAutores(ids) {
   }).join(', ');
 }
 
+// ---------------------------------------------------------------------------
+// Portadas ilustradas (change portadas-ilustradas). El mapa acota la derivación
+// de rutas a las imágenes que existen: los libros nuevos (ids `lib-…`) no piden
+// un archivo inexistente y caen a la tapa CSS.
+// ---------------------------------------------------------------------------
+const PORTADAS_IDS_CONOCIDOS = {
+  'li-1': 'assets/img/portadas/li-1.webp',
+  'li-2': 'assets/img/portadas/li-2.webp',
+  'li-3': 'assets/img/portadas/li-3.webp',
+  'li-4': 'assets/img/portadas/li-4.webp',
+  'li-5': 'assets/img/portadas/li-5.webp',
+  'li-6': 'assets/img/portadas/li-6.webp'
+};
+
+// Ruta de la portada de un libro (pura, sin DOM). Orden: campo `portada` con
+// texto no vacío -> ruta del mapa para ids conocidos -> null (tapa CSS).
+function resolverPortada(libro) {
+  if (!libro) {
+    return null;
+  }
+  if (typeof libro.portada === 'string' && libro.portada.trim() !== '') {
+    return libro.portada.trim();
+  }
+  if (Object.prototype.hasOwnProperty.call(PORTADAS_IDS_CONOCIDOS, libro.id)) {
+    return PORTADAS_IDS_CONOCIDOS[libro.id];
+  }
+  return null;
+}
+
 // Renderiza el catálogo desde un array de libros (C-04).
 // Usa createElement para la estructura y textContent para todo el texto (RN-GL-01).
 function renderCatalogo(librosAMostrar) {
@@ -391,7 +420,11 @@ function renderCatalogo(librosAMostrar) {
     const articulo = document.createElement('article');
     articulo.className = 'tarjeta';
 
-    // Tapa (CSS generada, sin imágenes).
+    // Portada: caja 2:3 con la imagen ilustrada (si hay) y la tapa CSS de
+    // respaldo (siempre creada; visible solo si falta la imagen o falla).
+    const cajaPortada = document.createElement('div');
+    cajaPortada.className = 'tarjeta__portada';
+
     const tapa = document.createElement('div');
     tapa.className = 'tarjeta__tapa tapa tapa--degrade-' + ((index % 6) + 1);
     tapa.setAttribute('aria-hidden', 'true');
@@ -403,7 +436,28 @@ function renderCatalogo(librosAMostrar) {
     tapaAutor.textContent = obtenerNombresAutores(libro.autorIds);
     tapa.appendChild(tapaTitulo);
     tapa.appendChild(tapaAutor);
-    articulo.appendChild(tapa);
+
+    const rutaPortada = resolverPortada(libro);
+    if (rutaPortada) {
+      const imagen = document.createElement('img');
+      imagen.className = 'tarjeta__portada-imagen';
+      imagen.src = rutaPortada;
+      imagen.alt = 'Portada de «' + libro.titulo + '»';
+      imagen.loading = 'lazy';
+      imagen.decoding = 'async';
+      imagen.width = 600;
+      imagen.height = 900;
+      imagen.addEventListener('error', function () {
+        imagen.hidden = true;
+        tapa.hidden = false;
+      });
+      tapa.hidden = true;
+      cajaPortada.appendChild(tapa);
+      cajaPortada.appendChild(imagen);
+    } else {
+      cajaPortada.appendChild(tapa);
+    }
+    articulo.appendChild(cajaPortada);
 
     // Título.
     const tituloEl = document.createElement('h3');
