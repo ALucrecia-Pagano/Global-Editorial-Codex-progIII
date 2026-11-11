@@ -18,8 +18,8 @@
 ## 3. Estilos de la portada y los temas
 
 - [x] 3.1 En `css/styles.css`, agregar las clases BEM `.tarjeta__portada` (caja con `aspect-ratio: 2 / 3`, `overflow: hidden` y radio) y `.tarjeta__portada-imagen` (`width`/`height` 100 %, `object-fit: cover`, `display: block`); ajustar la tapa CSS de respaldo para ocupar el 100 % de la caja. Verificar visualmente que la portada se recorta sin deformarse y que la tapa CSS llena la misma caja.
-- [ ] 3.2 Verificar que la imagen se ve bien en tema claro y oscuro, sin filtros de tema ni recortes fuera de la caja. Alternar el tema con el botón y comparar las 6 tarjetas.
-- [ ] 3.3 Verificar a 320 px y 1280 px que la grilla no genera scroll horizontal (`document.documentElement.scrollWidth <= window.innerWidth`) y que las portadas mantienen la proporción 2:3.
+- [x] 3.2 Verificar que la imagen se ve bien en tema claro y oscuro, sin filtros de tema ni recortes fuera de la caja. Alternar el tema con el botón y comparar las 6 tarjetas.
+- [x] 3.3 Verificar a 320 px y 1280 px que la grilla no genera scroll horizontal (`document.documentElement.scrollWidth <= window.innerWidth`) y que las portadas mantienen la proporción 2:3.
 
 ## 4. Documentación del proyecto
 
@@ -30,8 +30,8 @@
 
 ## 5. Verificación manual final
 
-- [ ] 5.1 Ejecutar la plantilla «Verificación manual — portadas ilustradas» en el navegador: las 6 portadas visibles, un libro nuevo con tapa CSS, una imagen renombrada con respaldo, 320 px y 1280 px, ambos temas y filtro por título. Registrar el resultado observado real en cada fila del README, con fecha y navegador.
-- [ ] 5.2 Recorrer el Catálogo solo con teclado (Tab/Shift+Tab) y confirmar que el foco es visible y que no hay controles nuevos innecesarios; revisar la consola y confirmar que no hay errores propios del cambio (el 404 de una imagen renombrada durante la prueba es esperado).
+- [x] 5.1 Ejecutar la plantilla «Verificación manual — portadas ilustradas» en el navegador: las 6 portadas visibles, un libro nuevo con tapa CSS, una imagen renombrada con respaldo, 320 px y 1280 px, ambos temas y filtro por título. Registrar el resultado observado real en cada fila del README, con fecha y navegador.
+- [x] 5.2 Recorrer el Catálogo solo con teclado (Tab/Shift+Tab) y confirmar que el foco es visible y que no hay controles nuevos innecesarios; revisar la consola y confirmar que no hay errores propios del cambio (el 404 de una imagen renombrada durante la prueba es esperado).
 - [x] 5.3 Ejecutar `openspec validate portadas-ilustradas --strict` y confirmar que el change valida sin errores.
 
 ## Workflow follow-up

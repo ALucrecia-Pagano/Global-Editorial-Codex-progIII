@@ -520,7 +520,7 @@ Los responsables de Etapa 2 están a definir; este es el orden recomendado y qu�
 Changes fuera del roadmap original, registrados por **nombre descriptivo** (sin número `C-NN`, por convención del grupo). No alteran la tabla resumen ni el árbol de dependencias de arriba.
 
 ### `portadas-ilustradas`
-- **Estado**: `[ ]` pendiente (extra fuera de la consigna)
+- **Estado**: `[x]` completado (archivado en `openspec/changes/archive/2026-11-10-portadas-ilustradas/`)
 - **Qué hace**: muestra las seis portadas ilustradas locales del seed en las tarjetas del Catálogo (`assets/img/portadas/li-1.webp` … `li-6.webp`), con la tapa CSS como respaldo ante ausencia o error de imagen y compatibilidad con libros guardados sin el campo `portada`.
 - **Ubicación al archivarse**: `openspec/changes/archive/AAAA-MM-DD-portadas-ilustradas/` (la fecha se fija al archivar).
 

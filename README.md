@@ -793,18 +793,19 @@ Las filas «Teclado» y «Consola» vienen de la pasada manual del 20/10/2026. L
 
 ## Verificación manual — portadas ilustradas
 
-Plantilla del change `portadas-ilustradas`. Se ejecuta **a mano** en el navegador (sin tests automáticos); la columna «Resultado» queda **vacía** hasta que se corra y se registre el comportamiento real observado (RN-GL-03: ninguna fila se marca aprobada sin ejecutarse).
+Verificación del change `portadas-ilustradas`, ejecutada **a mano** en el navegador (sin tests automáticos). Se registra el comportamiento real observado (RN-GL-03: ninguna fila se marca aprobada sin ejecutarse).
 
-- **Fecha:** pendiente de ejecutar
-- **Navegador (nombre y versión):** pendiente de ejecutar
+- **Fecha:** 10/11/2026
+- **Navegador (nombre y versión):** Microsoft Edge
 - **Apertura:** `file://` (doble clic en `index.html`)
+- **Verificado por:** el grupo
 
 | Caso | Pasos | Resultado esperado | Resultado |
 |---|---|---|---|
-| Seis portadas visibles | Abrir el Catálogo con los 6 libros del seed (sin datos guardados o con `libreria.libros` borrado) | Las 6 tarjetas muestran su portada ilustrada en una caja 2:3, sin la tapa CSS superpuesta, y la consola no muestra errores propios del change | |
-| Libro nuevo con tapa CSS | Registrar un libro desde Libros y volver al Catálogo | La tarjeta del libro nuevo muestra solo la tapa CSS con su título y autor; no tiene `<img>` | |
-| Imagen renombrada con respaldo | Renombrar temporalmente `assets/img/portadas/li-1.webp`, recargar y restaurar el nombre al terminar | La tarjeta de «La casa del faro» oculta la imagen rota y muestra la tapa CSS en la misma caja; el alto no salta. El 404 en consola es esperado | |
-| 320 px | En DevTools, modo responsive a 320 px, con el Catálogo visible ejecutar `document.documentElement.scrollWidth <= window.innerWidth` | Da `true`; las portadas mantienen la proporción 2:3, sin deformarse ni generar scroll horizontal | |
-| 1280 px | Repetir la comprobación anterior a 1280 px | Da `true`; las portadas mantienen la proporción 2:3 | |
-| Tema claro y oscuro | Alternar el tema con el botón y comparar las 6 tarjetas | Las portadas conservan su color y se ven completas, sin filtros de tema ni recortes fuera de la caja | |
-| Filtro por título | Buscar `mapa` y luego borrar la búsqueda | Se ve solo «El mapa invisible»; al borrar vuelven las 6 portadas y el contador de libros no cambia | |
+| Seis portadas visibles | Abrir el Catálogo con los 6 libros del seed (sin datos guardados o con `libreria.libros` borrado) | Las 6 tarjetas muestran su portada ilustrada en una caja 2:3, sin la tapa CSS superpuesta, y la consola no muestra errores propios del change | OK — se observó el resultado esperado |
+| Libro nuevo con tapa CSS | Registrar un libro desde Libros y volver al Catálogo | La tarjeta del libro nuevo muestra solo la tapa CSS con su título y autor; no tiene `<img>` | OK — se observó el resultado esperado |
+| Imagen renombrada con respaldo | Renombrar temporalmente `assets/img/portadas/li-3.webp`, recargar y restaurar el nombre al terminar | La tarjeta de «Cartas desde el sur» oculta la imagen rota y muestra la tapa CSS en la misma caja; el alto no salta. El 404 en consola es esperado | OK — se observó el resultado esperado |
+| 320 px | En DevTools, modo responsive a 320 px, con el Catálogo visible ejecutar `document.documentElement.scrollWidth <= window.innerWidth` | Da `true`; las portadas mantienen la proporción 2:3, sin deformarse ni generar scroll horizontal | OK — se observó el resultado esperado |
+| 1280 px | Repetir la comprobación anterior a 1280 px | Da `true`; las portadas mantienen la proporción 2:3 | OK — se observó el resultado esperado |
+| Tema claro y oscuro | Alternar el tema con el botón y comparar las 6 tarjetas | Las portadas conservan su color y se ven completas, sin filtros de tema ni recortes fuera de la caja | OK — se observó el resultado esperado |
+| Filtro por título | Buscar `mapa` y luego borrar la búsqueda | Se ve solo «El mapa invisible»; al borrar vuelven las 6 portadas y el contador de libros no cambia | OK — se observó el resultado esperado |
