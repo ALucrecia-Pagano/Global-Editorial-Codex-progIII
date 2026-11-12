@@ -30,18 +30,18 @@
 
 ---
 
-## Mapa de personas y fechas internas
+## Mapa de personas
 
 El trabajo se reparte entre los 5 integrantes del grupo. Para evitar bloqueos, **CH-03, CH-04 y CH-05 se desarrollan en paralelo** una vez que CH-01 está en `main`.
 
 | Change ID | Nombre | Responsable | Rama Git | Fecha interna | Casos G |
 |---|---|---|---|---|---|
-| **CH-01** | `imagen-frontend` | Amanda | `feat/CH-01-imagen-frontend` | Jueves 12/11 (✅ Hecho) | G-07 (local) |
-| **CH-02** | `primer-despliegue-easypanel` | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | Viernes 13/11 noche | G-07 (VPS) |
-| **CH-03** | `catalogo-y-detalle` | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | Viernes 13/11 noche | G-01 |
-| **CH-04** | `altas-libros-y-clientes` | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | Viernes 13/11 noche | G-02, G-03 |
-| **CH-05** | `ventas-e-historial` | Amanda | `feat/CH-05-ventas-e-historial` | Jueves 12/11 | G-04, G-05, G-06 |
-| **CH-06** | `verificacion-y-entrega` | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | Sábado 14/11 | G-01 a G-07 |
+| **CH-01** | `imagen-frontend` | Amanda | `feat/CH-01-imagen-frontend` | ✅ Hecho | G-07 (local) |
+| **CH-02** | `primer-despliegue-easypanel` | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | A definir | G-07 (VPS) |
+| **CH-03** | `catalogo-y-detalle` | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | A definir | G-01 |
+| **CH-04** | `altas-libros-y-clientes` | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | A definir | G-02, G-03 |
+| **CH-05** | `ventas-e-historial` | Amanda | `feat/CH-05-ventas-e-historial` | ✅ Hecho | G-04, G-05, G-06 |
+| **CH-06** | `verificacion-y-entrega` | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | A definir | G-01 a G-07 |
 
 *Integrantes del grupo:* Liendo Mateo, Avila Lucas, García Juan, Pagano Amanda, Valentini Tiziano.  
 *Entrega final:* Sábado 14/11 a la noche.
@@ -94,22 +94,21 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 
 | ID | Nombre | Ejercicio | Dueño | Rama | Archivos autorizados | Funciones de app.js a borrar | Casos G | Fecha |
 |---|---|---|---|---|---|---|---|---|
-| **CH-01** | `imagen-frontend` | Ej. 4 | Amanda | `feat/CH-01-imagen-frontend` | `frontend/Dockerfile`, `.dockerignore`, `default.conf.template`, `env.example`, `public/js/api.js`, `public/index.html` (solo script) | *Ninguna* (no toca `app.js`) | G-07 (local) | 12/11 (✅ Hecho) |
-| **CH-02** | `primer-despliegue-easypanel` | Ej. 5 | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | `DEPLOY.md` | *Ninguna* | G-07 (VPS) | 13/11 noche |
-| **CH-03** | `catalogo-y-detalle` | Ej. 1 | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css` (ya creado), `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 | 13/11 noche |
-| **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 | 13/11 noche |
-| **CH-05** | `ventas-e-historial` | Ej. 3 | Amanda | `feat/CH-05-ventas-e-historial` | `public/js/ventas.js`, `public/css/ventas.css`, `public/index.html` (solo script/link, `#ventas`, `#historial`), `public/js/app.js` (solo borrar) | `renglonesBorrador`, `TEXTO_ERROR_CANTIDAD`, `esCantidadValida`, `buscarLibroPorId`, `renderSelectorVenta`, `renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `calcularTotalBorrador`, `actualizarTotalVenta`, `agregarRenglonBorrador`, `registrarHandlerAgregarDetalle`, `aplicarCantidadRenglon`, `renderRenglonesVenta`, `sincronizarCantidadesBorrador`, `calcularSiguienteIdVenta`, `validarVenta`, `construirVenta`, `registrarHandlerConfirmarVenta`, `numeroDeVenta`, `agregarCeldaTexto`, `renderHistorialVentas`, `escribirTituloConId`, `mostrarDetalleVenta`, y llamadas en DOMContentLoaded (`renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `registrarHandlerAgregarDetalle`, `renderRenglonesVenta`, `registrarHandlerConfirmarVenta`, `renderHistorialVentas`) | G-04, G-05, G-06 | 12/11 (✅ Hecho) |
-| **CH-06** | `verificacion-y-entrega` | Verif. | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | `README.md`, `DEPLOY.md`, `evidencia/`, `public/js/storage.js`, `public/js/data.js`, `public/js/app.js`, `public/css/styles.css` (opcional) | Limpieza final en `app.js`: funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), `iniciarPersistencia`, `mostrarErrorPersistencia`, validadores `es*GuardadoValido`, y `registrarFormulariosMaqueta` | G-01 a G-07 | 14/11 |
+| **CH-01** | `imagen-frontend` | Ej. 4 | Amanda | `feat/CH-01-imagen-frontend` | `frontend/Dockerfile`, `.dockerignore`, `default.conf.template`, `env.example`, `public/js/api.js`, `public/index.html` (solo script) | *Ninguna* (no toca `app.js`) | G-07 (local) | ✅ Hecho |
+| **CH-02** | `primer-despliegue-easypanel` | Ej. 5 | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | `DEPLOY.md` | *Ninguna* | G-07 (VPS) | A definir |
+| **CH-03** | `catalogo-y-detalle` | Ej. 1 | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css` (ya creado), `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 | A definir |
+| **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 | A definir |
+| **CH-05** | `ventas-e-historial` | Ej. 3 | Amanda | `feat/CH-05-ventas-e-historial` | `public/js/ventas.js`, `public/css/ventas.css`, `public/index.html` (solo script/link, `#ventas`, `#historial`), `public/js/app.js` (solo borrar) | `renglonesBorrador`, `TEXTO_ERROR_CANTIDAD`, `esCantidadValida`, `buscarLibroPorId`, `renderSelectorVenta`, `renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `calcularTotalBorrador`, `actualizarTotalVenta`, `agregarRenglonBorrador`, `registrarHandlerAgregarDetalle`, `aplicarCantidadRenglon`, `renderRenglonesVenta`, `sincronizarCantidadesBorrador`, `calcularSiguienteIdVenta`, `validarVenta`, `construirVenta`, `registrarHandlerConfirmarVenta`, `numeroDeVenta`, `agregarCeldaTexto`, `renderHistorialVentas`, `escribirTituloConId`, `mostrarDetalleVenta`, y llamadas en DOMContentLoaded (`renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `registrarHandlerAgregarDetalle`, `renderRenglonesVenta`, `registrarHandlerConfirmarVenta`, `renderHistorialVentas`) | G-04, G-05, G-06 | ✅ Hecho |
+| **CH-06** | `verificacion-y-entrega` | Verif. | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | `README.md`, `DEPLOY.md`, `evidencia/`, `public/js/storage.js`, `public/js/data.js`, `public/js/app.js`, `public/css/styles.css` (opcional) | Limpieza final en `app.js`: funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), `iniciarPersistencia`, `mostrarErrorPersistencia`, validadores `es*GuardadoValido`, y `registrarFormulariosMaqueta` | G-01 a G-07 | A definir |
 
 ---
 
 ## Fichas detalladas de Changes
 
 ### CH-01 · imagen-frontend (✅ Hecho)
-- **Estado:** ✅ Hecho (Archivado el 12/11/2026)
+- **Estado:** ✅ Hecho
 - **Responsable:** Amanda
 - **Rama:** `feat/CH-01-imagen-frontend`
-- **Fecha límite:** Jueves 12/11
 - **Objetivo:**
   1. Construir la imagen Docker del frontend con Nginx 1.30 Alpine sirviendo `public/` y configurando `default.conf.template` para reenviar `/api/*` al backend mediante `API_UPSTREAM`.
   2. Implementar el módulo cliente HTTP centralizado `frontend/public/js/api.js` que usarán todos los demás changes.
@@ -143,7 +142,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 - **Responsable:** Integrante 2
 - **Requisitos de acceso:** Requiere credenciales de acceso al panel de Easypanel del VPS.
 - **Rama:** `feat/CH-02-primer-despliegue-easypanel`
-- **Fecha límite:** Viernes 13/11 a la noche
+- **Fecha límite:** A definir
 - **Objetivo:** Configurar en Easypanel (proyecto `calculadora`) los dos servicios App: `backend` (privado, conectado a `calculadora_db` con base y usuario `libreria`) y `frontend` (público con certificado HTTPS y `API_UPSTREAM=calculadora_backend:8000`). Iniciar `DEPLOY.md` con los detalles de despliegue.
 - **Archivos que puede tocar (autorizados):**
   - `DEPLOY.md` (creación y registro de pasos).
@@ -162,7 +161,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 ### CH-03 · catalogo-y-detalle
 - **Responsable:** Integrante 3
 - **Rama:** `feat/CH-03-catalogo-y-detalle`
-- **Fecha límite:** Viernes 13/11 a la noche
+- **Fecha límite:** A definir
 - **Objetivo:** Conectar el catálogo de libros con la API usando `api.js`. Toda la lógica de catálogo vive en `frontend/public/js/catalogo.js` y sus estilos en `frontend/public/css/catalogo.css`. `css/catalogo.css` ya existe con la grilla compacta y el estilo de libro, y CH-03 agrega sus estilos debajo sin borrar lo existente. Manejar búsqueda en servidor, paginación, los 4 estados de la vista, libros sin género ("Sin clasificar"), detalle de autores al hacer clic en tarjeta (`GET /libros/{id}`), portadas compactas y portada de respaldo SVG.
 - **Criterios de aceptación:** En 1280 px entran al menos 4 tarjetas por fila, ninguna portada supera 320 px de alto, en 375 px entran 2 por fila; la tarjeta completa es clickeable para abrir el detalle (`GET /libros/{id}`) con cursor pointer, foco visible y Enter.
 - **Archivos que puede tocar (autorizados):**
@@ -240,7 +239,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 ### CH-04 · altas-libros-y-clientes
 - **Responsable:** Integrante 4
 - **Rama:** `feat/CH-04-altas-libros-y-clientes`
-- **Fecha límite:** Viernes 13/11 a la noche
+- **Fecha límite:** A definir
 - **Objetivo:** Conectar las pantallas de altas de libros (`#libros`) y clientes (`#clientes`) con la API mediante `frontend/public/js/altas.js` y sus estilos en `frontend/public/css/altas.css`. Cargar selectores de editoriales (`GET /editoriales/?limit=100`), géneros (`GET /generos/?limit=100`) y autores (`GET /autores/?limit=100`). Validar en cliente y manejar respuestas 201, 409 y 422 mostrando mensajes de error cerca de cada formulario.
 - **Archivos que puede tocar (autorizados):**
   - `frontend/public/js/altas.js` (creación del módulo).
@@ -306,10 +305,9 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 ---
 
 ### CH-05 · ventas-e-historial (✅ Hecho)
-- **Estado:** ✅ Hecho (Archivado el 12/11/2026)
+- **Estado:** ✅ Hecho
 - **Responsable:** Amanda
 - **Rama:** `feat/CH-05-ventas-e-historial`
-- **Fecha límite:** Jueves 12/11
 - **Independencia absoluta:** Es 100% independiente de CH-03 y CH-04. `js/ventas.js` carga por su cuenta los clientes (`GET /clientes/?limit=100`) y los libros (`GET /libros/?limit=100`) para los selectores de la venta usando `api.js`, y **no llama ninguna función** de `catalogo.js` ni de `altas.js`. No toca `storage.js` ni `data.js`. Puede iniciarse e implementarse inmediatamente después de que CH-01 esté mergeado en `main`.
 - **Objetivo:**
   1. Conectar el registro de ventas (`POST /ventas/`) y el historial (`GET /ventas/` y `GET /ventas/{id}`) mediante `frontend/public/js/ventas.js` y sus estilos en `frontend/public/css/ventas.css`.
@@ -393,7 +391,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 ### CH-06 · verificacion-y-entrega
 - **Responsable:** Integrante 5
 - **Rama:** `feat/CH-06-verificacion-y-entrega`
-- **Fecha límite:** Sábado 14/11
+- **Fecha límite:** A definir
 - **Datos para README.md:**
   - **Materia:** Programación III — Tecnicatura Universitaria en Programación, UTN FRM
   - **Comisión:** 4
