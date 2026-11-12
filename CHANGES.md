@@ -407,11 +407,11 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
        - Limpia en `frontend/public/js/app.js` las funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), las funciones obsoletas de persistencia (`iniciarPersistencia`, `mostrarErrorPersistencia`, los validadores `es*GuardadoValido`) y `registrarFormulariosMaqueta`.
        - Ajustes cosméticos finales en `frontend/public/css/styles.css` si fueran necesarios.
     2. Reúne, revisa y consolida todas las capturas y notas de prueba en la carpeta `evidencia/`.
-    3. Redacta el `README.md` con los 5 integrantes del grupo Editorial Codex, instrucciones de clonación, ejecución local y seed.
+    3. Completa el `README.md` (que ya existe con la base) con la URL pública, el estado final de los changes y la evidencia, sin borrar lo existente.
     4. Completa `DEPLOY.md` con URL pública, revisión Git, variables, proxy, puertos y verificación tras redespliegue.
     5. Empaqueta el archivo ZIP final de entrega excluyendo `.git`, `.env` y credenciales.
 - **Archivos que puede tocar (autorizados):**
-  - `README.md`
+  - `README.md` (ya existe con la base; CH-06 lo completa con la URL pública, el estado final de los changes y la evidencia, sin borrar lo existente).
   - `DEPLOY.md`
   - `evidencia/` (capturas de pantalla y bitácoras de prueba de G-01 a G-07).
   - `frontend/public/js/storage.js` (limpieza de datos de dominio).
