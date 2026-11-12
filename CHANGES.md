@@ -36,7 +36,7 @@ El trabajo se reparte entre los 5 integrantes del grupo. Para evitar bloqueos, *
 
 | Change ID | Nombre | Responsable | Rama Git | Fecha interna | Casos G |
 |---|---|---|---|---|---|
-| **CH-01** | `imagen-frontend` | Amanda | `feat/CH-01-imagen-frontend` | Jueves 12/11 | G-07 (local) |
+| **CH-01** | `imagen-frontend` | Amanda | `feat/CH-01-imagen-frontend` | Jueves 12/11 (✅ Hecho) | G-07 (local) |
 | **CH-02** | `primer-despliegue-easypanel` | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | Viernes 13/11 noche | G-07 (VPS) |
 | **CH-03** | `catalogo-y-detalle` | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | Viernes 13/11 noche | G-01 |
 | **CH-04** | `altas-libros-y-clientes` | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | Viernes 13/11 noche | G-02, G-03 |
@@ -79,6 +79,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
    - Trabajar **exclusivamente** sobre los archivos autorizados en la ficha de tu change.
    - En `app.js`, **borrar únicamente** las funciones y llamadas viejas especificadas en tu ficha.
    - No tocar archivos prohibidos ni de otros changes.
+   - **Rutas en `api.js` y barra final:** Las colecciones van con barra final (ej. `Api.get('/libros/')`, `Api.post('/ventas/', ...)`), pero las rutas con ID van **sin** barra final (ej. `Api.get('/libros/1')`, `Api.patch('/libros/1', ...)`). Con barra de más, FastAPI responde 307 hacia el host interno y la petición falla en el navegador.
 6. **Probar localmente:**
    - Verificar en `http://127.0.0.1:8080/` desde el navegador y con comandos `curl.exe`.
    - Tomar capturas de los casos G asignados para la carpeta `evidencia/`.
@@ -92,7 +93,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 
 | ID | Nombre | Ejercicio | Dueño | Rama | Archivos autorizados | Funciones de app.js a borrar | Casos G | Fecha |
 |---|---|---|---|---|---|---|---|---|
-| **CH-01** | `imagen-frontend` | Ej. 4 | Amanda | `feat/CH-01-imagen-frontend` | `frontend/Dockerfile`, `.dockerignore`, `default.conf.template`, `env.example`, `public/js/api.js` | *Ninguna* (no toca `app.js`) | G-07 (local) | 12/11 |
+| **CH-01** | `imagen-frontend` | Ej. 4 | Amanda | `feat/CH-01-imagen-frontend` | `frontend/Dockerfile`, `.dockerignore`, `default.conf.template`, `env.example`, `public/js/api.js`, `public/index.html` (solo script) | *Ninguna* (no toca `app.js`) | G-07 (local) | 12/11 (✅ Hecho) |
 | **CH-02** | `primer-despliegue-easypanel` | Ej. 5 | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | `DEPLOY.md` | *Ninguna* | G-07 (VPS) | 13/11 noche |
 | **CH-03** | `catalogo-y-detalle` | Ej. 1 | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css`, `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script/link y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 | 13/11 noche |
 | **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 | 13/11 noche |
@@ -103,7 +104,8 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 
 ## Fichas detalladas de Changes
 
-### CH-01 · imagen-frontend
+### CH-01 · imagen-frontend (✅ Hecho)
+- **Estado:** ✅ Hecho (Archivado el 12/11/2026)
 - **Responsable:** Amanda
 - **Rama:** `feat/CH-01-imagen-frontend`
 - **Fecha límite:** Jueves 12/11
@@ -121,7 +123,8 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
   - `frontend/default.conf.template`
   - `frontend/env.example`
   - `frontend/public/js/api.js`
-- **Archivos que NO puede tocar (prohibidos):** `frontend/public/index.html`, `frontend/public/js/app.js`, `frontend/public/js/storage.js`, `frontend/public/js/data.js`, `backend/*`.
+  - `frontend/public/index.html` (solo agregar `<script src="js/api.js"></script>`)
+- **Archivos que NO puede tocar (prohibidos):** `frontend/public/js/app.js`, `frontend/public/js/storage.js`, `frontend/public/js/data.js`, `backend/*`.
 - **Funciones de app.js a borrar:** *Ninguna* (`app.js` no se toca en este change).
 - **Sección de docs/Global_Consigna.md a leer:** `## Ejercicio 4 · Dockerfile del frontend` (Pasos 1 al 4).
 - **Endpoints:**

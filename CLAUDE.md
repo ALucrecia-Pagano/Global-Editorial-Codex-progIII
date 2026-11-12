@@ -30,7 +30,7 @@ Para cada change de `CHANGES.md`:
 1. **NUNCA commitees:** los commits los hace la usuaria, con conventional commits en español y el change entre paréntesis, p. ej. `feat(CH-03): catalogo y detalle`.
 2. **NUNCA credenciales reales:** solo datos ficticios; secretos en `.env` (ignorado) o entorno de Easypanel.
 3. **Frontend nativo:** JavaScript nativo sin frameworks, sin build y sin CDN (recursos 100% locales).
-4. **Cliente centralizado:** todo fetch pasa por `js/api.js` con base `/api` y respeta la barra final de las rutas (ej. `/api/libros/`).
+4. **Cliente centralizado y rutas:** todo fetch pasa por `js/api.js` con base `/api`. Las colecciones llevan barra final (ej. `/libros/`, `/ventas/`), pero las rutas con ID van **sin** barra final (ej. `/libros/{id}`, `/ventas/{id}`, `/clientes/{id}`, `/autores/{id}`). Con barra de más, FastAPI responde 307 hacia el host interno y el navegador falla.
 5. **Cero datos de dominio en localStorage:** solo preferencias de UI (tema, sidebar). El borrador de venta vive únicamente en memoria.
 6. **Importes inalterables:** los importes confirmados provienen de la respuesta de la API; nunca se recalculan en el navegador.
 7. **Manipulación segura del DOM:** armar con `textContent` y `createElement`; nunca `innerHTML` con datos dinámicos.
