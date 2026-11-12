@@ -1,0 +1,176 @@
+/* Estilos del catálogo; CH-03 agrega los suyos debajo */
+
+/* ==========================================================================
+   Grilla compacta de catálogo
+   ========================================================================== */
+#catalogo .vista__lista {
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+}
+
+@media (max-width: 420px) {
+  #catalogo .vista__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--espacio-2);
+  }
+  #catalogo .tarjeta {
+    padding: var(--espacio-2);
+  }
+}
+
+/* ==========================================================================
+   Efecto de libro realista y hover en catálogo
+   ========================================================================== */
+#catalogo .tarjeta {
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  transition: transform 350ms cubic-bezier(.2, .7, .2, 1), box-shadow 350ms cubic-bezier(.2, .7, .2, 1);
+}
+
+#catalogo .tarjeta:hover,
+#catalogo .tarjeta:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), var(--sombra-brillo);
+}
+
+:root[data-tema="claro"] #catalogo .tarjeta:hover,
+:root[data-tema="claro"] #catalogo .tarjeta:focus-within {
+  box-shadow: 0 12px 28px rgba(45, 30, 80, 0.18), var(--sombra-brillo);
+}
+
+/* 1. Forma de libro en .tarjeta__portada: border-radius 2px (lomo) y 6px (derecho) */
+#catalogo .tarjeta__portada {
+  position: relative;
+  border-radius: 2px 6px 6px 2px;
+  overflow: hidden;
+  transform-origin: left center;
+  transition: transform 350ms cubic-bezier(.2, .7, .2, 1), box-shadow 350ms cubic-bezier(.2, .7, .2, 1);
+  /* 3. Hojas: canto de páginas a la derecha y abajo con box-shadow escalonada en tonos papel */
+  box-shadow:
+    1px 1px 0 #f3eee4,
+    2px 2px 0 #d6cfc0,
+    3px 3px 0 #f3eee4,
+    4px 4px 0 #d6cfc0,
+    0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* 4. Giro 3D y expansión de hojas en hover y :focus-within sobre la portada (el libro) */
+#catalogo .tarjeta:hover .tarjeta__portada,
+#catalogo .tarjeta:focus-within .tarjeta__portada {
+  transform: perspective(900px) rotateY(-14deg);
+  box-shadow:
+    2px 1px 0 #f3eee4,
+    4px 2px 0 #d6cfc0,
+    6px 3px 0 #f3eee4,
+    8px 4px 0 #d6cfc0,
+    10px 10px 22px rgba(0, 0, 0, 0.35);
+}
+
+/* 2. Lomo: pseudo-elemento ::before franja ~10px con degradé oscuro -> claro -> oscuro + brillo */
+#catalogo .tarjeta__portada::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(255, 255, 255, 0.18) 35%,
+    rgba(0, 0, 0, 0.4) 80%,
+    rgba(255, 255, 255, 0.35) 90%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+/* 5. Brillo: pseudo-elemento ::after diagonal blanco translúcido que cruza la tapa en hover */
+#catalogo .tarjeta__portada::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.35) 35%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.65) 65%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-160%) skewX(-25deg);
+}
+
+#catalogo .tarjeta:hover .tarjeta__portada::after,
+#catalogo .tarjeta:focus-within .tarjeta__portada::after {
+  animation: catalogo-brillo 700ms ease-in-out forwards;
+}
+
+@keyframes catalogo-brillo {
+  0% {
+    transform: translateX(-160%) skewX(-25deg);
+  }
+  100% {
+    transform: translateX(160%) skewX(-25deg);
+  }
+}
+
+/* 6. @media (prefers-reduced-motion: reduce): sin giro, sin elevación y sin brillo; solo sombra */
+@media (prefers-reduced-motion: reduce) {
+  #catalogo .tarjeta {
+    transform: none !important;
+    transition: box-shadow 350ms ease;
+  }
+  #catalogo .tarjeta:hover,
+  #catalogo .tarjeta:focus-within {
+    transform: none !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), var(--sombra-brillo);
+  }
+  #catalogo .tarjeta__portada {
+    transform: none !important;
+    transition: box-shadow 350ms ease;
+  }
+  #catalogo .tarjeta:hover .tarjeta__portada,
+  #catalogo .tarjeta:focus-within .tarjeta__portada {
+    transform: none !important;
+    box-shadow:
+      1px 1px 0 #f3eee4,
+      2px 2px 0 #d6cfc0,
+      3px 3px 0 #f3eee4,
+      4px 4px 0 #d6cfc0,
+      0 6px 14px rgba(0, 0, 0, 0.3);
+  }
+  #catalogo .tarjeta__portada::after {
+    display: none !important;
+    animation: none !important;
+  }
+}
+
+/* 7. @media (forced-colors: active): sin lomo, sin hojas, sin brillo */
+@media (forced-colors: active) {
+  #catalogo .tarjeta__portada::before {
+    display: none;
+  }
+  #catalogo .tarjeta__portada {
+    box-shadow: none;
+    border: 1px solid CanvasText;
+  }
+  #catalogo .tarjeta__portada::after {
+    display: none;
+  }
+  #catalogo .tarjeta:hover,
+  #catalogo .tarjeta:focus-within {
+    box-shadow: none;
+  }
+  #catalogo .tarjeta:hover .tarjeta__portada,
+  #catalogo .tarjeta:focus-within .tarjeta__portada {
+    box-shadow: none;
+  }
+}

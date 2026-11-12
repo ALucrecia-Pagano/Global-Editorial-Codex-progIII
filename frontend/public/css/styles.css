@@ -671,8 +671,7 @@ html.js .barra__hamburguesa {
    ========================================================================== */
 .barra__hamburguesa,
 .sidebar__cerrar,
-.sidebar__colapsar,
-.tema-alternar {
+.sidebar__colapsar {
   align-items: center;
   justify-content: center;
   min-width: 2.75rem;
@@ -687,8 +686,7 @@ html.js .barra__hamburguesa {
 
 .barra__hamburguesa:hover,
 .sidebar__cerrar:hover,
-.sidebar__colapsar:hover,
-.tema-alternar:hover {
+.sidebar__colapsar:hover {
   border-color: var(--color-acento-rosa);
 }
 
@@ -702,10 +700,21 @@ html.js .barra__hamburguesa {
   stroke-linejoin: round;
 }
 
-/* Botón de tema: solo con JS (html.js, D3). */
+/* Botón de tema: solo con JS (html.js, D3). Sin recuadro, área mínima 44x44px. */
 .tema-alternar {
   display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: var(--espacio-2);
   margin-left: auto;
+  border: 0;
+  border-radius: var(--radio-m);
+  background: transparent;
+  color: var(--color-text-suave);
+  cursor: pointer;
+  transition: color 200ms ease;
 }
 
 html.js .tema-alternar {
@@ -713,14 +722,29 @@ html.js .tema-alternar {
 }
 
 .tema-alternar__icono {
-  font-size: 1.25rem;
-  line-height: 1;
+  width: 1.375rem;
+  height: 1.375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: color 200ms ease, filter 200ms ease, transform 200ms ease;
 }
 
-/* Estado marcado (tema claro activo): borde más grueso además del color. */
-.tema-alternar[aria-pressed="true"] {
-  border-width: 4px;
-  border-color: var(--color-accent);
+.tema-alternar:hover {
+  color: var(--color-accent);
+}
+
+.tema-alternar:hover .tema-alternar__icono {
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 6px var(--color-accent));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tema-alternar:hover .tema-alternar__icono--sol {
+    transform: rotate(20deg);
+  }
 }
 
 /* ==========================================================================
@@ -1485,15 +1509,36 @@ main { padding: clamp(1rem, 2.5vw, 2rem); }
    Solo afecta a Catálogo (#catalogo por salto de fragmento; #titulo-catalogo por el
    scroll del foco del h2). Las demás vistas conservan el scroll normal. */
 #catalogo, #titulo-catalogo { scroll-margin-top: 100rem; }
-.tema-alternar { min-width: 2.5rem; min-height: 2.5rem; padding: .5rem; border-width: 1px; background: var(--color-surface); }
-.tema-alternar[aria-pressed="true"] { border-width: 1px; }
-.tema-alternar__icono { width: 1.375rem; height: 1.375rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .tema-alternar__icono--luna { display: none; }
 :root[data-tema="claro"] .tema-alternar__icono--sol { display: none; }
 :root[data-tema="claro"] .tema-alternar__icono--luna { display: block; }
-.barra__inicio { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 2.5rem; padding: .4rem .6rem; border: 1px solid var(--color-borde-campo); border-radius: .5rem; font-size: .875rem; color: var(--color-text-suave); text-decoration: none; }
-.barra__inicio:hover { color: var(--color-accent); background: var(--color-surface-2); }
-.tema-alternar { margin-left: auto; }
+.barra__inicio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: .5rem .75rem;
+  border: 0;
+  border-radius: .5rem;
+  background: transparent;
+  font-size: .875rem;
+  color: var(--color-text-suave);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+.barra__inicio .boton__icono {
+  transition: color 200ms ease, filter 200ms ease;
+}
+.barra__inicio:hover {
+  color: var(--color-accent);
+  background: transparent;
+}
+.barra__inicio:hover .boton__icono {
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 6px var(--color-accent));
+}
 .bienvenida__resumen { position: relative; }
 .bienvenida__destello { position: absolute; right: 1.25rem; top: 1.25rem; width: 1.375rem; height: 1.375rem; fill: none; stroke: var(--color-accent); stroke-width: 1.6; stroke-linejoin: round; }
 .bienvenida__etiqueta { padding-right: 2rem; }
