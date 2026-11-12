@@ -6,10 +6,12 @@
   <title>Editorial Codex</title>
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/ventas.css">
   <script src="js/api.js"></script>
   <script src="js/data.js" defer></script>
   <script src="js/storage.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/ventas.js" defer></script>
 </head>
 <body>
   <a class="salto" href="#contenido">Saltar al contenido</a>
@@ -223,27 +225,20 @@
         <section id="ventas" class="vista" aria-labelledby="titulo-ventas">
           <h2 id="titulo-ventas" class="vista__titulo" tabindex="-1">Ventas</h2>
 
+          <div id="venta-carga-error" class="mensaje mensaje--error" role="alert" hidden></div>
+
           <form id="form-venta" class="formulario formulario--registro" novalidate>
             <div class="formulario__cabecera"><h3 class="formulario__titulo">Registrar venta</h3><p class="formulario__ayuda">Elegí el cliente y agregá los libros de la venta.</p></div>
             <div class="formulario__campo">
               <label class="formulario__etiqueta" for="venta-cliente">Cliente</label>
               <select class="formulario__control" id="venta-cliente" name="clienteId">
                 <option value="">Elegí un cliente</option>
-                <option value="cl-1">Carla Benítez</option>
-                <option value="cl-2">Martín Sosa</option>
-                <option value="cl-3">Julieta Rinaldi</option>
               </select>
             </div>
             <div class="formulario__campo">
               <label class="formulario__etiqueta" for="venta-libro">Libro</label>
               <select class="formulario__control" id="venta-libro" name="libroId">
                 <option value="">Elegí un libro</option>
-                <option value="li-1">La casa del faro</option>
-                <option value="li-2">Estrellas de papel</option>
-                <option value="li-3">Cartas desde el sur</option>
-                <option value="li-4">Órbita lenta</option>
-                <option value="li-5">Manual de jardinería urbana</option>
-                <option value="li-6">El mapa invisible</option>
               </select>
             </div>
             <div class="formulario__campo">
@@ -267,13 +262,13 @@
                   </tr>
                 </thead>
                 <tbody id="venta-renglones">
-                  <!-- Los renglones se renderizan desde el borrador de la venta (C-08) -->
+                  <!-- Los renglones se renderizan desde el borrador de la venta en memoria -->
                 </tbody>
               </table>
             </section>
             <p id="venta-renglones-vacio" class="mensaje mensaje--vacio" hidden>Todavía no agregaste libros a la venta.</p>
 
-            <p class="resumen-venta">Total: <strong id="venta-total" class="resumen-venta__total">$&nbsp;0,00</strong></p>
+            <p class="resumen-venta"><span id="venta-total-rotulo">Total estimado:</span> <strong id="venta-total" class="resumen-venta__total">$&nbsp;0,00</strong></p>
 
             <div class="formulario__acciones">
               <button class="boton boton--primario" type="submit" id="venta-confirmar">Confirmar venta</button>
@@ -283,12 +278,15 @@
           <div id="venta-errores" class="mensaje mensaje--error" role="alert" hidden>
             <p>Error: agregá al menos un libro a la venta.</p>
           </div>
-          <p id="venta-mensaje" class="mensaje mensaje--exito" role="status" hidden>Venta V-0003 registrada correctamente.</p>
+          <p id="venta-mensaje" class="mensaje mensaje--exito" role="status" hidden></p>
+          <div id="venta-resumen-confirmado" class="resumen-confirmado" hidden></div>
         </section>
 
         <!-- Vista: Historial -->
         <section id="historial" class="vista" aria-labelledby="titulo-historial">
           <h2 id="titulo-historial" class="vista__titulo" tabindex="-1">Historial</h2>
+
+          <div id="historial-estado" class="mensaje" hidden></div>
 
           <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de ventas registradas">
             <table class="tabla">
@@ -303,14 +301,21 @@
                 </tr>
               </thead>
               <tbody id="historial-tabla">
-                <!-- Las filas se renderizan desde el array `ventas` (C-10) -->
+                <!-- Las filas se renderizan dinámicamente desde GET /ventas/ -->
               </tbody>
             </table>
           </section>
           <p id="historial-vacio" class="mensaje mensaje--vacio" hidden>Todavía no hay ventas registradas.</p>
 
+          <div id="historial-paginacion" class="paginacion" hidden>
+            <button id="historial-anterior" class="boton boton--secundario" type="button" disabled>Anterior</button>
+            <span id="historial-pagina-info" class="paginacion__info"></span>
+            <button id="historial-siguiente" class="boton boton--secundario" type="button" disabled>Siguiente</button>
+          </div>
+
           <div id="historial-detalle" class="detalle-venta" hidden>
             <h3 class="detalle-venta__titulo" tabindex="-1"></h3>
+            <div id="historial-detalle-meta" class="detalle-venta__meta"></div>
             <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de renglones de la venta seleccionada">
               <table class="tabla">
                 <caption class="tabla__titulo"></caption>
@@ -323,7 +328,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- Los renglones guardados se escriben al abrir el detalle (C-10) -->
+                  <!-- Los renglones guardados se escriben al abrir el detalle -->
                 </tbody>
               </table>
             </section>

@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Estilos específicos de la vista de Ventas e Historial (CH-05)
+   Extiende css/styles.css respetando sus tokens y estética.
+   ========================================================================== */
+
+/* Paginación del historial de ventas */
+.paginacion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.paginacion__info {
+  font-size: 0.9375rem;
+  color: var(--color-text-suave);
+  font-weight: 500;
+}
+
+/* Indicador de importes estimados en el borrador */
+.resumen-venta__estimado {
+  font-size: 0.8125rem;
+  color: var(--color-text-suave);
+  font-weight: normal;
+  margin-left: 0.5rem;
+  font-style: italic;
+}
+
+/* Resumen de venta confirmada (HTTP 201) */
+.resumen-confirmado {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: var(--degrade-tabla, var(--color-surface-2));
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  box-shadow: var(--sombra-tarjeta, 0 4px 12px rgba(0, 0, 0, 0.25));
+}
+
+.resumen-confirmado__titulo {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  color: var(--color-exito);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.resumen-confirmado__meta {
+  font-size: 0.9375rem;
+  color: var(--color-text-suave);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.resumen-confirmado__total {
+  margin-top: 1rem;
+  font-size: 1.125rem;
+  color: var(--color-text);
+  text-align: right;
+}
+
+/* Metadatos en panel de detalle del historial */
+.detalle-venta__meta {
+  margin: 0.25rem 0 1rem 0;
+  font-size: 0.9375rem;
+  color: var(--color-text-suave);
+  line-height: 1.4;
+}
+
+/* Botón de reintento en alertas */
+.boton--reintentar {
+  margin-top: 0.5rem;
+  display: inline-block;
+}
+
+/* Estado visual durante envío de venta */
+button[aria-busy="true"] {
+  opacity: 0.7;
+  cursor: wait;
+}
