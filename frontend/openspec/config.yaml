@@ -1,0 +1,30 @@
+schema: spec-driven
+
+context: |
+  TPI "Frontend de una librería", Programación III, UTN FRM.
+  Consigna: retirada del repo al cerrar el TPI (antes docs/consigna-tpi.pdf). Reglas duras: AGENTS.md.
+  Conocimiento del dominio: knowledge-base/. Roadmap: CHANGES.md.
+  Todos los artefactos se escriben en español.
+  Solo HTML, CSS y JavaScript nativos: sin librerías, frameworks, CDNs,
+  npm, herramientas de build ni fetch. Persistencia con localStorage.
+  Sin tests automáticos ni TDD: la verificación es manual en el navegador
+  (320px, 1280px, teclado) y el resultado observado se registra en el README.
+
+rules:
+  proposal:
+    - Indicar qué ejercicios de la consigna cubre el change
+    - Indicar siempre qué queda fuera de alcance
+  tasks:
+    - Cada tarea debe poder verificarse manualmente en el navegador
+    - Incluir una tarea final de verificación en 320px, 1280px y con teclado
+    - No incluir tareas de tests automáticos
+
+operations:
+  apply:
+    guidance:
+      - Seguir las reglas de AGENTS.md
+      - No escribir tests automáticos (anula el Strict TDD global)
+      - No hacer commits ni push
+  archive:
+    guidance:
+      - Resumir qué quedó implementado y qué quedó pendiente

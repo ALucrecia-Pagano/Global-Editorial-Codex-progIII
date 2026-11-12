@@ -1,0 +1,13 @@
+# Sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editor
+.vscode/
+
+# Dependencias (no se usan en este TP, por las dudas)
+node_modules/
+
+# IMPORTANTE: no ignorar CLAUDE.md, AGENTS.md ni la carpeta de specs.
+# El profe pide que queden en el repo.

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editorial Codex</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/data.js" defer></script>
+  <script src="js/storage.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <a class="salto" href="#contenido">Saltar al contenido</a>
+
+  <header class="marca">
+    <svg class="marca__libro" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/></svg>
+    <h1 class="marca__titulo">
+      <a class="marca__enlace" href="#catalogo"><span class="marca__editorial">Editorial</span> <span class="marca__codex">Codex</span><span class="marca__estrella marca__estrella--primera" aria-hidden="true">&#10022;</span><span class="marca__estrella marca__estrella--segunda" aria-hidden="true">&#10022;</span><span class="marca__estrella marca__estrella--tercera" aria-hidden="true">&#10022;</span></a>
+    </h1>
+    <div class="marca__ornamento" aria-hidden="true"><span>&#10022;</span></div>
+    <p class="marca__lema">Tus historias. Tu próximo mundo.</p>
+  </header>
+
+  <div class="aplicacion">
+    <div id="sidebar-velo" class="sidebar__velo"></div>
+
+    <aside id="sidebar" class="sidebar" aria-label="Menú lateral">
+      <div class="sidebar__cabecera">
+        <svg class="sidebar__emblema" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/></svg>
+        <p class="sidebar__marca"><span class="sidebar__editorial">Editorial</span><strong class="sidebar__codex">CODEX<span class="sidebar__estrella" aria-hidden="true">✦</span></strong></p>
+        <button id="menu-cerrar" class="sidebar__cerrar" type="button" aria-controls="sidebar" aria-label="Cerrar menú"><svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </div>
+
+      <p class="sidebar__rotulo">TU BIBLIOTECA</p>
+      <nav id="nav-principal" class="navegacion" aria-label="Principal">
+        <ul class="navegacion__lista">
+          <li class="navegacion__item"><a class="navegacion__enlace" href="#catalogo"><svg class="navegacion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1Zm0 0v15"/></svg><span class="navegacion__texto">Catálogo</span><span class="navegacion__tooltip" aria-hidden="true">Catálogo</span></a></li>
+          <li class="navegacion__item"><a class="navegacion__enlace" href="#libros"><svg class="navegacion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3Z"/><path d="M9 9h5M9 13h5"/></svg><span class="navegacion__texto">Libros</span><span class="navegacion__tooltip" aria-hidden="true">Libros</span></a></li>
+          <li class="navegacion__item"><a class="navegacion__enlace" href="#clientes"><svg class="navegacion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.500 3-5.500 7-5.500s7 2 7 5.500"/><path d="M16 4.500a3.500 3.500 0 0 1 0 7M18 14.800c2.500.6 4 2.400 4 5.200"/></svg><span class="navegacion__texto">Clientes</span><span class="navegacion__tooltip" aria-hidden="true">Clientes</span></a></li>
+          <li class="navegacion__item"><a class="navegacion__enlace" href="#ventas"><svg class="navegacion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="20" r="1.500"/><circle cx="18" cy="20" r="1.500"/><path d="M2 3h3l2.500 12h11L21 7H6"/></svg><span class="navegacion__texto">Ventas</span><span class="navegacion__tooltip" aria-hidden="true">Ventas</span></a></li>
+          <li class="navegacion__item"><a class="navegacion__enlace" href="#historial"><svg class="navegacion__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="navegacion__texto">Historial</span><span class="navegacion__tooltip" aria-hidden="true">Historial</span></a></li>
+        </ul>
+      </nav>
+
+      <button id="sidebar-colapsar" class="sidebar__colapsar" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Colapsar menú"><svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6"/></svg></button>
+    </aside>
+
+    <div class="principal">
+      <section class="barra" aria-label="Barra superior">
+        <button id="menu-abrir" class="barra__hamburguesa" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menú"><svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <a class="barra__inicio" href="#catalogo"><svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg>Inicio</a>
+        <span class="barra__texto">Tu espacio de lectura</span>
+        <button id="tema-alternar" class="tema-alternar" type="button" aria-pressed="false" aria-label="Activar tema claro"><svg class="tema-alternar__icono tema-alternar__icono--sol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="tema-alternar__icono tema-alternar__icono--luna" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></svg></button>
+      </section>
+
+      <main id="contenido" tabindex="-1">
+  <div id="error-persistencia" class="mensaje mensaje--error" role="alert" hidden>
+    <strong>Error de datos:</strong> Se detectó un problema con la información guardada y se restauraron los valores iniciales. Tus cambios recientes podrían no estar disponibles.
+  </div>
+
+        <!-- Vista: Catálogo -->
+        <section id="catalogo" class="vista" aria-labelledby="titulo-catalogo">
+          <h2 id="titulo-catalogo" class="vista__titulo" tabindex="-1">Catálogo</h2>
+          <div class="bienvenida">
+            <div class="bienvenida__banner">
+              <div class="bienvenida__contenido">
+              <p class="bienvenida__titulo">Hola, lector. Tu próxima historia te espera.</p>
+              <p class="bienvenida__texto">Desconectá un rato. Encontrá un libro. Dejá que empiece el viaje.</p>
+              </div>
+            </div>
+            <div class="bienvenida__resumen">
+              <svg class="bienvenida__destello" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/></svg>
+              <p class="bienvenida__etiqueta">Historias por descubrir</p>
+              <p class="bienvenida__cantidad">6</p>
+              <p class="bienvenida__detalle">libros, infinitos mundos</p>
+              <span class="bienvenida__linea" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <form id="form-busqueda" class="formulario formulario--busqueda" novalidate>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="catalogo-busqueda">Buscar por título</label>
+              <div class="formulario__buscador"><svg class="formulario__lupa" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><input class="formulario__control" type="search" id="catalogo-busqueda" name="busqueda" placeholder="Buscá tu próxima historia…"></div>
+            </div>
+            <div class="formulario__acciones">
+              <button class="boton boton--primario boton--buscar" type="submit"><svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg>Buscar</button>
+            </div>
+          </form>
+
+          <p id="catalogo-resultados" class="solo-lectores" role="status" aria-live="polite"></p>
+
+          <p id="catalogo-sin-resultados" class="mensaje mensaje--vacio" hidden>No se encontraron libros que coincidan con la búsqueda.</p>
+          <p id="catalogo-vacio" class="mensaje mensaje--vacio" hidden>Todavía no hay libros en el catálogo.</p>
+
+          <div id="catalogo-lista" class="vista__lista">
+            <!-- Las tarjetas se renderizan desde el array `libros` (C-04) -->
+          </div>
+        </section>
+
+        <!-- Vista: Libros -->
+        <section id="libros" class="vista" aria-labelledby="titulo-libros">
+          <h2 id="titulo-libros" class="vista__titulo" tabindex="-1">Libros</h2>
+
+          <form id="form-libro" class="formulario formulario--registro" novalidate>
+            <div class="formulario__cabecera"><h3 class="formulario__titulo">Registrar libro</h3><p class="formulario__ayuda">Completá los datos del libro y elegí sus autores.</p></div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-titulo">Título</label>
+              <input class="formulario__control" type="text" id="libro-titulo" name="titulo">
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-isbn">ISBN</label>
+              <input class="formulario__control" type="text" id="libro-isbn" name="isbn">
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-precio">Precio (ARS)</label>
+              <input class="formulario__control" type="number" id="libro-precio" name="precio" step="0.01" inputmode="decimal">
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-editorial">Editorial</label>
+              <select class="formulario__control" id="libro-editorial" name="editorialId">
+                <option value="ed-1">Ediciones del Faro</option>
+                <option value="ed-2">Prisma Editorial</option>
+              </select>
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-genero">Género</label>
+              <select class="formulario__control" id="libro-genero" name="generoId">
+                <option value="">Sin clasificar</option>
+                <option value="ge-1">Novela</option>
+                <option value="ge-2">Ciencia ficción</option>
+              </select>
+            </div>
+            <fieldset id="libro-autores" class="formulario__grupo">
+              <legend class="formulario__leyenda">Autores</legend>
+              <div class="formulario__opcion">
+                <input type="checkbox" id="libro-autor-1" name="autorIds" value="au-1">
+                <label for="libro-autor-1">Lucía Ferreyra</label>
+              </div>
+              <div class="formulario__opcion">
+                <input type="checkbox" id="libro-autor-2" name="autorIds" value="au-2">
+                <label for="libro-autor-2">Tomás Aguirre</label>
+              </div>
+              <div class="formulario__opcion">
+                <input type="checkbox" id="libro-autor-3" name="autorIds" value="au-3">
+                <label for="libro-autor-3">Inés Montoya</label>
+              </div>
+            </fieldset>
+            <div class="formulario__acciones">
+              <button class="boton boton--primario" type="submit">Guardar libro</button>
+            </div>
+          </form>
+
+          <div id="libro-errores" class="mensaje mensaje--error" role="alert" hidden>
+            <p>Error: el título es obligatorio.</p>
+          </div>
+          <p id="libro-mensaje" class="mensaje mensaje--exito" role="status" hidden>Libro guardado correctamente.</p>
+
+          <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de libros cargados">
+            <table class="tabla">
+              <caption class="tabla__titulo">Listado de libros</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Título</th>
+                  <th scope="col">ISBN</th>
+                  <th scope="col">Editorial</th>
+                  <th scope="col">Género</th>
+                  <th scope="col">Autores</th>
+                  <th scope="col">Precio</th>
+                </tr>
+              </thead>
+              <tbody id="libros-tabla">
+                <!-- Las filas se renderizan desde el array `libros` (C-04) -->
+              </tbody>
+            </table>
+          </section>
+          <p id="libros-vacio" class="mensaje mensaje--vacio" hidden>Todavía no hay libros cargados.</p>
+        </section>
+
+        <!-- Vista: Clientes -->
+        <section id="clientes" class="vista" aria-labelledby="titulo-clientes">
+          <h2 id="titulo-clientes" class="vista__titulo" tabindex="-1">Clientes</h2>
+
+          <form id="form-cliente" class="formulario formulario--registro" novalidate>
+            <div class="formulario__cabecera"><h3 class="formulario__titulo">Registrar cliente</h3><p class="formulario__ayuda">Completá el nombre y el correo electrónico del cliente.</p></div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="cliente-nombre">Nombre completo</label>
+              <input class="formulario__control" type="text" id="cliente-nombre" name="nombreCompleto">
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="cliente-email">Email</label>
+              <input class="formulario__control" type="email" id="cliente-email" name="email">
+            </div>
+            <div class="formulario__acciones">
+              <button class="boton boton--primario" type="submit">Guardar cliente</button>
+            </div>
+          </form>
+
+          <div id="cliente-errores" class="mensaje mensaje--error" role="alert" hidden>
+            <p>Error: el email no tiene un formato válido.</p>
+          </div>
+          <p id="cliente-mensaje" class="mensaje mensaje--exito" role="status" hidden>Cliente guardado correctamente.</p>
+
+          <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de clientes cargados">
+            <table class="tabla">
+              <caption class="tabla__titulo">Listado de clientes</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nombre completo</th>
+                  <th scope="col">Email</th>
+                </tr>
+              </thead>
+              <tbody id="clientes-tabla">
+                <!-- Las filas se renderizan desde el array `clientes` (C-04) -->
+              </tbody>
+            </table>
+          </section>
+          <p id="clientes-vacio" class="mensaje mensaje--vacio" hidden>Todavía no hay clientes cargados.</p>
+        </section>
+
+        <!-- Vista: Ventas -->
+        <section id="ventas" class="vista" aria-labelledby="titulo-ventas">
+          <h2 id="titulo-ventas" class="vista__titulo" tabindex="-1">Ventas</h2>
+
+          <form id="form-venta" class="formulario formulario--registro" novalidate>
+            <div class="formulario__cabecera"><h3 class="formulario__titulo">Registrar venta</h3><p class="formulario__ayuda">Elegí el cliente y agregá los libros de la venta.</p></div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="venta-cliente">Cliente</label>
+              <select class="formulario__control" id="venta-cliente" name="clienteId">
+                <option value="">Elegí un cliente</option>
+                <option value="cl-1">Carla Benítez</option>
+                <option value="cl-2">Martín Sosa</option>
+                <option value="cl-3">Julieta Rinaldi</option>
+              </select>
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="venta-libro">Libro</label>
+              <select class="formulario__control" id="venta-libro" name="libroId">
+                <option value="">Elegí un libro</option>
+                <option value="li-1">La casa del faro</option>
+                <option value="li-2">Estrellas de papel</option>
+                <option value="li-3">Cartas desde el sur</option>
+                <option value="li-4">Órbita lenta</option>
+                <option value="li-5">Manual de jardinería urbana</option>
+                <option value="li-6">El mapa invisible</option>
+              </select>
+            </div>
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="venta-cantidad">Cantidad</label>
+              <input class="formulario__control" type="number" id="venta-cantidad" name="cantidad" value="1" inputmode="numeric">
+            </div>
+            <div class="formulario__acciones">
+              <button class="boton boton--secundario" type="button" id="venta-agregar">Agregar renglón</button>
+            </div>
+
+            <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de renglones de la venta">
+              <table class="tabla">
+                <caption class="tabla__titulo">Renglones de la venta</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Libro</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio unitario</th>
+                    <th scope="col">Subtotal</th>
+                    <th scope="col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody id="venta-renglones">
+                  <!-- Los renglones se renderizan desde el borrador de la venta (C-08) -->
+                </tbody>
+              </table>
+            </section>
+            <p id="venta-renglones-vacio" class="mensaje mensaje--vacio" hidden>Todavía no agregaste libros a la venta.</p>
+
+            <p class="resumen-venta">Total: <strong id="venta-total" class="resumen-venta__total">$&nbsp;0,00</strong></p>
+
+            <div class="formulario__acciones">
+              <button class="boton boton--primario" type="submit" id="venta-confirmar">Confirmar venta</button>
+            </div>
+          </form>
+
+          <div id="venta-errores" class="mensaje mensaje--error" role="alert" hidden>
+            <p>Error: agregá al menos un libro a la venta.</p>
+          </div>
+          <p id="venta-mensaje" class="mensaje mensaje--exito" role="status" hidden>Venta V-0003 registrada correctamente.</p>
+        </section>
+
+        <!-- Vista: Historial -->
+        <section id="historial" class="vista" aria-labelledby="titulo-historial">
+          <h2 id="titulo-historial" class="vista__titulo" tabindex="-1">Historial</h2>
+
+          <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de ventas registradas">
+            <table class="tabla">
+              <caption class="tabla__titulo">Ventas registradas</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="historial-tabla">
+                <!-- Las filas se renderizan desde el array `ventas` (C-10) -->
+              </tbody>
+            </table>
+          </section>
+          <p id="historial-vacio" class="mensaje mensaje--vacio" hidden>Todavía no hay ventas registradas.</p>
+
+          <div id="historial-detalle" class="detalle-venta" hidden>
+            <h3 class="detalle-venta__titulo" tabindex="-1"></h3>
+            <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de renglones de la venta seleccionada">
+              <table class="tabla">
+                <caption class="tabla__titulo"></caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Libro</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio unitario</th>
+                    <th scope="col">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Los renglones guardados se escriben al abrir el detalle (C-10) -->
+                </tbody>
+              </table>
+            </section>
+            <p class="detalle-venta__total">Total: <strong></strong></p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>

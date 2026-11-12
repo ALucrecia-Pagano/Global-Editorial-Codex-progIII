@@ -1,0 +1,1561 @@
+/* Editorial Codex - hoja de estilos única (C-02, grupo A).
+   Orden (design D5): fuente -> tokens/temas -> base y utilidades -> marca y fondo
+   -> layout -> componentes -> vistas -> media queries (mobile-first) -> movimiento reducido. */
+
+/* ==========================================================================
+   1. Fuente local (Cinzel Decorative, licencia OFL en fonts/OFL.txt)
+   ========================================================================== */
+@font-face {
+  font-family: "Cinzel Decorative";
+  src: url("../fonts/CinzelDecorative-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   2. Tokens y temas (D4). Oscuro por defecto; claro con data-tema="claro".
+   ========================================================================== */
+:root {
+  color-scheme: dark;
+
+  /* Superficies y bordes. Las superficies grandes llevan degradé (ver abajo). */
+  --color-bg: #05060f;
+  --color-surface: #120a20;
+  --color-surface-2: #1d1030;
+  --color-borde: #5b2f7e;
+  --color-linea: #3a2152;
+  --color-borde-campo: #9a8cc0;
+
+  /* Texto y acentos. */
+  --color-text: #f2f4fc;
+  --color-text-suave: #c3bfdc;
+  --color-accent: #b6a6ff;
+  --color-sobre-accent: #080d17;
+  --color-acento-rosa: #c9a6e8;
+  --color-error: #ff9b9b;
+  --color-exito: #8be0ae;
+  --color-foco: #ffd166;
+  --color-foco-marca: #ffd166;
+
+  /* Degradés sobrios ciruela profundo / azul noche (D20; sin magenta). Regla: el
+     contraste del texto se calcula contra el tramo MÁS CLARO de cada degradé; si no
+     llega a 4.5:1 se oscurece el degradé, nunca el texto. Tramo más claro de main:
+     #251a3a (los demás se redefinen en la sección 12). */
+  --degrade-superficie: linear-gradient(135deg, #251a3a 0%, #161a33 55%, #0a0d19 100%);
+  --degrade-sidebar: linear-gradient(180deg, #101824, #0d1420);
+  --degrade-tarjeta: linear-gradient(145deg, #182133, #0e1623);
+  --degrade-tabla: linear-gradient(145deg, #182133, #0e1623);
+
+  /* Brillo suave violeta apagado alrededor de las superficies. */
+  --sombra-brillo: 0 0 0 1px rgba(150, 125, 210, 0.1), 0 0 18px rgba(130, 100, 200, 0.12), 0 18px 50px rgba(0, 0, 0, 0.45);
+  --sombra-brillo-suave: 0 0 12px rgba(130, 100, 200, 0.1), 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  --espacio-1: 0.25rem;
+  --espacio-2: 0.5rem;
+  --espacio-3: 0.75rem;
+  --espacio-4: 1rem;
+  --espacio-5: 1.5rem;
+  --espacio-6: 2rem;
+
+  --radio-s: 0.375rem;
+  --radio-m: 0.625rem;
+  --radio-l: 1rem;
+
+  --sombra: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+  --fuente-marca: "Cinzel Decorative", Georgia, "Times New Roman", serif;
+  --fuente-base: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+
+/* Tema claro: lavanda y rosa pálido SOLO en los paneles (sidebar, barra, main y sus
+   tarjetas, tablas y formularios). El fondo de la página y el encabezado son los del
+   tema oscuro (D21): por eso acá NO se redefine --color-bg (fondo de la página, usado
+   también por el halo del botón de colapsar). El tramo crítico de cada degradé es el MÁS OSCURO. */
+:root[data-tema="claro"] {
+  color-scheme: light;
+
+  --color-surface: #ffffff;
+  --color-surface-2: #f5effc;
+  --color-borde: #bfa5de;
+  --color-linea: #dccff0;
+  --color-borde-campo: #66598c;
+  --color-text: #1c1530;
+  --color-text-suave: #54486f;
+  --color-accent: #5c37bd;
+  --color-sobre-accent: #ffffff;
+  --color-acento-rosa: #8a3d84;
+  --color-error: #a8201a;
+  --color-exito: #17663a;
+  --color-foco: #1b4fd8;
+
+  --degrade-superficie: linear-gradient(135deg, #ffffff 0%, #f7f0fd 55%, #f9e9f4 100%);
+  --degrade-sidebar: linear-gradient(180deg, #ffffff 0%, #f2e9fb 60%, #f7e4f1 100%);
+  --degrade-tarjeta: linear-gradient(145deg, #ffffff 0%, #f3ebfc 60%, #f6e3f0 100%);
+  --degrade-tabla: linear-gradient(145deg, #ffffff 0%, #f4ecfb 60%, #f5e3f0 100%);
+
+  --sombra-brillo: 0 0 0 1px rgba(120, 90, 180, 0.08), 0 0 14px rgba(120, 90, 180, 0.08), 0 14px 40px rgba(90, 60, 150, 0.14);
+  --sombra-brillo-suave: 0 0 8px rgba(120, 90, 180, 0.08), 0 6px 18px rgba(90, 60, 150, 0.1);
+  --sombra: 0 20px 60px rgba(36, 55, 98, 0.16);
+}
+
+/* ==========================================================================
+   3. Base y utilidades
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: var(--espacio-4);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--fuente-base);
+  font-size: 1rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+ul,
+ol,
+figure {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+/* Se conserva de C-01: los mensajes y vistas ocultas no se muestran. */
+[hidden] {
+  display: none !important;
+}
+
+/* Utilidad: oculto a la vista, disponible para lectores de pantalla. */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Foco visible (se conserva de C-01 y se refuerza). */
+:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 3px;
+}
+
+/* Foco por programa (h2 y main con tabindex="-1"): sin contorno si no es por teclado. */
+[tabindex="-1"]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Enlace "Saltar al contenido": fuera de pantalla hasta recibir foco. */
+.salto {
+  position: absolute;
+  top: var(--espacio-2);
+  left: var(--espacio-2);
+  z-index: 100;
+  padding: var(--espacio-3) var(--espacio-4);
+  border-radius: var(--radio-s);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 700;
+  transform: translateY(-200%);
+}
+
+.salto:focus {
+  transform: none;
+}
+
+/* ==========================================================================
+   4. Fondo galáctico decorativo (solo CSS, sin imágenes)
+   body::before = nebulosas ciruela / azul noche (rosa solo como toque muy tenue) sobre base negro azulado.
+   body::after  = estrellas chicas (capas de radial-gradient repetidas).
+   html::before = foto de la biblioteca (assets/img/banner-biblioteca.jpg) difuminada
+   y oscurecida, por debajo de la galaxia. Las tres capas son IDÉNTICAS en ambos temas (D21).
+   Todos son fijos, decorativos (pointer-events: none, content vacío: no entran
+   en el árbol de accesibilidad) y quedan detrás de todo el contenido.
+   Apilado (contexto raíz; el fondo de body se pinta en el canvas, por debajo de todo):
+   html::before (-4) < body::before (-3) < body::after (-2) < contenido (auto).
+   ========================================================================== */
+html::before,
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+}
+
+/* Foto de la biblioteca: muy difuminada, oscurecida y agrandada (scale 1.1) para
+   que los bordes desenfocados queden fuera de la pantalla. Un tinte cálido suave
+   (va dentro del mismo filtro) hace que la luz de las estrellas se lea como un
+   resplandor dorado. Es solo atmósfera: la galaxia va encima y manda. Es fija
+   (inset: 0), así que no genera scroll horizontal, y no se anima. */
+html::before {
+  inset: 0;
+  z-index: -4;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255, 176, 96, 0.22), transparent 75%),
+    url("../assets/img/banner-biblioteca.jpg") center / cover no-repeat;
+  filter: blur(12px) brightness(0.5);
+  transform: scale(1.1);
+}
+
+/* El velo galáctico (opacity 0.65) deja adivinar la biblioteca detrás. Paleta
+   desaturada (D20): ciruela profundo y azul noche; el rosa es apenas un toque. */
+body::before {
+  inset: 0;
+  z-index: -3;
+  opacity: 0.65;
+  background:
+    radial-gradient(ellipse 55% 45% at 15% 20%, rgba(112, 66, 160, 0.36), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 85% 30%, rgba(48, 92, 180, 0.38), transparent 72%),
+    radial-gradient(ellipse 70% 55% at 55% 85%, rgba(94, 62, 150, 0.34), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 30% 65%, rgba(150, 70, 130, 0.14), transparent 70%),
+    linear-gradient(180deg, #070a18 0%, #05060f 60%, #0a0618 100%);
+}
+
+/* Estrellas: cada capa se repite con un mosaico que divide a 600 px, así el
+   desplazamiento de 600 px de la animación cierra el ciclo sin saltos. El
+   elemento es 600 px más grande arriba y a la izquierda; al ser fijo no genera scroll. */
+body::after {
+  inset: -600px 0 0 -600px;
+  z-index: -2;
+  background-image:
+    radial-gradient(circle at 40px 60px, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 110px 20px, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 90px 140px, rgba(235, 220, 255, 0.8) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 220px 130px, rgba(215, 200, 255, 0.8) 0 1.3px, transparent 2px),
+    radial-gradient(circle at 420px 300px, rgba(255, 255, 255, 0.95) 0 1.6px, transparent 2.4px);
+  background-size: 120px 120px, 150px 150px, 200px 200px, 300px 300px, 600px 600px;
+}
+
+/* Tema claro (D21): sin reglas propias. La página (foto, nebulosas, estrellas) y el
+   encabezado son los mismos que en el tema oscuro; solo los paneles se aclaran. */
+
+/* ==========================================================================
+   5. Marca (título "Editorial Codex")
+   Encabezado TRANSPARENTE en ambos temas (D20, D21). Se ve la biblioteca difuminada y la
+   nebulosa de la página; detrás del título hay un resplandor violeta y, para el
+   contraste, un velo oscuro radial difuso (.marca::before), nunca una franja.
+   ========================================================================== */
+.marca {
+  --marca-texto: #f3eaff;
+  --marca-dorado: #e8c47a;
+  /* Degradé de "CODEX" (D20): blanco -> lila -> violeta -> azul. Tramo más oscuro: #9a8cff. */
+  --marca-degrade: linear-gradient(100deg, #ffffff 0%, #e4d0ff 24%, #bc92f8 48%, #9a8cff 72%, #78a2ff 100%);
+  /* Velo oscuro central (contraste) y resplandor violeta (atmósfera). */
+  --marca-velo: 8, 5, 18;
+  --marca-brillo: 120, 84, 210;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem; /* 80 % de --espacio-2 */
+  padding: 1.2rem 0.8rem 0.8rem; /* 80 % de --espacio-5 / --espacio-4 */
+  background: transparent;
+  border-bottom: 1px solid var(--color-borde);
+  box-shadow: none;
+  color: var(--marca-texto);
+  text-align: center;
+  overflow-x: clip; /* el velo nunca genera scroll horizontal */
+}
+
+/* Velo + resplandor detrás del título. z-index -1 sin crear contexto de apilado en
+   .marca: queda por encima de la galaxia y de las estrellas pero por debajo de todo
+   el contenido y de los paneles (que son opacos), así el borde inferior del velo
+   se oculta debajo de ellos. Radios en rem / % (el ancho es min(34rem, 100 %)): sin
+   franja ni desborde. Opacidad del velo: 0.85 en el centro, 0.82 hasta el 55 % del
+   radio, 0.61 al 75 %, 0.28 al 90 % y 0 al 100 % (README, "Marca"). */
+.marca::before {
+  content: "";
+  position: absolute;
+  inset: -1rem 0 -1.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse min(24rem, 90%) 6.5rem at 50% 49%, rgba(var(--marca-brillo), 0.25) 0%, rgba(var(--marca-brillo), 0.12) 45%, transparent 100%),
+    radial-gradient(ellipse min(34rem, 100%) 9.5rem at 50% 49%, rgba(var(--marca-velo), 0.85) 0%, rgba(var(--marca-velo), 0.82) 55%, rgba(var(--marca-velo), 0.61) 75%, rgba(var(--marca-velo), 0.28) 90%, rgba(var(--marca-velo), 0) 100%);
+}
+
+/* Foco sobre el encabezado (fondo oscuro en ambos temas): amarillo propio. */
+.marca :focus-visible {
+  outline-color: var(--color-foco-marca);
+}
+
+.marca__titulo {
+  font-family: var(--fuente-marca);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.marca__enlace {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem 1.8rem; /* 80 % de --espacio-2 / 2.25rem */
+  color: var(--marca-texto);
+  text-decoration: none;
+  border-radius: var(--radio-m);
+}
+
+.marca__editorial {
+  font-size: clamp(0.9rem, 3.6vw, 1.3rem); /* 80 % */
+  text-shadow: 0 0 8px rgba(162, 119, 236, 0.45);
+}
+
+/* "CODEX": color sólido de respaldo; degradé blanco-lila-violeta-azul donde hay background-clip: text. */
+.marca__codex {
+  font-size: clamp(1.4rem, 7.2vw, 2.8rem); /* 80 % */
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--marca-texto);
+  filter: drop-shadow(0 0 12px rgba(166, 106, 255, 0.35));
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .marca__codex {
+    background-image: var(--marca-degrade);
+    background-size: 100% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+/* Estrellas doradas decorativas (aria-hidden en el HTML). */
+.marca__estrella {
+  position: absolute;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.7rem; /* 80 % de 0.875rem */
+  line-height: 1;
+  color: var(--marca-dorado);
+  text-shadow: 0 0 9px rgba(232, 196, 122, 0.44);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.marca__estrella--primera {
+  top: 48%;
+  left: 0.4rem;
+}
+
+.marca__estrella--segunda {
+  top: 26%;
+  right: 0.2rem;
+  font-size: 0.85rem; /* 80 % de 1.0625rem */
+}
+
+.marca__estrella--tercera {
+  bottom: 8%;
+  right: 0.4rem;
+}
+
+/* Ornamento debajo del título: líneas doradas con una estrella al centro. */
+.marca__ornamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem; /* 80 % de --espacio-3 */
+  width: min(12.8rem, 75%); /* 80 % de 16rem */
+  color: var(--marca-dorado);
+  pointer-events: none;
+}
+
+.marca__ornamento::before,
+.marca__ornamento::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(232, 196, 122, 0.6));
+}
+
+.marca__ornamento::after {
+  background: linear-gradient(to left, transparent, rgba(232, 196, 122, 0.6));
+}
+
+.marca__ornamento span {
+  font-size: 0.9rem; /* 80 % de 1.125rem */
+  line-height: 1.5;
+  text-shadow: 0 0 10px rgba(232, 196, 122, 0.31);
+}
+
+/* Hover y foco: más brillo y estrellas más intensas y giradas (estático; el movimiento va aparte). */
+.marca__enlace:hover .marca__codex,
+.marca__enlace:focus-visible .marca__codex {
+  filter: drop-shadow(0 0 16px rgba(203, 166, 255, 0.85));
+}
+
+.marca__enlace:hover .marca__editorial,
+.marca__enlace:focus-visible .marca__editorial {
+  text-shadow: 0 0 14px rgba(203, 166, 255, 0.85);
+}
+
+.marca__enlace:hover .marca__estrella,
+.marca__enlace:focus-visible .marca__estrella {
+  opacity: 1;
+  text-shadow: 0 0 12px rgba(232, 196, 122, 0.7);
+  transform: rotate(18deg) scale(1.25);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marca__estrella {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .marca__enlace:hover .marca__codex,
+  .marca__enlace:focus-visible .marca__codex {
+    animation: marca-titilar 3.5s ease-in-out infinite;
+  }
+
+  .marca__enlace:hover .marca__estrella,
+  .marca__enlace:focus-visible .marca__estrella {
+    animation: marca-titilar 1.8s ease-in-out infinite;
+  }
+
+  .marca__enlace:hover .marca__estrella--segunda,
+  .marca__enlace:focus-visible .marca__estrella--segunda {
+    animation-delay: 0.5s;
+  }
+
+  .marca__enlace:hover .marca__estrella--tercera,
+  .marca__enlace:focus-visible .marca__estrella--tercera {
+    animation-delay: 1s;
+  }
+}
+
+@keyframes marca-titilar {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Alto contraste de Windows: sin degradé ni sombras, el texto usa el color del sistema. */
+@media (forced-colors: active) {
+  .marca__codex {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: CanvasText;
+    filter: none;
+  }
+
+  .marca__editorial,
+  .marca__estrella,
+  .marca__ornamento span {
+    text-shadow: none;
+  }
+
+  .marca__estrella,
+  .marca__ornamento {
+    color: CanvasText;
+  }
+
+  .marca__ornamento::before,
+  .marca__ornamento::after {
+    background: CanvasText;
+  }
+}
+
+/* ==========================================================================
+   6. Layout base (mobile-first): aplicación, sidebar, barra y contenido
+   ========================================================================== */
+.aplicacion {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--espacio-3);
+  width: calc(100% - 2 * var(--espacio-3));
+  max-width: 80rem;
+  margin: var(--espacio-3) auto var(--espacio-5);
+}
+
+.principal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  min-width: 0;
+}
+
+/* Sidebar: sin JS es un bloque de enlaces visible en cualquier ancho (D3). */
+.sidebar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  min-width: 0;
+  padding: var(--espacio-3);
+  background: var(--degrade-sidebar);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-m);
+  box-shadow: var(--sombra-brillo);
+}
+
+.sidebar__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+}
+
+.sidebar__emblema {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: var(--color-accent);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sidebar__colapsar,
+.sidebar__cerrar,
+.barra__hamburguesa {
+  display: none;
+}
+
+.sidebar__velo {
+  display: none;
+}
+
+/* Navegación */
+.navegacion__lista {
+  display: grid;
+  gap: var(--espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navegacion__item {
+  min-width: 0;
+}
+
+.navegacion__enlace {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  min-height: 2.75rem;
+  padding: var(--espacio-2) var(--espacio-3);
+  border: 1px solid transparent;
+  border-left: 4px solid transparent;
+  border-radius: var(--radio-s);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.navegacion__enlace:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-acento-rosa);
+}
+
+.navegacion__icono {
+  flex: none;
+  width: 1.375rem;
+  height: 1.375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.navegacion__tooltip {
+  display: none;
+}
+
+/* Vista activa (aria-current="page"): fondo + borde izquierdo grueso + peso, no solo color. */
+.navegacion__enlace[aria-current="page"] {
+  background: var(--color-surface-2);
+  border-color: var(--color-acento-rosa);
+  border-left-width: 6px;
+  font-weight: bold;
+}
+
+/* Se conserva de C-01: subrayado grueso en la página actual. */
+.navegacion__enlace[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 4px;
+}
+
+/* Barra superior (solo con JS): hamburguesa a la izquierda, tema a la derecha. */
+.barra {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+html:not(.js) .barra {
+  display: none;
+}
+
+main {
+  min-width: 0;
+  padding: var(--espacio-4);
+  background: var(--degrade-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-brillo);
+}
+
+/* Con JS en celular (< 1024 px): la sidebar es un panel fuera de pantalla (D8).
+   visibility: hidden la saca del orden de Tab mientras está cerrada. */
+html.js .sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  width: min(18rem, 85vw);
+  overflow-y: auto;
+  border-radius: 0 var(--radio-m) var(--radio-m) 0;
+  transform: translateX(-100%);
+  visibility: hidden;
+}
+
+html.js .aplicacion--menu-abierto .sidebar {
+  transform: none;
+  visibility: visible;
+}
+
+html.js .aplicacion--menu-abierto .sidebar__velo {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: block;
+  background: rgba(8, 13, 23, 0.7);
+}
+
+html.js .sidebar__cerrar,
+html.js .barra__hamburguesa {
+  display: inline-flex;
+}
+
+/* ==========================================================================
+   7. Botones de la barra y de la sidebar (hamburguesa, cerrar, colapsar, tema)
+   ========================================================================== */
+.barra__hamburguesa,
+.sidebar__cerrar,
+.sidebar__colapsar,
+.tema-alternar {
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: var(--espacio-2);
+  border: 2px solid var(--color-borde-campo);
+  border-radius: var(--radio-m);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.barra__hamburguesa:hover,
+.sidebar__cerrar:hover,
+.sidebar__colapsar:hover,
+.tema-alternar:hover {
+  border-color: var(--color-acento-rosa);
+}
+
+.boton__icono {
+  width: 1.375rem;
+  height: 1.375rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Botón de tema: solo con JS (html.js, D3). */
+.tema-alternar {
+  display: none;
+  margin-left: auto;
+}
+
+html.js .tema-alternar {
+  display: inline-flex;
+}
+
+.tema-alternar__icono {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* Estado marcado (tema claro activo): borde más grueso además del color. */
+.tema-alternar[aria-pressed="true"] {
+  border-width: 4px;
+  border-color: var(--color-accent);
+}
+
+/* ==========================================================================
+   8. Componentes
+   ========================================================================== */
+
+/* Botón (primario / secundario) */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: var(--espacio-2) var(--espacio-5);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radio-m);
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.boton--primario {
+  background: var(--color-accent);
+  color: var(--color-sobre-accent);
+}
+
+.boton--secundario {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-borde-campo);
+}
+
+.boton:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Aviso de maqueta */
+.aviso {
+  margin-bottom: var(--espacio-4);
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 1px dashed var(--color-borde-campo);
+  border-radius: var(--radio-m);
+  background: var(--color-surface-2);
+  color: var(--color-text-suave);
+}
+
+.aviso--maqueta::before {
+  content: "Aviso: ";
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Mensajes: siempre con texto; borde grueso e ícono además del color */
+.mensaje {
+  margin: var(--espacio-4) 0;
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 1px solid var(--color-linea);
+  border-left-width: 8px;
+  border-radius: var(--radio-m);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.mensaje p + p {
+  margin-top: var(--espacio-2);
+}
+
+.mensaje--error {
+  border-color: var(--color-error);
+  border-style: solid;
+}
+
+.mensaje--error::before {
+  content: "\26A0";
+  content: "\26A0" / "";
+  margin-right: var(--espacio-2);
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.mensaje--exito {
+  border-color: var(--color-exito);
+  border-style: double;
+  border-left-width: 8px;
+}
+
+.mensaje--exito::before {
+  content: "\2714";
+  content: "\2714" / "";
+  margin-right: var(--espacio-2);
+  color: var(--color-exito);
+  font-weight: 700;
+}
+
+.mensaje--vacio {
+  border-style: dashed;
+  border-color: var(--color-borde-campo);
+  color: var(--color-text-suave);
+}
+
+/* Formularios (una columna) */
+.formulario {
+  display: grid;
+  gap: var(--espacio-4);
+  max-width: 36rem;
+  margin-bottom: var(--espacio-5);
+}
+
+.formulario__campo {
+  display: grid;
+  gap: var(--espacio-1);
+}
+
+.formulario__etiqueta,
+.formulario__leyenda {
+  font-weight: 700;
+}
+
+.formulario__control {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--espacio-2) var(--espacio-3);
+  border: 2px solid var(--color-borde-campo);
+  border-radius: var(--radio-s);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.formulario__control:hover {
+  border-color: var(--color-acento-rosa);
+}
+
+.formulario__grupo {
+  margin: 0;
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 2px solid var(--color-borde-campo);
+  border-radius: var(--radio-s);
+  min-width: 0;
+}
+
+.formulario__opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  min-height: 2.75rem;
+}
+
+.formulario__opcion input {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  accent-color: var(--color-accent);
+}
+
+.formulario__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-3);
+}
+
+/* Tablas: el contenedor se desplaza, la página no */
+.tabla-contenedor {
+  /* Referencia de los .solo-lectores (position: absolute) de la tabla: sin esto toman la página y generan scroll horizontal. */
+  position: relative;
+  max-width: 100%;
+  margin-bottom: var(--espacio-4);
+  overflow-x: auto;
+  background: var(--degrade-tabla);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-m);
+  box-shadow: var(--sombra-brillo-suave);
+  /* Contenedor de consulta: 100cqi = ancho visible, para que el título no se corte. */
+  container-type: inline-size;
+}
+
+/* Región con scroll enfocable por teclado (tabindex="0"): foco siempre visible. */
+.tabla-contenedor:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 2px;
+}
+
+.tabla {
+  width: 100%;
+  min-width: 34rem;
+  border-collapse: collapse;
+}
+
+/* Título siempre completo: tan ancho como el área visible (se parte en líneas si hace
+   falta) y fijo a la izquierda mientras la tabla se desplaza. Las celdas siguen sin partirse. */
+.tabla__titulo {
+  position: sticky;
+  left: 0;
+  box-sizing: border-box;
+  max-width: 100cqi;
+  padding: var(--espacio-3) var(--espacio-4);
+  text-align: left;
+  font-weight: 700;
+  white-space: normal;
+}
+
+/* Id de venta dentro de un título: nunca se parte en el guion ("V-" / "0001"). */
+.tabla__id {
+  white-space: nowrap;
+}
+
+/* Campo de cantidad editable dentro de un renglón de venta (el foco visible lo hereda de los controles). */
+.tabla__cantidad {
+  width: 5rem;
+  min-width: 4rem;
+}
+
+.tabla th,
+.tabla td {
+  padding: var(--espacio-3) var(--espacio-4);
+  border-top: 1px solid var(--color-linea);
+  text-align: left;
+  vertical-align: top;
+  /* Sin cortes ("V-0001", fechas, importes): si no entra, la tabla se desplaza en su contenedor. */
+  white-space: nowrap;
+}
+
+.tabla th {
+  background: var(--color-surface-2);
+}
+
+.resumen-venta {
+  margin-bottom: var(--espacio-4);
+  font-size: 1.125rem;
+}
+
+.resumen-venta__total {
+  color: var(--color-accent);
+}
+
+.detalle-venta {
+  margin-top: var(--espacio-5);
+}
+
+.detalle-venta__titulo {
+  margin-bottom: var(--espacio-3);
+  font-size: 1.25rem;
+}
+
+.detalle-venta__total {
+  font-size: 1.125rem;
+}
+
+/* Tarjeta de libro */
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  min-width: 0;
+  padding: var(--espacio-3);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-m);
+  background: var(--degrade-tarjeta);
+  box-shadow: var(--sombra-brillo-suave);
+}
+
+.tarjeta__titulo {
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+
+.tarjeta__datos {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--espacio-1) var(--espacio-3);
+  color: var(--color-text-suave);
+  font-size: 0.9375rem;
+}
+
+.tarjeta__datos dt {
+  font-weight: 700;
+}
+
+.tarjeta__precio {
+  margin-top: auto;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+/* Portada ilustrada: caja 2:3 que reserva el alto y contiene la imagen o, como
+   respaldo, la tapa CSS (DD-16). */
+.tarjeta__portada {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border-radius: var(--radio-s);
+}
+
+.tarjeta__portada-imagen {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tarjeta__portada .tapa {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Tapas generadas con CSS (sin imágenes). Texto sobre degradés oscuros. */
+.tapa {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 11rem;
+  padding: var(--espacio-4);
+  border-radius: var(--radio-s);
+  border-left: 8px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.tarjeta__tapa-titulo {
+  font-family: var(--fuente-marca);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.tarjeta__tapa-autor {
+  font-size: 0.875rem;
+}
+
+.tapa--degrade-1 {
+  background: linear-gradient(150deg, #3b1d8f, #1c3f9e);
+}
+
+.tapa--degrade-2 {
+  background: linear-gradient(150deg, #0b4f6c, #1a2a6c);
+}
+
+.tapa--degrade-3 {
+  background: linear-gradient(150deg, #7a2048, #3b1d8f);
+}
+
+.tapa--degrade-4 {
+  background: linear-gradient(150deg, #14532d, #0b4f6c);
+}
+
+.tapa--degrade-5 {
+  background: linear-gradient(150deg, #7c3a0a, #6b1d5c);
+}
+
+.tapa--degrade-6 {
+  background: linear-gradient(150deg, #1e293b, #5b21b6);
+}
+
+/* ==========================================================================
+   9. Vistas
+   ========================================================================== */
+/* Con JS hay una sola vista visible (las demás llevan hidden), por eso NO se
+   separa con borde ni margen: `.vista + .vista` también coincidiría con la vista
+   visible porque su hermano anterior oculto sigue siendo hermano en el DOM.
+   Solo sin JS (todas apiladas) se separan unas de otras. */
+html:not(.js) .vista + .vista {
+  margin-top: var(--espacio-6);
+  padding-top: var(--espacio-5);
+  border-top: 1px solid var(--color-linea);
+}
+
+.vista__titulo {
+  margin-bottom: var(--espacio-4);
+  font-size: 1.625rem;
+  line-height: 1.25;
+}
+
+.vista__lista {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--espacio-4);
+}
+
+/* ==========================================================================
+   10. Media queries (mobile-first)
+   ========================================================================== */
+@media (min-width: 640px) {
+  .aplicacion {
+    width: calc(100% - 2 * var(--espacio-5));
+  }
+
+  main {
+    padding: var(--espacio-5);
+  }
+
+  .vista__lista {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vista__titulo {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Escritorio: sidebar fija en su columna; hamburguesa y cerrar no se usan. */
+  .aplicacion {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    align-items: start;
+  }
+
+  html.js .sidebar {
+    position: sticky;
+    top: var(--espacio-3);
+    bottom: auto;
+    z-index: auto;
+    width: auto;
+    overflow-y: visible;
+    border-radius: var(--radio-m);
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+
+  html.js .sidebar__cerrar,
+  html.js .barra__hamburguesa,
+  html.js .aplicacion--menu-abierto .sidebar__velo {
+    display: none;
+  }
+
+  html.js .sidebar__colapsar {
+    display: inline-flex;
+    align-self: flex-end;
+  }
+
+  .sidebar__colapsar .boton__icono {
+    transform: rotate(180deg);
+  }
+
+  /* Colapsada: solo íconos; el texto sigue disponible para lectores de pantalla
+     (equivale a .solo-lectores) y el nombre aparece como tooltip. */
+  html.js .aplicacion--sidebar-colapsada {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  html.js .aplicacion--sidebar-colapsada .sidebar__colapsar .boton__icono {
+    transform: none;
+  }
+
+  html.js .aplicacion--sidebar-colapsada .sidebar__colapsar {
+    align-self: center;
+  }
+
+  html.js .aplicacion--sidebar-colapsada .sidebar__cabecera {
+    justify-content: center;
+  }
+
+  html.js .aplicacion--sidebar-colapsada .navegacion__enlace {
+    justify-content: center;
+    padding-inline: var(--espacio-2);
+  }
+
+  html.js .aplicacion--sidebar-colapsada .navegacion__texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  html.js .aplicacion--sidebar-colapsada .navegacion__enlace:hover .navegacion__tooltip,
+  html.js .aplicacion--sidebar-colapsada .navegacion__enlace:focus-visible .navegacion__tooltip {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + var(--espacio-2));
+    z-index: 20;
+    display: block;
+    padding: var(--espacio-1) var(--espacio-3);
+    border: 1px solid var(--color-acento-rosa);
+    border-radius: var(--radio-s);
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    font-size: 0.9375rem;
+    font-weight: 400;
+    text-decoration: none;
+    white-space: nowrap;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  .vista__lista {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .vista__lista {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   11. Movimiento (fondo galáctico; la foto de html::before es estática) y movimiento reducido: sin animaciones ni transiciones automáticas
+   ========================================================================== */
+/* Movimiento lento del fondo galáctico: SOLO con preferencia "sin restricción" y
+   animando únicamente transform y opacity. Con reduce el fondo queda quieto. */
+@media (prefers-reduced-motion: no-preference) {
+  body::before {
+    animation: galaxia-nebulosa 70s ease-in-out infinite alternate;
+  }
+
+  body::after {
+    animation:
+      galaxia-estrellas 400s linear infinite,
+      galaxia-brillo 11s ease-in-out infinite alternate;
+  }
+
+}
+
+@keyframes galaxia-nebulosa {
+  from {
+    opacity: 0.6;
+    transform: translate3d(0, 0, 0) scale(1.04);
+  }
+  to {
+    opacity: 0.7;
+    transform: translate3d(-2%, 1.5%, 0) scale(1.14);
+  }
+}
+
+@keyframes galaxia-estrellas {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(600px, 600px, 0);
+  }
+}
+
+@keyframes galaxia-brillo {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Alto contraste de Windows: sin fondo galáctico ni degradés; superficies del sistema. */
+@media (forced-colors: active) {
+  html::before,
+  body::before,
+  body::after {
+    display: none;
+  }
+
+  .marca,
+  .sidebar,
+  main,
+  .tarjeta,
+  .tabla-contenedor {
+    background: Canvas;
+    box-shadow: none;
+  }
+
+  .marca::before {
+    display: none;
+  }
+
+  .marca,
+  .sidebar,
+  main,
+  .tarjeta,
+  .tabla-contenedor,
+  .mensaje,
+  .aviso {
+    border-color: CanvasText;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   12. Pasada visual: marco azul noche y biblioteca morada conservada.
+   El banner mantiene un fondo de respaldo si la imagen local no está presente.
+   ========================================================================== */
+:root {
+  --color-surface: #0e1623;
+  --color-surface-2: #182133;
+  --color-borde: #8675a7;
+  --color-linea: #8675a7;
+  --color-borde-campo: #9a8cc0;
+  --color-text: #f2f4fc;
+  --color-text-suave: #c3bfdc;
+  --color-accent: #b6a6ff;
+  --color-sobre-accent: #ffffff;
+  --degrade-sidebar: linear-gradient(180deg, #101824, #0d1420);
+  --degrade-tarjeta: linear-gradient(145deg, #182133, #0e1623);
+  --degrade-tabla: linear-gradient(145deg, #182133, #0e1623);
+  --degrade-boton: linear-gradient(110deg, #5934d8, #07689b);
+  --degrade-boton-hover: linear-gradient(110deg, #492bb7, #075680);
+  --color-borde-boton: #b6a6ff;
+  --color-banner-texto: #f2f4fc;
+  --color-banner-suave: #d7d1eb;
+  --color-banner-borde: #b6a6ff;
+  --color-banner-limite: #343c5e;
+  --sombra-brillo-suave: 0 6px 20px #00000030;
+}
+
+:root[data-tema="claro"] {
+  --color-surface: #ffffff;
+  --color-surface-2: #f5effc;
+  --color-borde: #80708f;
+  --color-linea: #80708f;
+  --color-borde-campo: #66598c;
+  --color-text: #1c1530;
+  --color-text-suave: #54486f;
+  --color-accent: #5c37bd;
+  --degrade-sidebar: linear-gradient(180deg, #ffffff, #f2e9fb);
+  --degrade-tarjeta: linear-gradient(145deg, #ffffff, #f6e3f0);
+  --degrade-tabla: linear-gradient(145deg, #ffffff, #f5e3f0);
+  --color-borde-boton: #5934d8;
+  --sombra-brillo-suave: 0 6px 20px #6e3caa18;
+}
+
+.marca {
+  --marca-degrade: linear-gradient(100deg, #ffffff 0%, #e4d0ff 24%, #bc92f8 48%, #9a8cff 72%, #78a2ff 100%);
+  padding-block: 1rem; /* 80 % de 1.25rem */
+  border-bottom: 0;
+  box-shadow: none;
+}
+.marca__libro {
+  width: 2.2rem; /* 80 % de 2.75rem */
+  height: 2.2rem;
+  fill: none;
+  stroke: #d6baff;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.marca__editorial { font-size: .75rem; /* 80 % de .9375rem */ letter-spacing: .3em; text-transform: uppercase; }
+.marca__codex { font-size: clamp(1.8rem, 4.8vw, 3.8rem); /* 80 % de clamp(2.25rem, 6vw, 4.75rem) */ }
+.marca__lema { font-family: Georgia, serif; font-size: .8rem; /* 80 % de 1rem */ font-style: italic; color: #e4dced; }
+.marca__estrella { opacity: 1; }
+/* El skip-link se dibuja sobre el fondo de la página (oscuro en ambos temas): foco amarillo propio. */
+.salto:focus-visible { outline-color: var(--color-foco-marca); }
+.sidebar { padding: 1.25rem; gap: 1.5rem; box-shadow: 0 0 20px #b6a6ff12; }
+.sidebar__cabecera { justify-content: start; gap: .75rem; }
+.sidebar__emblema { flex: none; }
+.sidebar__marca { min-width: 0; text-decoration: none; color: var(--color-text); }
+.sidebar__editorial { display: block; font-size: .8125rem; font-weight: 700; letter-spacing: .12em; }
+.sidebar__codex { display: block; position: relative; font-family: var(--fuente-marca); font-size: 1.875rem; color: var(--color-accent); }
+.sidebar__estrella { color: var(--color-accent); font-size: .875rem; position: absolute; right: -.4rem; top: -.15rem; }
+.sidebar__rotulo { color: var(--color-text-suave); letter-spacing: .12em; font-size: .8125rem; margin-top: .75rem; }
+.sidebar__cerrar { margin-left: auto; }
+.navegacion__lista { gap: .5rem; }
+.navegacion__enlace { min-height: 3.25rem; border-radius: .65rem; color: var(--color-text-suave); }
+.navegacion__enlace[aria-current="page"] {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+  background: var(--color-surface-2);
+  text-decoration: none;
+  font-weight: 700;
+}
+.navegacion__enlace:hover { border-color: var(--color-accent); }
+.barra { padding: .875rem 1rem; background: var(--color-surface); border: 1px solid var(--color-borde); border-radius: var(--radio-m); }
+.barra__texto { color: var(--color-text-suave); font-size: .9375rem; }
+.principal { min-width: 0; }
+main { padding: clamp(1rem, 2.5vw, 2rem); }
+.bienvenida { display: grid; gap: 1rem; margin-bottom: 2rem; }
+.bienvenida__banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  min-width: 0;
+  min-height: 16rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--color-banner-borde);
+  border-radius: var(--radio-l);
+  background-color: #131a31;
+  /* El velo se abre hacia la derecha para mostrar la estrella.
+     La superficie local .bienvenida__contenido protege el contraste del texto. */
+  background-image: linear-gradient(90deg, rgba(14, 18, 39, .98) 0%, rgba(16, 24, 63, .92) 42%, rgba(16, 24, 63, .2) 75%, transparent 100%), url("../assets/img/banner-biblioteca.jpg");
+  background-size: cover;
+  background-position: center 45%;
+  color: var(--color-banner-texto);
+}
+.bienvenida__titulo { max-width: 20ch; font-family: var(--fuente-marca); font-size: clamp(1.5rem, 2.5vw, 2.25rem); font-weight: 700; line-height: 1.4; }
+.bienvenida__texto { max-width: 36ch; color: var(--color-banner-suave); }
+.bienvenida__resumen { display: flex; flex-direction: column; justify-content: center; gap: .75rem; padding: 1.5rem; border: 1px solid var(--color-borde); border-radius: var(--radio-l); background: var(--color-surface); }
+.bienvenida__etiqueta { font-size: 1rem; font-weight: 700; }
+.bienvenida__cantidad { font-size: 3.5rem; font-weight: 700; line-height: 1.2; color: var(--color-accent); }
+.bienvenida__detalle { color: var(--color-text-suave); }
+.bienvenida__linea { height: .375rem; margin-top: 1rem; border-radius: 1rem; background: var(--degrade-boton); }
+.formulario { min-width: 0; padding: 1.25rem; border: 1px solid var(--color-borde); border-radius: var(--radio-l); background: var(--degrade-tarjeta); box-shadow: var(--sombra-brillo-suave); }
+.formulario__campo { min-width: 0; }
+.formulario__control { border-radius: .65rem; }
+.formulario__control::placeholder { color: var(--color-text-suave); opacity: 1; }
+.formulario--busqueda { max-width: none; padding: 0; border: 0; box-shadow: none; background: none; }
+.formulario__buscador { position: relative; min-width: 0; }
+.formulario__buscador .formulario__control { padding-left: 3rem; border-radius: 2rem; min-height: 3.25rem; background: var(--color-surface); }
+.formulario__lupa { position: absolute; left: 1rem; top: 50%; width: 1.25rem; height: 1.25rem; transform: translateY(-50%); pointer-events: none; fill: none; stroke: var(--color-text-suave); stroke-width: 1.7; }
+.boton--primario { background: var(--degrade-boton); color: var(--color-sobre-accent); border-color: var(--color-borde-boton); }
+.boton--primario:hover { background: var(--degrade-boton-hover); }
+.boton--primario:focus-visible { outline-color: var(--color-foco); }
+.tarjeta { padding: 1rem; border-radius: var(--radio-l); }
+.tarjeta:hover, .formulario:hover, .tabla-contenedor:hover { box-shadow: 0 0 16px #b6a6ff22, var(--sombra-brillo-suave); }
+.tapa { min-height: 15rem; }
+/* Sin JavaScript el menú sigue visible; solo se ocultan sus controles. */
+@media (min-width: 768px) {
+  .bienvenida { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+  .formulario--busqueda { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  .formulario--busqueda .boton { min-height: 3.25rem; }
+}
+@media (min-width: 1024px) {
+  .aplicacion { align-items: stretch; }
+  html.js .sidebar { top: .75rem; align-self: start; min-height: 34rem; }
+  html.js .sidebar__colapsar { position: absolute; top: 1.5rem; right: -1.125rem; min-width: 2.25rem; min-height: 2.25rem; border-radius: 50%; z-index: 2; }
+  html.js .aplicacion--sidebar-colapsada .sidebar { padding: .5rem; }
+  html.js .aplicacion--sidebar-colapsada .sidebar__marca,
+  html.js .aplicacion--sidebar-colapsada .sidebar__rotulo { display: none; }
+}
+@media (max-width: 400px) {
+  .barra { gap: .5rem; padding: .75rem; }
+  .barra__texto { font-size: .8125rem; }
+  .formulario { padding: .875rem; }
+  .formulario--busqueda { padding: 0; }
+  .formulario__acciones .boton { width: 100%; padding-inline: .75rem; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js .sidebar { transition: transform .25s ease; }
+  .tarjeta, .formulario, .tabla-contenedor { transition: transform .2s ease; }
+  .tarjeta:hover, .formulario:hover, .tabla-contenedor:hover { transform: translateY(-2px); }
+}
+@media (forced-colors: active) {
+  .bienvenida__banner, .bienvenida__resumen, .formulario, .barra, .boton--primario { background: Canvas; color: CanvasText; border-color: CanvasText; }
+  .bienvenida__texto, .bienvenida__detalle, .bienvenida__cantidad, .sidebar__codex, .marca__lema { color: CanvasText; }
+}
+
+/* Retoques de detalle: controles finos, formularios y texto protegido del banner. */
+/* Truco intencional: "Inicio", el logo y el menú llevan a #catalogo. Con un margen de
+   scroll enorme (mayor que el alto de la marca + barra, y de la sidebar sin JS) el
+   navegador no puede alinear el borde superior de la vista con el de la ventana y
+   la deja en el tope de la página: se ve la marca y la barra, no solo el contenido.
+   Solo afecta a Catálogo (#catalogo por salto de fragmento; #titulo-catalogo por el
+   scroll del foco del h2). Las demás vistas conservan el scroll normal. */
+#catalogo, #titulo-catalogo { scroll-margin-top: 100rem; }
+.tema-alternar { min-width: 2.5rem; min-height: 2.5rem; padding: .5rem; border-width: 1px; background: var(--color-surface); }
+.tema-alternar[aria-pressed="true"] { border-width: 1px; }
+.tema-alternar__icono { width: 1.375rem; height: 1.375rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.tema-alternar__icono--luna { display: none; }
+:root[data-tema="claro"] .tema-alternar__icono--sol { display: none; }
+:root[data-tema="claro"] .tema-alternar__icono--luna { display: block; }
+.barra__inicio { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 2.5rem; padding: .4rem .6rem; border: 1px solid var(--color-borde-campo); border-radius: .5rem; font-size: .875rem; color: var(--color-text-suave); text-decoration: none; }
+.barra__inicio:hover { color: var(--color-accent); background: var(--color-surface-2); }
+.tema-alternar { margin-left: auto; }
+.bienvenida__resumen { position: relative; }
+.bienvenida__destello { position: absolute; right: 1.25rem; top: 1.25rem; width: 1.375rem; height: 1.375rem; fill: none; stroke: var(--color-accent); stroke-width: 1.6; stroke-linejoin: round; }
+.bienvenida__etiqueta { padding-right: 2rem; }
+.bienvenida__contenido { display: grid; gap: 1rem; max-width: 35ch; padding: .875rem; margin: -.875rem; border-radius: .5rem; background: rgba(14, 18, 39, .94); }
+/* El velo local limita el fondo del texto incluso si la imagen contiene blanco. */
+html:not(.js) .barra { display: flex; }
+.formulario--busqueda .formulario__control { min-height: 2.75rem; border-width: 1px; }
+.formulario--busqueda .boton--buscar { min-height: 2.75rem; padding: .5rem 1.25rem; border-width: 1px; gap: .5rem; border-radius: 2rem; }
+.formulario--registro { max-width: none; padding: clamp(1rem, 2.5vw, 2rem); gap: 1.25rem; }
+.formulario__cabecera { display: grid; gap: .4rem; margin-bottom: .25rem; }
+.formulario__titulo { font-size: 1.25rem; }
+.formulario__ayuda { color: var(--color-text-suave); max-width: 65ch; font-size: .9375rem; }
+.formulario--registro .formulario__control { border-width: 1px; background: var(--color-surface); min-height: 2.875rem; }
+.formulario--registro .formulario__grupo { display: flex; flex-wrap: wrap; gap: .625rem; padding: .875rem; border-width: 1px; border-radius: .75rem; }
+.formulario--registro .formulario__opcion { position: relative; min-width: 0; min-height: 2.75rem; }
+.formulario--registro .formulario__opcion input { position: absolute; width: 1px; height: 1px; margin: 0; clip-path: inset(50%); overflow: hidden; }
+.formulario--registro .formulario__opcion label { display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: .5rem .875rem; border: 1px solid var(--color-borde-campo); border-radius: 2rem; color: var(--color-text-suave); background: var(--color-surface); cursor: pointer; }
+.formulario--registro .formulario__opcion label::before { content: ""; width: .875rem; height: .875rem; flex: none; border: 1px solid currentColor; border-radius: .2rem; }
+.formulario--registro .formulario__opcion input:checked + label { color: var(--color-accent); background: var(--color-surface-2); border-color: var(--color-accent); font-weight: 700; }
+.formulario--registro .formulario__opcion input:checked + label::before { content: "✓"; display: grid; place-items: center; border: 0; font-weight: 700; line-height: 1; }
+.formulario--registro .formulario__opcion input:focus-visible + label { outline: 3px solid var(--color-foco); outline-offset: 3px; }
+.tabla-contenedor { padding: .5rem; border-radius: var(--radio-l); }
+.tabla__titulo { font-size: 1.125rem; padding: 1rem; }
+.tabla th { color: var(--color-text-suave); font-weight: 600; }
+.tabla th, .tabla td { padding: .875rem 1rem; }
+@media (min-width: 640px) {
+  .formulario--registro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formulario--registro > .formulario__cabecera,
+  .formulario--registro > .formulario__grupo,
+  .formulario--registro > .formulario__acciones,
+  .formulario--registro > .tabla-contenedor,
+  .formulario--registro > .mensaje,
+  .formulario--registro > .resumen-venta { grid-column: 1 / -1; }
+}
+@media (min-width: 1024px) {
+  html.js .sidebar__colapsar { min-width: 2rem; min-height: 2rem; width: 2rem; height: 2rem; padding: .375rem; right: -1rem; border-width: 1px; background: var(--color-surface); /* halo del color de la página: su borde no depende de la foto ni de la galaxia que queda detrás */ box-shadow: 0 0 0 3px var(--color-bg); }
+  .sidebar__colapsar .boton__icono { width: 1rem; height: 1rem; }
+  /* Tema claro (D21): el botón sobresale de la sidebar y queda sobre el fondo de la página, que es
+     oscuro en ambos temas. Recibe localmente los valores del tema oscuro (borde, interior, ícono,
+     rosa de :hover y foco) para que sus pares de contraste sean los ya calculados. */
+  html.js[data-tema="claro"] .sidebar__colapsar {
+    --color-borde-campo: #9a8cc0;
+    --color-surface: #0e1623;
+    --color-text: #f2f4fc;
+    --color-acento-rosa: #c9a6e8;
+    --color-foco: #ffd166;
+  }
+  /* Con foco el anillo amarillo queda rodeado de oscuro por dentro y por fuera (halo de 9 px): no
+     depende de si detrás hay la página oscura o la sidebar clara. */
+  html.js[data-tema="claro"] .sidebar__colapsar:focus-visible { box-shadow: 0 0 0 9px var(--color-bg); }
+  /* Tema claro: el tooltip queda casi todo sobre main (claro) y un tramo sobre la página (oscura);
+     #9a4a94 da >= 3:1 contra ambos (4.76 y 3.64). */
+  html.js[data-tema="claro"] .navegacion__tooltip { --color-acento-rosa: #9a4a94; }
+}
+@media (max-width: 400px) {
+  .barra { flex-wrap: wrap; }
+  .barra__texto { flex: 1; }
+  .barra__inicio { padding-inline: .5rem; }
+  .bienvenida__banner { padding: 1.25rem; }
+  .bienvenida__contenido { padding: .75rem; margin: -.75rem; }
+}
+@media (forced-colors: active) {
+  .bienvenida__contenido { background: Canvas; color: CanvasText; }
+  .formulario__opcion input:checked + label { border-color: Highlight; color: CanvasText; }
+}
