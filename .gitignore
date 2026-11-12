@@ -11,3 +11,8 @@ node_modules/
 
 # IMPORTANTE: no ignorar CLAUDE.md, AGENTS.md ni la carpeta de specs.
 # El profe pide que queden en el repo.
+# Secretos y entornos locales
+.env
+.venv/
+__pycache__/
+*.pyc
