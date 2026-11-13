@@ -15,8 +15,11 @@ Librería web que conecta el frontend del primer parcial (HTML, CSS y JavaScript
 ├── frontend/    # Nginx, Dockerfile, default.conf.template, env.example y carpeta public/
 ├── backend/     # API FastAPI, modelos SQLModel, migraciones Alembic y seed
 ├── docs/        # Consigna del examen global en Markdown y PDF
+├── evidencia/   # Resultados de los casos G-01 a G-07 sobre la URL pública
+├── herramientas/ # Script de carga del catálogo de demostración por API
 ├── openspec/    # Especificaciones y changes del flujo OpenSpec
 ├── CHANGES.md   # Mapa de personas, tabla resumen y fichas de changes (CH-01 a CH-06)
+├── DEPLOY.md    # Registro del despliegue en Easypanel
 └── AGENTS.md    # Reglas de desarrollo, arquitectura y convenciones del equipo
 ```
 
@@ -69,8 +72,12 @@ El script es idempotente (correrlo dos veces no duplica nada) y también acepta 
 - Selectores: los selectores de clientes y autores usan los listados `GET /clientes/` y `GET /autores/` (la consigna pide documentar esta elección).
 - Persistencia: el borrador de la venta vive en memoria y `localStorage` solo guarda el tema y el estado de la barra lateral.
 - Importes: los importes confirmados salen siempre de la respuesta de la API.
+- Stock: como indica la consigna, el stock es un dato del catálogo; registrar una venta no lo descuenta.
+- Paginación: el catálogo pide 8 libros por página (`limit=8` y `offset`), así con los 12 libros de demostración se puede avanzar de página. El historial pide 10 ventas por página.
+- Portadas: no se suben desde la página. Son archivos del frontend en `assets/img/portadas/`, nombrados por ISBN (`{isbn}.webp`); si un libro no tiene archivo, se muestra `portada-fallback.svg`.
+- Caché del navegador: los `<link>` y `<script>` de `index.html` llevan `?v=AAAAMMDD`. Cada vez que cambia un CSS o JS se sube ese número para que los navegadores bajen la versión nueva.
 - Sinopsis: las sinopsis son contenido de presentación del frontend (`js/sinopsis.js`, por ISBN), igual que las portadas; la API no tiene campo de descripción y el backend no se modifica. Si un libro no tiene sinopsis, la sección no se muestra.
-- Animaciones: el detalle se abre como un libro 3D (`css/catalogo.css`, `js/catalogo.js`), el título "Codex" tiene una estela de polvo dorado (`js/titulo-magico.js`) y los destellos son partículas en `<canvas>` (`js/destellos.js`). Todas respetan `prefers-reduced-motion: reduce` (sin giros, sin crecimiento ni destellos).
+- Animaciones: en pantallas de 768 px o más, el detalle se abre como un libro 3D (`css/catalogo.css`, `js/catalogo.js`); en el celular se muestra directamente la tarjeta, porque el libro abierto no entra en la pantalla. Además, el título "Codex" tiene una estela de polvo dorado (`js/titulo-magico.js`) y los destellos son partículas en `<canvas>` (`js/destellos.js`). Todas respetan `prefers-reduced-motion: reduce` (sin giros, sin crecimiento ni destellos).
 
 ## Estado de los changes
 | Change | Nombre | Estado |
@@ -85,7 +92,7 @@ El script es idempotente (correrlo dos veces no duplica nada) y también acepta 
 La evidencia de los casos G-01 a G-07 está en `evidencia/casos-G.md`. Para consultar el alcance de cada change, ver `CHANGES.md`.
 
 ## Cómo se trabaja
-OpenSpec por change, una rama por change y Pull Request a `main`; ver `CHANGES.md` ("Cómo arrancar tu change") y `AGENTS.md`.
+OpenSpec por change, una rama por change y Pull Request a `main`; los ajustes chicos de documentación o estilo posteriores se integraron directo en `main`. Ver `CHANGES.md` ("Cómo arrancar tu change") y `AGENTS.md`.
 
 ## Repositorios de origen
 - Frontend del primer parcial: https://github.com/ALucrecia-Pagano/primer-parcial-libreria-frontend

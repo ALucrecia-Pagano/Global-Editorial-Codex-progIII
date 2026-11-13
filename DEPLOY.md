@@ -102,7 +102,7 @@ Pruebas ejecutadas directamente sobre el dominio público HTTPS:
    - Cuerpo: `{"estado":"lista"}`
 2. **Catálogo y portadas en el navegador:**
    - URL: `https://editorial-codex.a2qkmo.easypanel.host/#catalogo`
-   - Comportamiento: 12 tarjetas de libros renderizadas correctamente con sus portadas asociadas (`/assets/img/portadas/{isbn}.webp`) y portadas de respaldo CSS para los casos sin imagen.
+   - Comportamiento: 12 tarjetas de libros renderizadas correctamente con sus portadas asociadas (`/assets/img/portadas/{isbn}.webp`) y la portada de respaldo `assets/img/portada-fallback.svg` para los libros sin imagen.
    - Contador de catálogo: Muestra 12 libros en total.
 3. **Consulta de detalle de libro por ID:**
    - Petición: `GET https://editorial-codex.a2qkmo.easypanel.host/api/libros/10`
@@ -141,4 +141,4 @@ El flujo de integración continua es manual y controlado desde el panel de Easyp
 | Error en paso `COPY` durante el build en Easypanel | Ruta de compilación (**Build Path**) mal configurada en Source. | Verificar que el Build Path sea `/backend` para la API y `/frontend` para la web. Si se deja `/`, Docker no encuentra los archivos relativos. |
 | Error `502 Bad Gateway` al consultar `/api/*` | Variable `API_UPSTREAM` mal formada o backend apagado. | `API_UPSTREAM` debe ser exactamente `calculadora_libreria-api:8000` (sin `http://` ni barra final `/`). Revisar que el servicio `libreria-api` esté en estado Running. |
 | Error al conectar a PostgreSQL (`OperationalError` / asyncpg) | Caracteres especiales sin escapar en la contraseña de `DATABASE_URL`. | Si la contraseña del rol contiene caracteres como `@`, `:`, `/` o `#`, deben URL-encodearse o cambiarse por una clave alfanumérica mediante `ALTER ROLE`. |
-| Cambios en la interfaz no se reflejan tras redesplegar | Caché estática del navegador para archivos JS o CSS. | Forzar recarga completa con `Ctrl+Shift+R` (o `Ctrl+F5`) en el navegador. Nginx y el navegador pueden retener versiones cacheadas si solo se pulsa F5. |
+| Cambios en la interfaz no se reflejan tras redesplegar | El navegador sigue usando una copia guardada de los JS o CSS. | Al cambiar un CSS o JS, subir el `?v=AAAAMMDD` de todos los `<link>` y `<script>` de `index.html` antes de implementar. Para ver el cambio al instante: `Ctrl+Shift+R` o una ventana de incógnito. |

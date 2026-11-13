@@ -12,9 +12,12 @@ Evaluación Global de Programación III (UTN). Conecta el frontend nativo del 1�
 ├── docs/             # Consigna en PDF y Markdown
 ├── frontend/         # Dockerfile, Nginx proxy y carpeta public/
 │   └── public/       # index.html, css/ (styles.css + vistas), js/ (app.js, api.js, vistas)
+├── evidencia/        # Resultados de los casos G-01 a G-07 sobre la URL pública
+├── herramientas/     # Script de carga del catálogo de demostración por API
 ├── openspec/         # Especificaciones y changes OpenSpec
 ├── CHANGES.md        # Mapa, fichas, personas y ramas (CH-01 a CH-06)
-└── DEPLOY.md         # Registro de despliegue en VPS (Easypanel)
+├── DEPLOY.md         # Registro de despliegue en VPS (Easypanel)
+└── README.md         # Datos del grupo, ejecución local y decisiones
 ```
 
 ## Flujo OpenSpec (/opsx:*) y Git
@@ -24,12 +27,12 @@ Para cada change de `CHANGES.md`:
 3. Proponer: `/opsx:propose CH-XX` (generar proposal, design y tasks enfocados).
 4. Implementar: `/opsx:apply CH-XX` (estrictamente los archivos autorizados en la ficha).
 5. Archivar: `/opsx:archive CH-XX` (sync delta specs y archivar).
-6. Pull Request a `main`: nadie commitea directo en `main`.
+6. Pull Request a `main`. Los ajustes chicos de documentación o estilo posteriores pueden ir directo a `main`.
 
 ## Reglas obligatorias
 1. **NUNCA commitees:** los commits los hace la usuaria, con conventional commits en español y el change entre paréntesis, p. ej. `feat(CH-03): catalogo y detalle`.
 2. **NUNCA credenciales reales:** solo datos ficticios; secretos en `.env` (ignorado) o entorno de Easypanel.
-3. **Frontend nativo:** JavaScript nativo sin frameworks, sin build y sin CDN (recursos 100% locales).
+3. **Frontend nativo:** JavaScript nativo sin frameworks, sin build y sin CDN (recursos 100% locales). Si se cambia un CSS o JS, subir el `?v=` de todos los `<link>` y `<script>` de `index.html`.
 4. **Cliente centralizado y rutas:** todo fetch pasa por `js/api.js` con base `/api`. Las colecciones llevan barra final (ej. `/libros/`, `/ventas/`), pero las rutas con ID van **sin** barra final (ej. `/libros/{id}`, `/ventas/{id}`, `/clientes/{id}`, `/autores/{id}`). Con barra de más, FastAPI responde 307 hacia el host interno y el navegador falla.
 5. **Cero datos de dominio en localStorage:** solo preferencias de UI (tema, sidebar). El borrador de venta vive únicamente en memoria.
 6. **Importes inalterables:** los importes confirmados provienen de la respuesta de la API; nunca se recalculan en el navegador.

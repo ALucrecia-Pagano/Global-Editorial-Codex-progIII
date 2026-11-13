@@ -10,7 +10,7 @@
   - Backend FastAPI (capítulos 1 a 4 aprobados) en `backend/`, conectado a PostgreSQL con SQLAlchemy y SQLModel asincrónicos.
   - Nginx 1.30 Alpine dentro del contenedor del frontend sirve estáticos desde `/` y reenvía `/api/*` al backend (`API_UPSTREAM`). No se requiere CORS ni cookies en producción.
 - **Infraestructura VPS y Local:**
-  - **VPS (Easypanel):** Proyecto existente `calculadora` con base PostgreSQL `db` (host interno `calculadora_db`, base y usuario `libreria`). Actualmente la API corre como contenedor suelto `libreria` en la red `easypanel-calculadora`. Para el Global se crean dos servicios App en dicho proyecto: `backend` (privado) y `frontend` (público con HTTPS y reverse proxy a `calculadora_backend:8000`). Luego se retira el contenedor suelto sin reiniciar la VPS ni tocar el servicio `db`.
+  - **VPS (Easypanel):** Proyecto existente `calculadora` con base PostgreSQL `db` (host interno `calculadora_db`, base y usuario `libreria`). Para el Global se crearon dos servicios App en ese proyecto: `libreria-api` (privado, sin dominio) y `libreria-web` (público con HTTPS y reverse proxy a `calculadora_libreria-api:8000`). El contenedor suelto `libreria` del parcial se retiró sin reiniciar la VPS ni tocar el servicio `db`. Detalle completo en `DEPLOY.md`.
   - **Local:** Backend con Uvicorn en puerto 8000 sobre base local `libreria_global` (datos con `python -m scripts.seed`). Frontend en contenedor Docker mapeado a `127.0.0.1:8080:80` con `API_UPSTREAM=host.docker.internal:8000`.
 
 ---
@@ -41,7 +41,7 @@ El trabajo se reparte entre los 5 integrantes del grupo. Para evitar bloqueos, *
 | **CH-03** | `catalogo-y-detalle` | Hecho | `feat/CH-03-catalogo-y-detalle` | G-01 |
 | **CH-04** | `altas-libros-y-clientes` | Hecho | `feat/CH-04-altas-libros-y-clientes` | G-02, G-03 |
 | **CH-05** | `ventas-e-historial` | Hecho | `feat/CH-05-ventas-e-historial` | G-04, G-05, G-06 |
-| **CH-06** | `verificacion-y-entrega` | Pendiente | `feat/CH-06-verificacion-y-entrega` | G-01 a G-07 |
+| **CH-06** | `verificacion-y-entrega` | Hecho | `feat/CH-06-verificacion-y-entrega` | G-01 a G-07 |
 
 *Integrantes del grupo:* Liendo Mateo, Avila Lucas, García Juan, Pagano Amanda, Valentini Tiziano.  
 *Entrega final:* Sábado 14/11 a la noche.
@@ -58,7 +58,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
    git pull
    git checkout -b feat/CH-NN-nombre-del-change
    ```
-   *Regla estricta:* Nadie commitea directo en `main`. Cada change vive en su rama y entra por Pull Request.
+   *Regla:* cada change vive en su rama y entra por Pull Request. Los ajustes chicos de documentación o estilo posteriores a un change se integraron directo en `main`, siempre con conventional commits.
 2. **Levantar el backend local:**
    - Asegurar PostgreSQL corriendo con base `libreria_global`.
    - Desde la carpeta `backend/`:
@@ -99,7 +99,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 | **CH-03** | `catalogo-y-detalle` | Ej. 1 | Hecho | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css` (ya creado), `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 |
 | **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Hecho | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 |
 | **CH-05** | `ventas-e-historial` | Ej. 3 | Hecho | `feat/CH-05-ventas-e-historial` | `public/js/ventas.js`, `public/css/ventas.css`, `public/index.html` (solo script/link, `#ventas`, `#historial`), `public/js/app.js` (solo borrar) | `renglonesBorrador`, `TEXTO_ERROR_CANTIDAD`, `esCantidadValida`, `buscarLibroPorId`, `renderSelectorVenta`, `renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `calcularTotalBorrador`, `actualizarTotalVenta`, `agregarRenglonBorrador`, `registrarHandlerAgregarDetalle`, `aplicarCantidadRenglon`, `renderRenglonesVenta`, `sincronizarCantidadesBorrador`, `calcularSiguienteIdVenta`, `validarVenta`, `construirVenta`, `registrarHandlerConfirmarVenta`, `numeroDeVenta`, `agregarCeldaTexto`, `renderHistorialVentas`, `escribirTituloConId`, `mostrarDetalleVenta`, y llamadas en DOMContentLoaded (`renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `registrarHandlerAgregarDetalle`, `renderRenglonesVenta`, `registrarHandlerConfirmarVenta`, `renderHistorialVentas`) | G-04, G-05, G-06 |
-| **CH-06** | `verificacion-y-entrega` | Verif. | Pendiente | `feat/CH-06-verificacion-y-entrega` | `README.md`, `DEPLOY.md`, `evidencia/`, `public/js/storage.js`, `public/js/data.js`, `public/js/app.js`, `public/css/styles.css` (opcional) | Limpieza final en `app.js`: funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), `iniciarPersistencia`, `mostrarErrorPersistencia`, validadores `es*GuardadoValido`, y `registrarFormulariosMaqueta` | G-01 a G-07 |
+| **CH-06** | `verificacion-y-entrega` | Verif. | Hecho | `feat/CH-06-verificacion-y-entrega` | `README.md`, `DEPLOY.md`, `evidencia/`, `public/js/storage.js`, `public/js/data.js`, `public/js/app.js`, `public/css/styles.css` (opcional) | Limpieza final en `app.js`: funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), `iniciarPersistencia`, `mostrarErrorPersistencia`, validadores `es*GuardadoValido`, y `registrarFormulariosMaqueta` | G-01 a G-07 |
 
 ---
 
@@ -141,7 +141,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 - **Estado:** Hecho
 - **Requisitos de acceso:** Requiere credenciales de acceso al panel de Easypanel del VPS.
 - **Rama:** `feat/CH-02-primer-despliegue-easypanel`
-- **Objetivo:** Configurar en Easypanel (proyecto `calculadora`) los dos servicios App: `backend` (privado, conectado a `calculadora_db` con base y usuario `libreria`) y `frontend` (público con certificado HTTPS y `API_UPSTREAM=calculadora_backend:8000`). Iniciar `DEPLOY.md` con los detalles de despliegue.
+- **Objetivo:** Configurar en Easypanel (proyecto `calculadora`) los dos servicios App: `libreria-api` (privado, conectado a `calculadora_db` con base y usuario `libreria`) y `libreria-web` (público con certificado HTTPS y `API_UPSTREAM=calculadora_libreria-api:8000`). Iniciar `DEPLOY.md` con los detalles de despliegue.
 - **Archivos que puede tocar (autorizados):**
   - `DEPLOY.md` (creación y registro de pasos).
 - **Archivos que NO puede tocar (prohibidos):** Todo `frontend/`, todo `backend/`.
@@ -399,8 +399,8 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 
 ---
 
-### CH-06 · verificacion-y-entrega (Pendiente)
-- **Estado:** Pendiente
+### CH-06 · verificacion-y-entrega (Hecho)
+- **Estado:** Hecho
 - **Rama:** `feat/CH-06-verificacion-y-entrega`
 - **Datos para README.md:**
   - **Materia:** Programación III — Tecnicatura Universitaria en Programación, UTN FRM

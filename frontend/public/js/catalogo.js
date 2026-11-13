@@ -40,7 +40,9 @@
 
   // Estado local en memoria
   let offset = 0;
-  const LIMIT = 20;
+  // 8 por página: con el catálogo de demostración (12 libros) hay 2 páginas y se puede
+  // probar el avance con limit y offset (caso G-01).
+  const LIMIT = 8;
   let busqueda = '';
   let cargando = false;
   let elementoOrigenModal = null;
@@ -185,7 +187,7 @@
         actualizarPaginacion(libros.length, hayMas);
         if (zonaResultados) {
           const paginaActual = Math.floor(offset / LIMIT) + 1;
-          zonaResultados.textContent = 'Página ' + paginaActual + ' · Se muestran ' + libros.length + ' libros.';
+          zonaResultados.textContent = 'Página ' + paginaActual + ' · Se muestran ' + libros.length + (libros.length === 1 ? ' libro.' : ' libros.');
         }
       }
     } catch (err) {
