@@ -77,12 +77,12 @@ El script es idempotente (correrlo dos veces no duplica nada) y también acepta 
 |---|---|---|
 | CH-01 | `imagen-frontend` | Hecho |
 | CH-02 | `primer-despliegue-easypanel` | Hecho |
-| CH-03 | `catalogo-y-detalle` | Pendiente |
-| CH-04 | `altas-libros-y-clientes` | Pendiente |
+| CH-03 | `catalogo-y-detalle` | Hecho |
+| CH-04 | `altas-libros-y-clientes` | Hecho |
 | CH-05 | `ventas-e-historial` | Hecho |
-| CH-06 | `verificacion-y-entrega` | Pendiente |
+| CH-06 | `verificacion-y-entrega` | Hecho |
 
-Para consultar el alcance y detalle de cada change, ver `CHANGES.md`.
+La evidencia de los casos G-01 a G-07 está en `evidencia/casos-G.md`. Para consultar el alcance de cada change, ver `CHANGES.md`.
 
 ## Cómo se trabaja
 OpenSpec por change, una rama por change y Pull Request a `main`; ver `CHANGES.md` ("Cómo arrancar tu change") y `AGENTS.md`.
