@@ -8,7 +8,7 @@ Librería web que conecta el frontend del primer parcial (HTML, CSS y JavaScript
 - Profesores: Giuliano Espejo y Matías Torres
 - Grupo: Editorial Codex
 - Integrantes: Liendo Mateo, Avila Lucas, García Juan, Pagano Amanda, Valentini Tiziano
-- URL pública: https://calculadora-libreria-web.a2qkmo.easypanel.host/
+- URL pública: https://editorial-codex.a2qkmo.easypanel.host/
 
 ## Estructura del repositorio
 ```text

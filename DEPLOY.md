@@ -10,7 +10,8 @@ Este documento detalla la arquitectura, configuración, puesta en marcha y mante
 - **Proyecto:** `calculadora` (compartido con la aplicación de la calculadora existente, cuyos servicios no se modifican).
 - **Repositorio fuente:** `https://github.com/ALucrecia-Pagano/Global-Editorial-Codex-progIII.git`
 - **Rama productiva:** `main`
-- **URL pública de la aplicación:** [https://calculadora-libreria-web.a2qkmo.easypanel.host/](https://calculadora-libreria-web.a2qkmo.easypanel.host/)
+- **URL pública de la aplicación:** [https://editorial-codex.a2qkmo.easypanel.host/](https://editorial-codex.a2qkmo.easypanel.host/)
+- **Dominio anterior, que sigue activo:** [https://calculadora-libreria-web.a2qkmo.easypanel.host/](https://calculadora-libreria-web.a2qkmo.easypanel.host/). El principal es `editorial-codex`.
 
 ---
 
@@ -70,10 +71,11 @@ Este documento detalla la arquitectura, configuración, puesta en marcha y mante
 - **Nombre interno en red Easypanel:** `calculadora_libreria-web`
 - **Variable de entorno:**
   - `API_UPSTREAM=calculadora_libreria-api:8000`
-- **Configuración de dominio:**
-  - Dominio: `calculadora-libreria-web.a2qkmo.easypanel.host`
-  - Certificado SSL: Administrado automáticamente por Easypanel (Let's Encrypt).
-  - Destino interno: Protocolo `HTTP`, puerto `80`.
+- **Configuración de dominio:** Quedan los dos. El principal es el nuevo; el anterior no se borra para no romper enlaces ya compartidos.
+  - Dominio principal: `editorial-codex.a2qkmo.easypanel.host`
+  - Dominio anterior: `calculadora-libreria-web.a2qkmo.easypanel.host`
+  - Certificado SSL: Administrado automáticamente por Easypanel (Let's Encrypt) en cada dominio.
+  - Destino interno de ambos: Protocolo `HTTP`, puerto `80`, ruta `/`.
 
 ---
 
@@ -84,7 +86,7 @@ Este documento detalla la arquitectura, configuración, puesta en marcha y mante
 2. **Carga del catálogo de demostración:**
    Para poblar los 10 libros requeridos con autorías múltiples, géneros y portadas, se ejecutó el script idempotente provisto en el repositorio contra la API pública:
    ```bash
-   python herramientas/cargar_catalogo.py --base https://calculadora-libreria-web.a2qkmo.easypanel.host/api
+   python herramientas/cargar_catalogo.py --base https://editorial-codex.a2qkmo.easypanel.host/api
    ```
    El script detectó las entidades existentes, dio de alta las faltantes y dejó el catálogo con un total de 12 libros listos para evaluación.
 
@@ -92,21 +94,21 @@ Este documento detalla la arquitectura, configuración, puesta en marcha y mante
 
 ## 5. Verificación del despliegue
 
-Pruebas ejecutadas directamente sobre el dominio público HTTPS:
+Pruebas ejecutadas el 13/11 sobre el dominio anterior. Los dos dominios sirven el mismo `libreria-web`; la URL principal pasa a ser `editorial-codex`.
 
 1. **Salud de la API y conectividad con la base:**
-   - Petición: `GET https://calculadora-libreria-web.a2qkmo.easypanel.host/api/health/ready`
+   - Petición: `GET https://editorial-codex.a2qkmo.easypanel.host/api/health/ready`
    - Respuesta: HTTP `200 OK`
    - Cuerpo: `{"estado":"lista"}`
 2. **Catálogo y portadas en el navegador:**
-   - URL: `https://calculadora-libreria-web.a2qkmo.easypanel.host/#catalogo`
+   - URL: `https://editorial-codex.a2qkmo.easypanel.host/#catalogo`
    - Comportamiento: 12 tarjetas de libros renderizadas correctamente con sus portadas asociadas (`/assets/img/portadas/{isbn}.webp`) y portadas de respaldo CSS para los casos sin imagen.
    - Contador de catálogo: Muestra 12 libros en total.
 3. **Consulta de detalle de libro por ID:**
-   - Petición: `GET https://calculadora-libreria-web.a2qkmo.easypanel.host/api/libros/10`
+   - Petición: `GET https://editorial-codex.a2qkmo.easypanel.host/api/libros/10`
    - Respuesta: HTTP `200 OK` con el libro "Lo que susurra el pozo", sus metadatos y sus dos autorías vinculadas.
 4. **Manejo de recursos inexistentes:**
-   - Petición: `GET https://calculadora-libreria-web.a2qkmo.easypanel.host/api/libros/999999`
+   - Petición: `GET https://editorial-codex.a2qkmo.easypanel.host/api/libros/999999`
    - Respuesta: HTTP `404 Not Found` con mensaje `{"detail":"Libro no encontrado"}`.
 
 ---
