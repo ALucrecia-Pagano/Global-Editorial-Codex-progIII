@@ -119,9 +119,6 @@ function mostrarVista(id, opciones) {
   vistaActual = id;
 
   // Render inicial de listados desde los arrays (C-04).
-  if (id === 'catalogo') {
-    filtrarCatalogo();
-  }
   if (id === 'libros') {
     renderLibros();
   }
@@ -299,45 +296,6 @@ function registrarFormulariosMaqueta() {
 // la reutilice tal cual sobre el array de libros (DD-07).
 // ---------------------------------------------------------------------------
 
-// Texto comparable: en minúsculas y sin tildes ni otros diacríticos (NFD separa la
-// letra de su marca y el rango U+0300–U+036F quita las marcas). Pura; tolera null/undefined.
-// Efecto aceptado: la ñ queda como n ("nino" encuentra "niño").
-function normalizarTexto(texto) {
-  return String(texto == null ? '' : texto)
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase();
-}
-
-// Coincidencia por título: sin distinguir mayúsculas, tildes ni espacios en los bordes
-// de la búsqueda ("orbita" encuentra "Órbita lenta"). Búsqueda vacía o solo espacios -> true.
-// Tolera null/undefined.
-function coincideTitulo(titulo, busqueda) {
-  const texto = normalizarTexto(String(busqueda == null ? '' : busqueda).trim());
-  if (texto === '') {
-    return true;
-  }
-  return normalizarTexto(titulo).includes(texto);
-}
-
-// Texto que anuncia la zona de estado #catalogo-resultados (pura, sin DOM).
-function textoResultadosCatalogo(visibles, total, busquedaVacia) {
-  if (total === 0) {
-    return 'Todavía no hay libros en el catálogo.';
-  }
-  if (busquedaVacia) {
-    return 'Se muestran los ' + total + ' libros.';
-  }
-  if (visibles === 0) {
-    return 'No se encontraron libros que coincidan con la búsqueda.';
-  }
-  if (visibles === 1) {
-    return 'Se muestra 1 de ' + total + ' libros.';
-  }
-  return 'Se muestran ' + visibles + ' de ' + total + ' libros.';
-}
-
-// ---------------------------------------------------------------------------
 // Helpers de datos (C-04): resuelven nombres de editorial, género y autores
 // a partir de los ids estables del array.
 // ---------------------------------------------------------------------------
@@ -376,124 +334,6 @@ function obtenerNombresAutores(ids) {
 }
 
 // ---------------------------------------------------------------------------
-// Portadas ilustradas (change portadas-ilustradas). El mapa acota la derivación
-// de rutas a las imágenes que existen: los libros nuevos (ids `lib-…`) no piden
-// un archivo inexistente y caen a la tapa CSS.
-// ---------------------------------------------------------------------------
-const PORTADAS_IDS_CONOCIDOS = {
-  'li-1': 'assets/img/portadas/li-1.webp',
-  'li-2': 'assets/img/portadas/li-2.webp',
-  'li-3': 'assets/img/portadas/li-3.webp',
-  'li-4': 'assets/img/portadas/li-4.webp',
-  'li-5': 'assets/img/portadas/li-5.webp',
-  'li-6': 'assets/img/portadas/li-6.webp'
-};
-
-// Ruta de la portada de un libro (pura, sin DOM). Orden: campo `portada` con
-// texto no vacío -> ruta del mapa para ids conocidos -> null (tapa CSS).
-function resolverPortada(libro) {
-  if (!libro) {
-    return null;
-  }
-  if (typeof libro.portada === 'string' && libro.portada.trim() !== '') {
-    return libro.portada.trim();
-  }
-  if (Object.prototype.hasOwnProperty.call(PORTADAS_IDS_CONOCIDOS, libro.id)) {
-    return PORTADAS_IDS_CONOCIDOS[libro.id];
-  }
-  return null;
-}
-
-// Renderiza el catálogo desde un array de libros (C-04).
-// Usa createElement para la estructura y textContent para todo el texto (RN-GL-01).
-function renderCatalogo(librosAMostrar) {
-  const lista = document.getElementById('catalogo-lista');
-  if (!lista) {
-    return;
-  }
-  // Vaciar contenedor nodo a nodo (sin innerHTML).
-  while (lista.firstChild) {
-    lista.removeChild(lista.firstChild);
-  }
-
-  librosAMostrar.forEach(function (libro, index) {
-    const articulo = document.createElement('article');
-    articulo.className = 'tarjeta';
-
-    // Portada: caja 2:3 con la imagen ilustrada (si hay) y la tapa CSS de
-    // respaldo (siempre creada; visible solo si falta la imagen o falla).
-    const cajaPortada = document.createElement('div');
-    cajaPortada.className = 'tarjeta__portada';
-
-    const tapa = document.createElement('div');
-    tapa.className = 'tarjeta__tapa tapa tapa--degrade-' + ((index % 6) + 1);
-    tapa.setAttribute('aria-hidden', 'true');
-    const tapaTitulo = document.createElement('span');
-    tapaTitulo.className = 'tarjeta__tapa-titulo';
-    tapaTitulo.textContent = libro.titulo;
-    const tapaAutor = document.createElement('span');
-    tapaAutor.className = 'tarjeta__tapa-autor';
-    tapaAutor.textContent = obtenerNombresAutores(libro.autorIds);
-    tapa.appendChild(tapaTitulo);
-    tapa.appendChild(tapaAutor);
-
-    const rutaPortada = resolverPortada(libro);
-    if (rutaPortada) {
-      const imagen = document.createElement('img');
-      imagen.className = 'tarjeta__portada-imagen';
-      imagen.src = rutaPortada;
-      imagen.alt = 'Portada de «' + libro.titulo + '»';
-      imagen.loading = 'lazy';
-      imagen.decoding = 'async';
-      imagen.width = 600;
-      imagen.height = 900;
-      imagen.addEventListener('error', function () {
-        imagen.hidden = true;
-        tapa.hidden = false;
-      });
-      tapa.hidden = true;
-      cajaPortada.appendChild(tapa);
-      cajaPortada.appendChild(imagen);
-    } else {
-      cajaPortada.appendChild(tapa);
-    }
-    articulo.appendChild(cajaPortada);
-
-    // Título.
-    const tituloEl = document.createElement('h3');
-    tituloEl.className = 'tarjeta__titulo';
-    tituloEl.textContent = libro.titulo;
-    articulo.appendChild(tituloEl);
-
-    // Datos.
-    const dl = document.createElement('dl');
-    dl.className = 'tarjeta__datos';
-
-    function agregarDato(etiqueta, valor) {
-      const dt = document.createElement('dt');
-      dt.textContent = etiqueta;
-      const dd = document.createElement('dd');
-      dd.textContent = valor;
-      dl.appendChild(dt);
-      dl.appendChild(dd);
-    }
-
-    agregarDato('ISBN', libro.isbn);
-    agregarDato('Editorial', obtenerNombreEditorial(libro.editorialId));
-    agregarDato('Género', obtenerTextoGenero(libro));
-    agregarDato('Autores', obtenerNombresAutores(libro.autorIds));
-    articulo.appendChild(dl);
-
-    // Precio formateado en ARS.
-    const precio = document.createElement('p');
-    precio.className = 'tarjeta__precio';
-    precio.textContent = formatearImporteARS(libro.precio);
-    articulo.appendChild(precio);
-
-    lista.appendChild(articulo);
-  });
-}
-
 // Renderiza el listado de Libros desde el array libros (C-04).
 function renderLibros() {
   const tabla = document.getElementById('libros-tabla');
@@ -558,56 +398,6 @@ function renderClientes() {
   }
 }
 
-// Parte DOM: re-renderiza el catálogo desde el array libros aplicando
-// coincideTitulo sobre cada entrada. Crea o quita tarjetas dinámicamente.
-function filtrarCatalogo() {
-  const campo = document.getElementById('catalogo-busqueda');
-  const lista = document.getElementById('catalogo-lista');
-  const sinResultados = document.getElementById('catalogo-sin-resultados');
-  const zonaEstado = document.getElementById('catalogo-resultados');
-  if (!campo || !lista) {
-    return;
-  }
-  const busqueda = campo.value;
-  const librosFiltrados = libros.filter(function (libro) {
-    return coincideTitulo(libro.titulo, busqueda);
-  });
-  renderCatalogo(librosFiltrados);
-
-  const visibles = librosFiltrados.length;
-  const total = libros.length;
-  const vacio = document.getElementById('catalogo-vacio');
-  if (vacio) {
-    vacio.hidden = total > 0;
-  }
-  if (sinResultados) {
-    sinResultados.hidden = !(total > 0 && visibles === 0);
-  }
-
-  if (zonaEstado) {
-    const busquedaVacia = String(busqueda).trim() === '';
-    zonaEstado.textContent = textoResultadosCatalogo(visibles, total, busquedaVacia);
-  }
-}
-
-// Enter o clic en "Buscar": no recarga la página y vuelve a filtrar.
-function alEnviarBusqueda(evento) {
-  evento.preventDefault();
-  filtrarCatalogo();
-}
-
-function iniciarFiltroCatalogo() {
-  const formulario = document.getElementById('form-busqueda');
-  const campo = document.getElementById('catalogo-busqueda');
-  if (!formulario || !campo) {
-    return;
-  }
-  campo.addEventListener('input', filtrarCatalogo);
-  campo.addEventListener('change', filtrarCatalogo);
-  formulario.addEventListener('submit', alEnviarBusqueda);
-}
-
-// ---------------------------------------------------------------------------
 // Persistencia de datos de dominio (C-05): al arrancar, verifica si cada clave
 // de dominio existe en localStorage. Si falta, carga el seed y lo guarda; si
 // existe, usa lo guardado sin mezclar con seed.
@@ -661,7 +451,6 @@ iniciarNavegacion();
 registrarFormulariosMaqueta();
 iniciarTema();
 iniciarSidebar();
-iniciarFiltroCatalogo();
 
 // ==========================================
 // Helpers comunes de mensajes (correcciones Etapa 2)
@@ -925,7 +714,6 @@ function validarLibro(datos, listaLibros, listaEditoriales, listaGeneros, listaA
 // Refresca todo lo que muestra libros tras un alta.
 function refrescarVistasLibros() {
   renderLibros();
-  filtrarCatalogo();
   actualizarContadorLibros();
 }
 
