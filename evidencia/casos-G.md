@@ -2,7 +2,8 @@
 
 Pruebas hechas contra la URL pública, a través del mismo proxy que usa el frontend (`/api/...`).
 
-- URL: https://calculadora-libreria-web.a2qkmo.easypanel.host/
+- URL donde se hicieron las pruebas: https://calculadora-libreria-web.a2qkmo.easypanel.host/ (dominio anterior; sigue activo)
+- URL pública actual: https://editorial-codex.a2qkmo.easypanel.host/ (mismo servicio, mismos datos)
 - Fecha: 13/11/2026, 16:06 (hora de Argentina)
 - Las respuestas se recortaron a los campos relevantes.
 
