@@ -39,7 +39,7 @@ El trabajo se reparte entre los 5 integrantes del grupo. Para evitar bloqueos, *
 | **CH-01** | `imagen-frontend` | Amanda | `feat/CH-01-imagen-frontend` | ✅ Hecho | G-07 (local) |
 | **CH-02** | `primer-despliegue-easypanel` | Amanda | `feat/CH-02-primer-despliegue-easypanel` | ✅ Hecho | G-07 (VPS) |
 | **CH-03** | `catalogo-y-detalle` | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | ✅ Hecho | G-01 |
-| **CH-04** | `altas-libros-y-clientes` | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | A definir | G-02, G-03 |
+| **CH-04** | `altas-libros-y-clientes` | Amanda | `feat/CH-04-altas-libros-y-clientes` | ✅ Hecho | G-02, G-03 |
 | **CH-05** | `ventas-e-historial` | Amanda | `feat/CH-05-ventas-e-historial` | ✅ Hecho | G-04, G-05, G-06 |
 | **CH-06** | `verificacion-y-entrega` | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | A definir | G-01 a G-07 |
 
@@ -97,7 +97,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 | **CH-01** | `imagen-frontend` | Ej. 4 | Amanda | `feat/CH-01-imagen-frontend` | `frontend/Dockerfile`, `.dockerignore`, `default.conf.template`, `env.example`, `public/js/api.js`, `public/index.html` (solo script) | *Ninguna* (no toca `app.js`) | G-07 (local) | ✅ Hecho |
 | **CH-02** | `primer-despliegue-easypanel` | Ej. 5 | Amanda | `feat/CH-02-primer-despliegue-easypanel` | `DEPLOY.md` | *Ninguna* | G-07 (VPS) | ✅ Hecho |
 | **CH-03** | `catalogo-y-detalle` | Ej. 1 | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css` (ya creado), `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 | ✅ Hecho |
-| **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 | A definir |
+| **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Amanda | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 | ✅ Hecho |
 | **CH-05** | `ventas-e-historial` | Ej. 3 | Amanda | `feat/CH-05-ventas-e-historial` | `public/js/ventas.js`, `public/css/ventas.css`, `public/index.html` (solo script/link, `#ventas`, `#historial`), `public/js/app.js` (solo borrar) | `renglonesBorrador`, `TEXTO_ERROR_CANTIDAD`, `esCantidadValida`, `buscarLibroPorId`, `renderSelectorVenta`, `renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `calcularTotalBorrador`, `actualizarTotalVenta`, `agregarRenglonBorrador`, `registrarHandlerAgregarDetalle`, `aplicarCantidadRenglon`, `renderRenglonesVenta`, `sincronizarCantidadesBorrador`, `calcularSiguienteIdVenta`, `validarVenta`, `construirVenta`, `registrarHandlerConfirmarVenta`, `numeroDeVenta`, `agregarCeldaTexto`, `renderHistorialVentas`, `escribirTituloConId`, `mostrarDetalleVenta`, y llamadas en DOMContentLoaded (`renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `registrarHandlerAgregarDetalle`, `renderRenglonesVenta`, `registrarHandlerConfirmarVenta`, `renderHistorialVentas`) | G-04, G-05, G-06 | ✅ Hecho |
 | **CH-06** | `verificacion-y-entrega` | Verif. | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | `README.md`, `DEPLOY.md`, `evidencia/`, `public/js/storage.js`, `public/js/data.js`, `public/js/app.js`, `public/css/styles.css` (opcional) | Limpieza final en `app.js`: funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), `iniciarPersistencia`, `mostrarErrorPersistencia`, validadores `es*GuardadoValido`, y `registrarFormulariosMaqueta` | G-01 a G-07 | A definir |
 
@@ -243,10 +243,20 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 
 ---
 
-### CH-04 · altas-libros-y-clientes
-- **Responsable:** Integrante 4
+### CH-04 · altas-libros-y-clientes (✅ Hecho)
+- **Estado:** ✅ Hecho
+- **Responsable:** Amanda
 - **Rama:** `feat/CH-04-altas-libros-y-clientes`
-- **Fecha límite:** A definir
+- **Fecha de cierre:** 13/11/2026
+- **Decisiones técnicas acordadas:**
+  1. **Selectores con colecciones reales:** Se consumen `GET /editoriales/?limit=100`, `GET /generos/?limit=100` y `GET /autores/?limit=100` al inicializar la vista, con manejo de fallos y reintentos.
+  2. **Gestión interactiva de autorías:** Interfaz dinámica para agregar múltiples autores con rol (`autor`, `coautor`, `traductor`, `ilustrador`) y orden correlativo automático. Si el usuario selecciona un autor en el combo y presiona "Guardar" sin pulsar antes "Agregar autor", se auto-incluye facilitando la experiencia.
+  3. **Validación pre-envío en dos niveles:** Spans accesibles junto a cada control (`span.formulario__error-campo`, `aria-invalid="true"`) y banner de alerta general arriba del formulario (`.formulario__alerta`), enfocando automáticamente el primer control inválido.
+  4. **Mapeo de errores HTTP:** Los 409 (duplicados de ISBN o email) muestran el mensaje en el banner superior y en el span específico del campo conflictivo, conservando los datos ingresados. Los 422 detallan los campos con formato incorrecto y los errores de red (`ApiError.esConexion`) informan amigablemente que el servidor no responde.
+  5. **Prevención de doble envío:** Botones con atributo `aria-busy="true"` y estado `disabled` durante peticiones asincrónicas.
+  6. **Comunicación reactiva desacoplada:** Emisión de `document.dispatchEvent(new CustomEvent('libros:cambiaron'))` y `CustomEvent('clientes:cambiaron')`. Listeners mínimos en `catalogo.js` y `ventas.js` para refrescar catálogo, contador y selectores de venta sin recarga de página ni polling.
+  7. **Portadas de respaldo:** Los libros nuevos creados sin imagen muestran de manera predeterminada y robusta `assets/img/portada-fallback.svg` sin provocar errores en consola.
+  8. **Compatibilidad con navegación:** Se expusieron `cargarTablaLibros` y `cargarTablaClientes` como `window.renderLibros` y `window.renderClientes`, y se protegieron las llamadas en `mostrarVista` de `app.js` con verificación `typeof` para garantizar navegación fluida entre pestañas.
 - **Objetivo:** Conectar las pantallas de altas de libros (`#libros`) y clientes (`#clientes`) con la API mediante `frontend/public/js/altas.js` y sus estilos en `frontend/public/css/altas.css`. Cargar selectores de editoriales (`GET /editoriales/?limit=100`), géneros (`GET /generos/?limit=100`) y autores (`GET /autores/?limit=100`). Validar en cliente y manejar respuestas 201, 409 y 422 mostrando mensajes de error cerca de cada formulario.
 - **Archivos que puede tocar (autorizados):**
   - `frontend/public/js/altas.js` (creación del módulo).

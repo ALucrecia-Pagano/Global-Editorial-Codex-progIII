@@ -700,6 +700,12 @@
       }
     });
 
+    // Actualización reactiva ante altas de libros (CH-04)
+    document.addEventListener('libros:cambiaron', function () {
+      actualizarContadorCatalogo();
+      cargarCatalogo();
+    });
+
     verificarVistaCatalogo();
   }
 

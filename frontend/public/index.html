@@ -7,12 +7,14 @@
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/catalogo.css">
+  <link rel="stylesheet" href="css/altas.css">
   <link rel="stylesheet" href="css/ventas.css">
   <script src="js/api.js"></script>
   <script src="js/destellos.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/storage.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/altas.js" defer></script>
   <script src="js/sinopsis.js" defer></script>
   <script src="js/titulo-magico.js" defer></script>
   <script src="js/catalogo.js" defer></script>
@@ -183,59 +185,87 @@
         <section id="libros" class="vista" aria-labelledby="titulo-libros">
           <h2 id="titulo-libros" class="vista__titulo" tabindex="-1">Libros</h2>
 
+          <div id="libro-errores" class="mensaje mensaje--error" role="alert" hidden></div>
+          <p id="libro-mensaje" class="mensaje mensaje--exito" role="status" hidden></p>
+
           <form id="form-libro" class="formulario formulario--registro" novalidate>
-            <div class="formulario__cabecera"><h3 class="formulario__titulo">Registrar libro</h3><p class="formulario__ayuda">Completá los datos del libro y elegí sus autores.</p></div>
-            <div class="formulario__campo">
-              <label class="formulario__etiqueta" for="libro-titulo">Título</label>
-              <input class="formulario__control" type="text" id="libro-titulo" name="titulo">
+            <div class="formulario__cabecera">
+              <h3 class="formulario__titulo">Registrar libro</h3>
+              <p class="formulario__ayuda">Completá los datos del libro y elegí sus autores.</p>
             </div>
+
             <div class="formulario__campo">
-              <label class="formulario__etiqueta" for="libro-isbn">ISBN</label>
-              <input class="formulario__control" type="text" id="libro-isbn" name="isbn">
+              <label class="formulario__etiqueta" for="libro-titulo">Título <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <input class="formulario__control" type="text" id="libro-titulo" name="titulo" autocomplete="off" required>
+              <span class="formulario__error-campo" id="error-libro-titulo" aria-live="polite"></span>
             </div>
+
             <div class="formulario__campo">
-              <label class="formulario__etiqueta" for="libro-precio">Precio (ARS)</label>
-              <input class="formulario__control" type="number" id="libro-precio" name="precio" step="0.01" inputmode="decimal">
+              <label class="formulario__etiqueta" for="libro-isbn">ISBN <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <input class="formulario__control" type="text" id="libro-isbn" name="isbn" placeholder="978-..." autocomplete="off" required>
+              <span class="formulario__error-campo" id="error-libro-isbn" aria-live="polite"></span>
             </div>
+
             <div class="formulario__campo">
-              <label class="formulario__etiqueta" for="libro-editorial">Editorial</label>
-              <select class="formulario__control" id="libro-editorial" name="editorialId">
-                <option value="ed-1">Ediciones del Faro</option>
-                <option value="ed-2">Prisma Editorial</option>
+              <label class="formulario__etiqueta" for="libro-precio">Precio (ARS) <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <input class="formulario__control" type="number" id="libro-precio" name="precio" step="0.01" min="0.01" inputmode="decimal" required>
+              <span class="formulario__error-campo" id="error-libro-precio" aria-live="polite"></span>
+            </div>
+
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-stock">Stock <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <input class="formulario__control" type="number" id="libro-stock" name="stock" step="1" min="0" value="0" inputmode="numeric" required>
+              <span class="formulario__error-campo" id="error-libro-stock" aria-live="polite"></span>
+            </div>
+
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="libro-editorial">Editorial <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <select class="formulario__control" id="libro-editorial" name="editorialId" required>
+                <option value="">Cargando editoriales…</option>
               </select>
+              <span class="formulario__error-campo" id="error-libro-editorial" aria-live="polite"></span>
             </div>
+
             <div class="formulario__campo">
               <label class="formulario__etiqueta" for="libro-genero">Género</label>
               <select class="formulario__control" id="libro-genero" name="generoId">
                 <option value="">Sin clasificar</option>
-                <option value="ge-1">Novela</option>
-                <option value="ge-2">Ciencia ficción</option>
               </select>
+              <span class="formulario__error-campo" id="error-libro-genero" aria-live="polite"></span>
             </div>
+
             <fieldset id="libro-autores" class="formulario__grupo">
-              <legend class="formulario__leyenda">Autores</legend>
-              <div class="formulario__opcion">
-                <input type="checkbox" id="libro-autor-1" name="autorIds" value="au-1">
-                <label for="libro-autor-1">Lucía Ferreyra</label>
+              <legend class="formulario__leyenda">Autores <span class="formulario__requerido" aria-hidden="true">*</span></legend>
+              <p class="formulario__ayuda">Seleccioná al menos un autor con su rol correspondiente.</p>
+              <div class="altas-autor-fila">
+                <div class="formulario__campo altas-autor-select-campo">
+                  <label class="formulario__etiqueta" for="libro-autor-select">Autor</label>
+                  <select class="formulario__control" id="libro-autor-select">
+                    <option value="">Cargando autores…</option>
+                  </select>
+                </div>
+                <div class="formulario__campo altas-autor-rol-campo">
+                  <label class="formulario__etiqueta" for="libro-autor-rol">Rol</label>
+                  <select class="formulario__control" id="libro-autor-rol">
+                    <option value="autor">Autor</option>
+                    <option value="coautor">Coautor</option>
+                    <option value="traductor">Traductor</option>
+                    <option value="ilustrador">Ilustrador</option>
+                  </select>
+                </div>
+                <div class="altas-autor-boton-campo">
+                  <button class="boton boton--secundario" type="button" id="libro-agregar-autor">Agregar autor</button>
+                </div>
               </div>
-              <div class="formulario__opcion">
-                <input type="checkbox" id="libro-autor-2" name="autorIds" value="au-2">
-                <label for="libro-autor-2">Tomás Aguirre</label>
-              </div>
-              <div class="formulario__opcion">
-                <input type="checkbox" id="libro-autor-3" name="autorIds" value="au-3">
-                <label for="libro-autor-3">Inés Montoya</label>
-              </div>
+              <ul id="libro-autores-lista" class="altas-autores-lista" aria-label="Autores seleccionados"></ul>
+              <p id="libro-autores-vacio" class="altas-autores-vacio">No hay autores seleccionados todavía.</p>
+              <span class="formulario__error-campo" id="error-libro-autores" aria-live="polite"></span>
             </fieldset>
+
             <div class="formulario__acciones">
-              <button class="boton boton--primario" type="submit">Guardar libro</button>
+              <button class="boton boton--primario" id="btn-guardar-libro" type="submit">Guardar libro</button>
             </div>
           </form>
-
-          <div id="libro-errores" class="mensaje mensaje--error" role="alert" hidden>
-            <p>Error: el título es obligatorio.</p>
-          </div>
-          <p id="libro-mensaje" class="mensaje mensaje--exito" role="status" hidden>Libro guardado correctamente.</p>
 
           <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de libros cargados">
             <table class="tabla">
@@ -246,12 +276,11 @@
                   <th scope="col">ISBN</th>
                   <th scope="col">Editorial</th>
                   <th scope="col">Género</th>
-                  <th scope="col">Autores</th>
+                  <th scope="col">Stock</th>
                   <th scope="col">Precio</th>
                 </tr>
               </thead>
               <tbody id="libros-tabla">
-                <!-- Las filas se renderizan desde el array `libros` (C-04) -->
               </tbody>
             </table>
           </section>
@@ -262,25 +291,31 @@
         <section id="clientes" class="vista" aria-labelledby="titulo-clientes">
           <h2 id="titulo-clientes" class="vista__titulo" tabindex="-1">Clientes</h2>
 
+          <div id="cliente-errores" class="mensaje mensaje--error" role="alert" hidden></div>
+          <p id="cliente-mensaje" class="mensaje mensaje--exito" role="status" hidden></p>
+
           <form id="form-cliente" class="formulario formulario--registro" novalidate>
-            <div class="formulario__cabecera"><h3 class="formulario__titulo">Registrar cliente</h3><p class="formulario__ayuda">Completá el nombre y el correo electrónico del cliente.</p></div>
-            <div class="formulario__campo">
-              <label class="formulario__etiqueta" for="cliente-nombre">Nombre completo</label>
-              <input class="formulario__control" type="text" id="cliente-nombre" name="nombreCompleto">
+            <div class="formulario__cabecera">
+              <h3 class="formulario__titulo">Registrar cliente</h3>
+              <p class="formulario__ayuda">Completá el nombre y el correo electrónico del cliente.</p>
             </div>
+
             <div class="formulario__campo">
-              <label class="formulario__etiqueta" for="cliente-email">Email</label>
-              <input class="formulario__control" type="email" id="cliente-email" name="email">
+              <label class="formulario__etiqueta" for="cliente-nombre">Nombre completo <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <input class="formulario__control" type="text" id="cliente-nombre" name="nombreCompleto" autocomplete="off" required>
+              <span class="formulario__error-campo" id="error-cliente-nombre" aria-live="polite"></span>
             </div>
+
+            <div class="formulario__campo">
+              <label class="formulario__etiqueta" for="cliente-email">Email <span class="formulario__requerido" aria-hidden="true">*</span></label>
+              <input class="formulario__control" type="email" id="cliente-email" name="email" autocomplete="off" required>
+              <span class="formulario__error-campo" id="error-cliente-email" aria-live="polite"></span>
+            </div>
+
             <div class="formulario__acciones">
-              <button class="boton boton--primario" type="submit">Guardar cliente</button>
+              <button class="boton boton--primario" id="btn-guardar-cliente" type="submit">Guardar cliente</button>
             </div>
           </form>
-
-          <div id="cliente-errores" class="mensaje mensaje--error" role="alert" hidden>
-            <p>Error: el email no tiene un formato válido.</p>
-          </div>
-          <p id="cliente-mensaje" class="mensaje mensaje--exito" role="status" hidden>Cliente guardado correctamente.</p>
 
           <section class="tabla-contenedor" tabindex="0" aria-label="Tabla de clientes cargados">
             <table class="tabla">
@@ -292,7 +327,6 @@
                 </tr>
               </thead>
               <tbody id="clientes-tabla">
-                <!-- Las filas se renderizan desde el array `clientes` (C-04) -->
               </tbody>
             </table>
           </section>

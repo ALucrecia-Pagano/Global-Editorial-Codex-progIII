@@ -935,6 +935,14 @@
       });
     }
 
+    // Actualización reactiva ante altas de libros o clientes (CH-04)
+    document.addEventListener('libros:cambiaron', function () {
+      cargarOpciones();
+    });
+    document.addEventListener('clientes:cambiaron', function () {
+      cargarOpciones();
+    });
+
     // Inicializaciones
     actualizarTotalBorrador();
     promesaOpciones = cargarOpciones();
