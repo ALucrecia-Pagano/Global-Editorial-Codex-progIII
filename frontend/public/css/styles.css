@@ -75,25 +75,26 @@
 :root[data-tema="claro"] {
   color-scheme: light;
 
-  --color-surface: #efe5fb;
-  --color-surface-2: #e5d6f7;
-  --color-borde: #b293da;
-  --color-linea: #d2bff0;
-  --color-borde-campo: #66598c;
+  --color-surface: #dccdf3;
+  --color-surface-2: #d0bdee;
+  --color-borde: #9479c4;
+  --color-linea: #b49fdb;
+  --color-borde-campo: #4f4475;
   --color-text: #1c1530;
-  --color-text-suave: #54486f;
-  --color-accent: #5c37bd;
+  --color-text-suave: #43385c;
+  --color-accent: #4a2a9c;
   --color-sobre-accent: #ffffff;
-  --color-acento-rosa: #8a3d84;
-  --color-error: #a8201a;
-  --color-exito: #17663a;
+  --color-acento-rosa: #6e2f69;
+  --color-error: #8a1712;
+  --color-exito: #0f5530;
   --color-foco: #1b4fd8;
 
-  /* Lila clarito en lugar de blanco: el tema claro conserva el clima violeta de la página. */
-  --degrade-superficie: linear-gradient(135deg, #efe4fc 0%, #e6d8f8 55%, #eed9f1 100%);
-  --degrade-sidebar: linear-gradient(180deg, #ece0fb 0%, #e2d2f6 60%, #ead4ef 100%);
-  --degrade-tarjeta: linear-gradient(145deg, #f2e9fd 0%, #e7daf8 60%, #edd8f0 100%);
-  --degrade-tabla: linear-gradient(145deg, #f2e9fd 0%, #e8dbf8 60%, #edd8f0 100%);
+  /* Lila tipo acuarela en lugar de blanco: más intenso arriba a la izquierda y más
+     claro abajo a la derecha. Contraste medido contra el tramo más oscuro (#c4b0e8). */
+  --degrade-superficie: linear-gradient(135deg, #c4b0e8 0%, #d6c6f1 40%, #ebe0f9 100%);
+  --degrade-sidebar: linear-gradient(180deg, #c8b4ea 0%, #dccdf3 55%, #ece2f9 100%);
+  --degrade-tarjeta: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
+  --degrade-tabla: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
 
   --sombra-brillo: 0 0 0 1px rgba(120, 90, 180, 0.08), 0 0 14px rgba(120, 90, 180, 0.08), 0 14px 40px rgba(90, 60, 150, 0.14);
   --sombra-brillo-suave: 0 0 8px rgba(120, 90, 180, 0.08), 0 6px 18px rgba(90, 60, 150, 0.1);
@@ -1380,18 +1381,18 @@ html:not(.js) .vista + .vista {
 }
 
 :root[data-tema="claro"] {
-  --color-surface: #efe5fb;
-  --color-surface-2: #e5d6f7;
-  --color-borde: #80708f;
-  --color-linea: #80708f;
-  --color-borde-campo: #66598c;
+  --color-surface: #dccdf3;
+  --color-surface-2: #d0bdee;
+  --color-borde: #7d64ad;
+  --color-linea: #7d64ad;
+  --color-borde-campo: #4f4475;
   --color-text: #1c1530;
-  --color-text-suave: #54486f;
-  --color-accent: #5c37bd;
-  --degrade-sidebar: linear-gradient(180deg, #ece0fb, #e2d2f6);
-  --degrade-tarjeta: linear-gradient(145deg, #f2e9fd, #ead6f1);
-  --degrade-tabla: linear-gradient(145deg, #f2e9fd, #ead6f1);
-  --color-borde-boton: #5934d8;
+  --color-text-suave: #43385c;
+  --color-accent: #4a2a9c;
+  --degrade-sidebar: linear-gradient(180deg, #c8b4ea 0%, #dccdf3 55%, #ece2f9 100%);
+  --degrade-tarjeta: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
+  --degrade-tabla: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
+  --color-borde-boton: #4a2a9c;
   --sombra-brillo-suave: 0 6px 20px #6e3caa18;
 }
 
