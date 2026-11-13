@@ -47,6 +47,8 @@
   let catalogoIniciado = false;
   let temporizadoresModal = [];
   let cerrandoModal = false;
+  let animandoAperturaModal = false;
+  let destellosModalLanzados = false;
 
   const RUTA_FALLBACK = 'assets/img/portada-fallback.svg';
 
@@ -331,18 +333,54 @@
   }
 
   /**
+   * Lanza los destellos de la tarjeta una sola vez por apertura.
+   */
+  function lanzarDestellosModal() {
+    if (destellosModalLanzados) {
+      return;
+    }
+    destellosModalLanzados = true;
+    if (modalTarjeta && window.Destellos && typeof window.Destellos.lanzar === 'function') {
+      window.Destellos.lanzar(modalTarjeta);
+    }
+  }
+
+  /**
+   * Salta directo al estado final si el usuario interactúa mientras el libro abre.
+   */
+  function saltarAperturaModal() {
+    if (!dialogModal || !animandoAperturaModal) {
+      return;
+    }
+    animandoAperturaModal = false;
+    limpiarTemporizadoresModal();
+    dialogModal.classList.add('modal-libro--saltando');
+    dialogModal.classList.remove('modal-libro--entrando');
+    dialogModal.classList.add('modal-libro--abriendo', 'modal-libro--abierto');
+    lanzarDestellosModal();
+    window.requestAnimationFrame(function () {
+      if (dialogModal) {
+        dialogModal.classList.remove('modal-libro--saltando');
+      }
+    });
+  }
+
+  /**
    * Ejecuta la secuencia de apertura del libro 3D (o directa en móvil/reduced-motion).
    */
   function animarAperturaModal() {
     if (!dialogModal) {
       return;
     }
+    animandoAperturaModal = false;
+    destellosModalLanzados = false;
     dialogModal.classList.remove(
       'modal-libro--entrando',
       'modal-libro--abriendo',
       'modal-libro--abierto',
       'modal-libro--cerrando',
-      'modal-libro--cerrando-tapa'
+      'modal-libro--cerrando-tapa',
+      'modal-libro--saltando'
     );
 
     if (prefiereMovimientoReducido()) {
@@ -352,25 +390,23 @@
 
     if (!esEscritorio()) {
       dialogModal.classList.add('modal-libro--abierto');
-      if (modalTarjeta && window.Destellos && typeof window.Destellos.lanzar === 'function') {
-        programarModal(function () {
-          window.Destellos.lanzar(modalTarjeta);
-        }, 350);
-      }
+      programarModal(lanzarDestellosModal, 350);
       return;
     }
 
+    animandoAperturaModal = true;
     dialogModal.classList.add('modal-libro--entrando');
     programarModal(function () {
       dialogModal.classList.remove('modal-libro--entrando');
       dialogModal.classList.add('modal-libro--abriendo');
-    }, 600);
+    }, 350);
     programarModal(function () {
       dialogModal.classList.add('modal-libro--abierto');
-      if (modalTarjeta && window.Destellos && typeof window.Destellos.lanzar === 'function') {
-        window.Destellos.lanzar(modalTarjeta);
-      }
-    }, 1700);
+      lanzarDestellosModal();
+    }, 700);
+    programarModal(function () {
+      animandoAperturaModal = false;
+    }, 1200);
   }
 
   /**
@@ -482,6 +518,7 @@
   function finalizarCierreModal() {
     limpiarTemporizadoresModal();
     cerrandoModal = false;
+    animandoAperturaModal = false;
     if (!dialogModal) {
       return;
     }
@@ -518,16 +555,17 @@
     }
 
     cerrandoModal = true;
+    animandoAperturaModal = false;
     dialogModal.classList.add('modal-libro--cerrando');
     programarModal(function () {
       if (esEscritorio()) {
         dialogModal.classList.remove('modal-libro--abierto', 'modal-libro--abriendo');
         dialogModal.classList.add('modal-libro--cerrando-tapa');
-        programarModal(finalizarCierreModal, 600);
+        programarModal(finalizarCierreModal, 400);
       } else {
         finalizarCierreModal();
       }
-    }, 300);
+    }, 200);
   }
 
   /**
@@ -624,8 +662,18 @@
 
     if (dialogModal) {
       dialogModal.addEventListener('click', function (e) {
+        if (animandoAperturaModal && !cerrandoModal) {
+          saltarAperturaModal();
+          return;
+        }
         if (e.target === dialogModal) {
           cerrarDetalle();
+        }
+      });
+      dialogModal.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && animandoAperturaModal && !cerrandoModal) {
+          e.preventDefault();
+          saltarAperturaModal();
         }
       });
       dialogModal.addEventListener('cancel', function (e) {
