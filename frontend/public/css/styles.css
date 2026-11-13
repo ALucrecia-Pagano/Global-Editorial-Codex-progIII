@@ -75,10 +75,10 @@
 :root[data-tema="claro"] {
   color-scheme: light;
 
-  --color-surface: #ffffff;
-  --color-surface-2: #f5effc;
-  --color-borde: #bfa5de;
-  --color-linea: #dccff0;
+  --color-surface: #efe5fb;
+  --color-surface-2: #e5d6f7;
+  --color-borde: #b293da;
+  --color-linea: #d2bff0;
   --color-borde-campo: #66598c;
   --color-text: #1c1530;
   --color-text-suave: #54486f;
@@ -89,10 +89,11 @@
   --color-exito: #17663a;
   --color-foco: #1b4fd8;
 
-  --degrade-superficie: linear-gradient(135deg, #ffffff 0%, #f7f0fd 55%, #f9e9f4 100%);
-  --degrade-sidebar: linear-gradient(180deg, #ffffff 0%, #f2e9fb 60%, #f7e4f1 100%);
-  --degrade-tarjeta: linear-gradient(145deg, #ffffff 0%, #f3ebfc 60%, #f6e3f0 100%);
-  --degrade-tabla: linear-gradient(145deg, #ffffff 0%, #f4ecfb 60%, #f5e3f0 100%);
+  /* Lila clarito en lugar de blanco: el tema claro conserva el clima violeta de la página. */
+  --degrade-superficie: linear-gradient(135deg, #efe4fc 0%, #e6d8f8 55%, #eed9f1 100%);
+  --degrade-sidebar: linear-gradient(180deg, #ece0fb 0%, #e2d2f6 60%, #ead4ef 100%);
+  --degrade-tarjeta: linear-gradient(145deg, #f2e9fd 0%, #e7daf8 60%, #edd8f0 100%);
+  --degrade-tabla: linear-gradient(145deg, #f2e9fd 0%, #e8dbf8 60%, #edd8f0 100%);
 
   --sombra-brillo: 0 0 0 1px rgba(120, 90, 180, 0.08), 0 0 14px rgba(120, 90, 180, 0.08), 0 14px 40px rgba(90, 60, 150, 0.14);
   --sombra-brillo-suave: 0 0 8px rgba(120, 90, 180, 0.08), 0 6px 18px rgba(90, 60, 150, 0.1);
@@ -1379,17 +1380,17 @@ html:not(.js) .vista + .vista {
 }
 
 :root[data-tema="claro"] {
-  --color-surface: #ffffff;
-  --color-surface-2: #f5effc;
+  --color-surface: #efe5fb;
+  --color-surface-2: #e5d6f7;
   --color-borde: #80708f;
   --color-linea: #80708f;
   --color-borde-campo: #66598c;
   --color-text: #1c1530;
   --color-text-suave: #54486f;
   --color-accent: #5c37bd;
-  --degrade-sidebar: linear-gradient(180deg, #ffffff, #f2e9fb);
-  --degrade-tarjeta: linear-gradient(145deg, #ffffff, #f6e3f0);
-  --degrade-tabla: linear-gradient(145deg, #ffffff, #f5e3f0);
+  --degrade-sidebar: linear-gradient(180deg, #ece0fb, #e2d2f6);
+  --degrade-tarjeta: linear-gradient(145deg, #f2e9fd, #ead6f1);
+  --degrade-tabla: linear-gradient(145deg, #f2e9fd, #ead6f1);
   --color-borde-boton: #5934d8;
   --sombra-brillo-suave: 0 6px 20px #6e3caa18;
 }

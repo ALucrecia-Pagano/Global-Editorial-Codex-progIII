@@ -30,11 +30,35 @@ Detalle del libro 3 (recortado):
 
 ## G-02 · Alta de libro
 
-Pendiente: se completa cuando CH-04 esté desplegado.
+Hecho desde el formulario de la vista Libros, en la URL pública, el 13/11/2026 a las 17:20.
+
+1. Alta: *El jardín de los relojes*, ISBN `978-987-0001-11-0`, precio 20500, stock 4, Ediciones del Faro, género Fantasía y dos autorías (Inés Montoya como autor, orden 1; Martín Ledesma como ilustrador, orden 2). El front muestra «Libro «El jardín de los relojes» registrado correctamente.», limpia el formulario y la tabla pasa a 13 filas.
+2. Detalle: `GET /api/libros/13` responde **200**:
+
+```json
+{
+  "id": 13, "titulo": "El jardín de los relojes", "isbn": "978-987-0001-11-0",
+  "precio": "20500.00", "stock": 4,
+  "editorial": { "id": 2, "nombre": "Ediciones del Faro" },
+  "genero": { "id": 3, "nombre": "Fantasía" },
+  "autores": [
+    { "autor_id": 6, "rol": "autor", "orden": 1, "autor": { "nombre": "Inés Montoya" } },
+    { "autor_id": 8, "rol": "ilustrador", "orden": 2, "autor": { "nombre": "Martín Ledesma" } }
+  ]
+}
+```
+
+3. ISBN repetido: `POST /api/libros/` con el mismo ISBN responde **409** con `"No se pudo guardar el libro: ISBN, relaciones o datos en conflicto"`. El front muestra el mensaje arriba del formulario y al lado del ISBN, y conserva lo que se había escrito.
+4. Sin recargar, el libro aparece en el catálogo (el contador pasa de 12 a 13) y en el selector de libros de Ventas. Como no tiene portada propia, se muestra la portada de respaldo.
 
 ## G-03 · Alta de cliente
 
-Pendiente: se completa cuando CH-04 esté desplegado.
+Hecho desde el formulario de la vista Clientes, en la URL pública, el 13/11/2026 a las 17:20.
+
+1. Alta: Lucía Gómez, `lucia.gomez@example.com`. El front muestra «Cliente «Lucía Gómez» registrado correctamente.».
+2. Recuperarlo por ID: `GET /api/clientes/2` responde **200** con `{ "id": 2, "nombre": "Lucía Gómez", "email": "lucia.gomez@example.com", "perfil": null }`.
+3. Email repetido: `POST /api/clientes/` con el mismo email responde **409** con `"Ya existe un cliente con ese email"`. El front muestra el mismo mensaje junto al campo email.
+4. Sin recargar, la clienta aparece en el selector de clientes de Ventas.
 
 ## G-04 · Venta
 
@@ -86,4 +110,4 @@ El historial tenía 2 ventas antes de los dos intentos y siguió con 2 después:
 
 La imagen del frontend se construyó en Easypanel a partir de `frontend/Dockerfile` (servicio `libreria-web`).
 
-Pendiente para CH-06: redesplegar `libreria-web` y `libreria-api` y verificar que la venta 3 y los 12 libros siguen disponibles.
+Pendiente para CH-06: redesplegar `libreria-web` y `libreria-api` y verificar que la venta 3, los 13 libros y los 2 clientes siguen disponibles.
