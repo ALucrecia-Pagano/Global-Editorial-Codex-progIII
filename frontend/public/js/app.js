@@ -4,34 +4,12 @@
 // Mejora progresiva (D3): el CSS usa html.js para mostrar los controles que necesitan JS.
 document.documentElement.classList.add('js');
 
-// ---------------------------------------------------------------------------
-// Preferencias en localStorage (D7). Todo acceso va en try/catch: si el
-// almacenamiento falla, está bloqueado o tiene un valor inválido, se usa el
-// valor por defecto y la página sigue funcionando.
-// ---------------------------------------------------------------------------
-const PREFIJO_PREFERENCIAS = 'libreria.preferencias.';
+// El tema y la barra lateral se leen con leerPreferencia / guardarPreferencia
+// de storage.js. Si el almacenamiento falla, se usa el valor por defecto.
 const TEMAS_VALIDOS = ['claro', 'oscuro'];
 const ESTADOS_SIDEBAR_VALIDOS = ['colapsada', 'expandida'];
 
-function leerPreferencia(clave, valorPorDefecto) {
-  try {
-    const valor = window.localStorage.getItem(PREFIJO_PREFERENCIAS + clave);
-    return valor === null ? valorPorDefecto : valor;
-  } catch (error) {
-    return valorPorDefecto;
-  }
-}
-
-function guardarPreferencia(clave, valor) {
-  try {
-    window.localStorage.setItem(PREFIJO_PREFERENCIAS + clave, valor);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-// Orden de decisión (D4): preferencia guardada válida -> prefers-color-scheme -> oscuro.
+// Orden de decisión: preferencia guardada válida, después prefers-color-scheme, después oscuro.
 function obtenerTemaInicial() {
   const guardado = leerPreferencia('tema', null);
   if (TEMAS_VALIDOS.includes(guardado)) {
@@ -118,7 +96,7 @@ function mostrarVista(id, opciones) {
 
   vistaActual = id;
 
-  // Render inicial de listados desde los arrays si existen (C-04).
+  // Las tablas de altas se vuelven a pedir a la API al entrar a la vista.
   if (id === 'libros' && typeof renderLibros === 'function') {
     renderLibros();
   }
@@ -276,115 +254,7 @@ function iniciarSidebar() {
   }
 }
 
-// Handler de maqueta: evita que los formularios recarguen la página (D6).
-function prevenirEnvioMaqueta(evento) {
-  evento.preventDefault();
-}
-
-function registrarFormulariosMaqueta() {
-  document.querySelectorAll('form').forEach(function (formulario) {
-    // El buscador del catálogo ya no es maqueta: tiene su propio handler (C-03).
-    if (formulario.id === 'form-busqueda') {
-      return;
-    }
-    formulario.addEventListener('submit', prevenirEnvioMaqueta);
-  });
-}
-
-// ---------------------------------------------------------------------------
-// Filtro del catálogo (C-03). La regla es pura (sin DOM) para que la Etapa 2
-// la reutilice tal cual sobre el array de libros (DD-07).
-// ---------------------------------------------------------------------------
-
-// Helpers de datos (C-04): resuelven nombres de editorial, género y autores
-// a partir de los ids estables del array.
-// ---------------------------------------------------------------------------
-function obtenerNombreEditorial(id) {
-  const editorial = editoriales.find(function (e) {
-    return e.id === id;
-  });
-  return editorial ? editorial.nombre : '';
-}
-
-function obtenerNombreGenero(id) {
-  const genero = generos.find(function (g) {
-    return g.id === id;
-  });
-  return genero ? genero.nombre : '';
-}
-
-// Rótulo de género para mostrar: sin género o con un id que no existe → «Sin clasificar».
-// No cambia lo que se guarda (generoId sigue tal cual en libreria.libros).
-function obtenerTextoGenero(libro) {
-  return obtenerNombreGenero(libro.generoId) || 'Sin clasificar';
-}
-
-function obtenerNombresAutores(ids) {
-  if (!Array.isArray(ids)) {
-    return '';
-  }
-  return ids.map(function (id) {
-    const autor = autores.find(function (a) {
-      return a.id === id;
-    });
-    return autor ? autor.nombre : '';
-  }).filter(function (nombre) {
-    return nombre !== '';
-  }).join(', ');
-}
-
-// ---------------------------------------------------------------------------
-// Persistencia de datos de dominio (C-05): al arrancar, verifica si cada clave
-// de dominio existe en localStorage. Si falta, carga el seed y lo guarda; si
-// existe, usa lo guardado sin mezclar con seed.
-// ---------------------------------------------------------------------------
-function mostrarErrorPersistencia() {
-  const aviso = document.getElementById('error-persistencia');
-  if (aviso) {
-    aviso.hidden = false;
-  }
-}
-
-function iniciarPersistencia() {
-  // Libros: usar seed si no hay nada guardado.
-  const librosGuardados = cargar('libreria.libros');
-  if (librosGuardados === null) {
-    // JSON corrupto: usar seed y mostrar error.
-    mostrarErrorPersistencia();
-    guardar('libreria.libros', libros);
-  } else if (librosGuardados !== undefined && Array.isArray(librosGuardados)) {
-    // Se ignoran los elementos con forma inválida (no se reescribe la clave al arrancar).
-    libros = librosGuardados.filter(esLibroGuardadoValido);
-  } else {
-    guardar('libreria.libros', libros);
-  }
-
-  // Clientes: usar seed si no hay nada guardado.
-  const clientesGuardados = cargar('libreria.clientes');
-  if (clientesGuardados === null) {
-    mostrarErrorPersistencia();
-    guardar('libreria.clientes', clientes);
-  } else if (clientesGuardados !== undefined && Array.isArray(clientesGuardados)) {
-    clientes = clientesGuardados.filter(esClienteGuardadoValido);
-  } else {
-    guardar('libreria.clientes', clientes);
-  }
-
-  // Ventas: iniciar vacío si no hay nada guardado.
-  const ventasGuardadas = cargar('libreria.ventas');
-  if (ventasGuardadas === null) {
-    mostrarErrorPersistencia();
-    guardar('libreria.ventas', ventas);
-  } else if (ventasGuardadas !== undefined && Array.isArray(ventasGuardadas)) {
-    ventas = ventasGuardadas.filter(esVentaGuardadaValida);
-  } else {
-    guardar('libreria.ventas', ventas);
-  }
-}
-
-iniciarPersistencia();
 iniciarNavegacion();
-registrarFormulariosMaqueta();
 iniciarTema();
 iniciarSidebar();
 
@@ -447,87 +317,5 @@ function ocultarMensaje(contenedor) {
   }
   vaciarElemento(contenedor);
   contenedor.hidden = true;
-}
-
-// Aviso cuando el registro quedó en memoria pero no se pudo escribir en el navegador (D9).
-const TEXTO_ERROR_GUARDADO =
-  'Error: se registró en esta sesión, pero no se pudo guardar en el navegador. Se perderá al recargar la página.';
-
-// Marca los controles con error (aria-invalid) y enfoca el primero.
-// Para el grupo de autores se enfoca la primera casilla.
-function marcarCamposInvalidos(errores) {
-  let primero = null;
-  errores.forEach(function (error) {
-    const campo = document.getElementById(error.campo);
-    if (!campo) {
-      return;
-    }
-    campo.setAttribute('aria-invalid', 'true');
-    if (primero === null) {
-      primero = campo;
-    }
-  });
-  if (primero) {
-    const enfocable = primero.id === 'libro-autores' ? primero.querySelector('input') : primero;
-    if (enfocable) {
-      enfocable.focus();
-    }
-  }
-}
-
-// Quita aria-invalid de todos los controles de un formulario (y del fieldset de autores).
-function limpiarCamposInvalidos(contenedor) {
-  contenedor.querySelectorAll('[aria-invalid]').forEach(function (campo) {
-    campo.removeAttribute('aria-invalid');
-  });
-}
-
-// ---------------------------------------------------------------------------
-// Validadores de forma de lo guardado en localStorage (puros).
-// ---------------------------------------------------------------------------
-function esObjetoPlano(valor) {
-  return valor !== null && typeof valor === 'object' && !Array.isArray(valor);
-}
-
-function esNumeroFinito(valor) {
-  return typeof valor === 'number' && Number.isFinite(valor);
-}
-
-function esLibroGuardadoValido(libro) {
-  return esObjetoPlano(libro) &&
-    typeof libro.id === 'string' &&
-    typeof libro.titulo === 'string' &&
-    typeof libro.isbn === 'string' &&
-    typeof libro.editorialId === 'string' &&
-    esNumeroFinito(libro.precio) &&
-    Array.isArray(libro.autorIds);
-}
-
-function esClienteGuardadoValido(cliente) {
-  return esObjetoPlano(cliente) &&
-    typeof cliente.id === 'string' &&
-    typeof cliente.nombreCompleto === 'string' &&
-    typeof cliente.email === 'string';
-}
-
-function esRenglonGuardadoValido(renglon) {
-  return esObjetoPlano(renglon) &&
-    typeof renglon.libroId === 'string' &&
-    typeof renglon.titulo === 'string' &&
-    Number.isSafeInteger(renglon.cantidad) && renglon.cantidad > 0 &&
-    esNumeroFinito(renglon.precioUnitario) &&
-    esNumeroFinito(renglon.subtotal);
-}
-
-function esVentaGuardadaValida(venta) {
-  return esObjetoPlano(venta) &&
-    typeof venta.id === 'string' &&
-    typeof venta.fecha === 'string' &&
-    typeof venta.clienteId === 'string' &&
-    typeof venta.clienteNombre === 'string' &&
-    esNumeroFinito(venta.total) &&
-    Array.isArray(venta.renglones) &&
-    venta.renglones.length > 0 &&
-    venta.renglones.every(esRenglonGuardadoValido);
 }
 

@@ -11,6 +11,7 @@ Este documento detalla la arquitectura, configuración, puesta en marcha y mante
 - **Repositorio fuente:** `https://github.com/ALucrecia-Pagano/Global-Editorial-Codex-progIII.git`
 - **Rama productiva:** `main`
 - **URL pública de la aplicación:** [https://editorial-codex.a2qkmo.easypanel.host/](https://editorial-codex.a2qkmo.easypanel.host/)
+- **Revisión en producción al cerrar el dominio:** `442250f` (`libreria-web` ya implementado). CH-06 se publica al mergear `feat/CH-06-verificacion-y-entrega` y volver a implementar `libreria-web`. Los archivos estáticos pasan a `?v=20261114`.
 
 ---
 
@@ -119,6 +120,11 @@ El flujo de integración continua es manual y controlado desde el panel de Easyp
    - Si el cambio afecta a `frontend/`: ingresar al servicio `libreria-web` y pulsar **Deploy** (o **Implementar**).
    - Si el cambio afecta a `backend/`: ingresar al servicio `libreria-api` y pulsar **Deploy**.
 2. **Persistencia garantizada:** La base de datos PostgreSQL vive en el volumen del servicio `calculadora_db`, por lo que los redespliegues de los contenedores no borran ni reinician los datos de clientes, libros ni ventas.
+3. **Verificación del 13/11/2026, después de implementar `442250f` en `libreria-web`:** la página nueva ya responde en `editorial-codex` y la base sigue igual.
+   - `GET /api/health/ready` → 200, `{"estado":"lista"}`
+   - `GET /api/libros/?limit=100` → 12 libros
+   - `GET /api/clientes/?limit=100` → clientes 1 y 2
+   - `GET /api/ventas/3` → 200, total `60500.00`, precios históricos `18500.00` y `21000.00`
 
 ---
 

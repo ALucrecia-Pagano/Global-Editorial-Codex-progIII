@@ -112,4 +112,11 @@ El historial tenía 2 ventas antes de los dos intentos y siguió con 2 después:
 
 La imagen del frontend se construyó en Easypanel a partir de `frontend/Dockerfile` (servicio `libreria-web`).
 
-Pendiente para CH-06: redesplegar `libreria-web` y `libreria-api` y verificar que la venta 3, los 12 libros y los 2 clientes siguen disponibles.
+Revisión del 13/11/2026 a las 19:40, después de implementar `442250f` en `libreria-web` y de dejar `editorial-codex` como dominio principal. El contenedor de la API no se redesplegó en esta pasada; la base está en el volumen de `calculadora_db`.
+
+| Prueba | Pedido | Estado | Resultado |
+|---|---|---|---|
+| Salud tras el redespliegue del front | `GET /api/health/ready` | 200 | `{"estado":"lista"}` |
+| Catálogo | `GET /api/libros/?limit=100` | 200 | 12 libros |
+| Clientes | `GET /api/clientes/?limit=100` | 200 | ids 1 y 2 |
+| Venta histórica | `GET /api/ventas/3` | 200 | total `60500.00`; el libro 4 sigue en `21000.00` |
