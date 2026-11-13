@@ -177,7 +177,7 @@
 
 
 /* ==========================================================================
-   CH-03: Paginación, estados y modal accesible de detalle
+   CH-03: Paginación, estados y modal-libro accesible de detalle
    ========================================================================== */
 
 /* Altura máxima de portadas en tarjeta */
@@ -211,136 +211,482 @@
   padding: 0 var(--espacio-2, 0.5rem);
 }
 
-/* Modal de detalle accesible */
-.modal-dialogo {
-  border: 1px solid var(--color-borde, rgba(202, 168, 117, 0.3));
-  border-radius: var(--radio-md, 8px);
-  background: var(--color-superficie, #1f1a2e);
-  color: var(--color-texto, #f4f2ff);
-  max-width: 580px;
-  width: 90%;
-  padding: 0;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
-  margin: auto;
-}
-
-.modal-dialogo::backdrop {
-  background: rgba(10, 8, 18, 0.75);
-  backdrop-filter: blur(4px);
-}
-
-.modal-dialogo__contenido {
-  display: flex;
-  flex-direction: column;
-  padding: var(--espacio-5, 1.5rem);
-}
-
-.modal-dialogo__cabecera {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  border-bottom: 1px solid var(--color-borde, rgba(202, 168, 117, 0.2));
-  padding-bottom: var(--espacio-3, 0.75rem);
-  margin-bottom: var(--espacio-4, 1rem);
-}
-
-.modal-dialogo__titulo {
-  font-family: var(--fuente-titulos, 'Cinzel', serif);
-  font-size: 1.35rem;
-  color: var(--color-oro, #caa875);
-  margin: 0;
-}
-
-.modal-dialogo__cerrar {
-  background: transparent;
+/* ==========================================================================
+   Modal-libro 3D: el detalle se abre como un libro con una tarjeta de pergamino
+   ========================================================================== */
+.modal-libro {
+  --libro-cuero-1: #1d3a2c;
+  --libro-cuero-2: #2a5a41;
+  --libro-dorado: #caa875;
+  --libro-dorado-oscuro: #b8892f;
+  --libro-papel: #f5ecd8;
+  --libro-tinta: #3b2c1c;
+  --libro-etiqueta: #8a6a45;
+  --libro-sinopsis: #5c4630;
   border: none;
-  color: var(--color-texto-secundario, #a49eb5);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 4px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 200ms ease, background-color 200ms ease;
+  background: transparent;
+  color: var(--libro-tinta);
+  padding: 0;
+  margin: auto;
+  max-width: 96vw;
+  overflow: visible;
 }
 
-.modal-dialogo__cerrar:hover,
-.modal-dialogo__cerrar:focus-visible {
-  color: var(--color-texto, #f4f2ff);
-  background-color: rgba(255, 255, 255, 0.1);
-  outline: 2px solid var(--color-oro, #caa875);
+.modal-libro::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  animation: libro-backdrop 300ms ease both;
 }
 
-.modal-dialogo__cuerpo {
-  display: flex;
-  gap: var(--espacio-4, 1.25rem);
-  align-items: flex-start;
+@keyframes libro-backdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.modal-dialogo__portada-wrap {
-  flex: 0 0 140px;
-  border-radius: 4px;
+.libro-contenedor {
+  position: relative;
+  width: 560px;
+  height: 400px;
+}
+
+/* --- Escena 3D del libro (decorativa) --- */
+.libro-escena {
+  position: absolute;
+  inset: 0;
+  perspective: 1600px;
+  z-index: 1;
+}
+
+.libro-entrada {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+@keyframes libro-entrada {
+  from { opacity: 0; transform: scale(0.6) rotateY(-14deg); }
+  to { opacity: 1; transform: scale(1) rotateY(0deg); }
+}
+
+.modal-libro--entrando .libro-entrada {
+  animation: libro-entrada 600ms cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.libro-tomo {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: translateX(-140px) rotateX(12deg);
+  transition: transform 1100ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.modal-libro--abriendo .libro-tomo {
+  transform: translateX(0) rotateX(12deg);
+}
+
+/* Páginas: bloque de papel con canto escalonado y base oscura */
+.libro-paginas {
+  position: absolute;
+  top: 8px;
+  left: 285px;
+  width: 270px;
+  height: 344px;
+  background: var(--libro-papel);
+  border-radius: 1px 3px 3px 1px;
+  transform-style: preserve-3d;
+  transition: left 1100ms cubic-bezier(.2, .7, .2, 1), width 1100ms cubic-bezier(.2, .7, .2, 1);
+  box-shadow:
+    1px 1px 0 #efe4cb, 2px 2px 0 #d6c7a4,
+    3px 3px 0 #efe4cb, 4px 4px 0 #d6c7a4,
+    5px 5px 0 #efe4cb, 6px 6px 0 #d6c7a4,
+    7px 7px 0 #efe4cb, 8px 8px 0 #d6c7a4,
+    9px 9px 0 #efe4cb, 10px 10px 0 #d6c7a4,
+    11px 11px 0 #3a2416,
+    0 30px 45px rgba(0, 0, 0, 0.55);
+}
+
+.modal-libro--abriendo .libro-paginas {
+  left: 0;
+  width: 560px;
+}
+
+.libro-pagina {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: var(--libro-papel);
+}
+
+.libro-pagina--izq {
+  left: 0;
+  width: 270px;
+  opacity: 0;
+  transition: opacity 500ms ease;
+  background-image:
+    linear-gradient(to left, rgba(58, 36, 22, 0.28) 0, rgba(58, 36, 22, 0) 28px),
+    linear-gradient(to left, #cdbf9f 0, rgba(205, 191, 159, 0) 22px);
+}
+
+.libro-pagina--der {
+  right: 0;
+  width: 270px;
+  background-image:
+    linear-gradient(to right, rgba(58, 36, 22, 0.28) 0, rgba(58, 36, 22, 0) 28px),
+    linear-gradient(to right, #cdbf9f 0, rgba(205, 191, 159, 0) 22px);
+}
+
+.modal-libro--abriendo .libro-pagina--izq {
+  opacity: 1;
+}
+
+/* Pliegue del lomo: sombra vertical central */
+.libro-paginas::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 28px;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 500ms ease;
+  background: linear-gradient(90deg,
+    rgba(58, 36, 22, 0) 0%,
+    rgba(58, 36, 22, 0.28) 50%,
+    rgba(58, 36, 22, 0) 100%);
+}
+
+.modal-libro--abriendo .libro-paginas::after {
+  opacity: 1;
+}
+
+/* Tapa: gira sobre el lomo (transform-origin: left center) */
+.libro-tapa {
+  position: absolute;
+  top: 0;
+  left: 280px;
+  width: 280px;
+  height: 360px;
+  z-index: 3;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 1100ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.modal-libro--abriendo .libro-tapa {
+  transform: rotateY(-180deg);
+}
+
+.modal-libro--cerrando-tapa .libro-tomo,
+.modal-libro--cerrando-tapa .libro-tapa,
+.modal-libro--cerrando-tapa .libro-paginas,
+.modal-libro--cerrando-tapa .libro-paginas::after,
+.modal-libro--cerrando-tapa .libro-pagina--izq {
+  transition-duration: 600ms;
+}
+
+.libro-tapa__cara {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+  backface-visibility: hidden;
+  border: 1px solid var(--libro-dorado);
+  background: linear-gradient(135deg, var(--libro-cuero-1) 0%, var(--libro-cuero-2) 55%, #16301f 100%);
 }
 
-.modal-dialogo__portada {
+.libro-tapa__frente {
+  border-radius: 2px 6px 6px 2px;
+}
+
+.libro-tapa__portada {
   width: 100%;
-  height: auto;
-  max-height: 220px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.modal-dialogo__datos {
-  flex: 1;
+.libro-tapa__dorso {
+  transform: rotateY(180deg);
+  top: 8px;
+  bottom: 8px;
+  left: 10px;
+  right: 0;
+  border: none;
+  border-radius: 3px 1px 1px 3px;
+  background-color: var(--libro-papel);
+  background-image:
+    linear-gradient(to left, rgba(58, 36, 22, 0.28) 0, rgba(58, 36, 22, 0) 28px),
+    linear-gradient(to left, #cdbf9f 0, rgba(205, 191, 159, 0) 22px);
+  box-shadow:
+    -1px 1px 0 #efe4cb, -2px 2px 0 #d6c7a4,
+    -3px 3px 0 #efe4cb, -4px 4px 0 #d6c7a4,
+    -5px 5px 0 #efe4cb, -6px 6px 0 #d6c7a4,
+    -7px 7px 0 #efe4cb, -8px 8px 0 #d6c7a4,
+    -9px 9px 0 #efe4cb, -10px 10px 0 #d6c7a4,
+    -11px 11px 0 #3a2416,
+    0 30px 45px rgba(0, 0, 0, 0.55);
+}
+
+/* --- Tarjeta de pergamino (contenido real) --- */
+.libro-tarjeta {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  width: 420px;
+  max-width: 92vw;
+  padding: 1.6rem 1.8rem 1.8rem;
+  background: var(--libro-papel);
+  color: var(--libro-tinta);
+  border: 1px solid #c9a86a;
+  border-radius: 8px;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(202, 168, 117, 0.35);
+  transform-origin: center bottom;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4) translateY(40px);
+  transition: opacity 800ms ease, transform 800ms cubic-bezier(.25, 1.3, .4, 1);
+}
+
+.modal-libro--abierto .libro-tarjeta {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) translateY(0);
+}
+
+.modal-libro--cerrando .libro-tarjeta {
+  transition-duration: 300ms;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.4) translateY(40px);
+}
+
+.libro-tarjeta__cerrar {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.modal-dialogo__item {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
-.modal-dialogo__precio {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--color-oro, #caa875);
-}
-
-.modal-dialogo__autores-bloque {
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px dashed var(--color-borde, rgba(255, 255, 255, 0.1));
-}
-
-.modal-dialogo__autores-lista {
-  margin: 0.25rem 0 0 1.25rem;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
   padding: 0;
-  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--libro-etiqueta);
+  cursor: pointer;
+  transition: color 200ms ease, background-color 200ms ease;
 }
 
-.modal-dialogo__autores-lista li {
-  margin-bottom: 0.2rem;
+.libro-tarjeta__cerrar:hover,
+.libro-tarjeta__cerrar:focus-visible {
+  color: var(--libro-tinta);
+  background-color: rgba(138, 106, 69, 0.14);
+  outline: 2px solid var(--libro-dorado-oscuro);
+  outline-offset: 1px;
 }
 
-@media (max-width: 520px) {
-  .modal-dialogo__cuerpo {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+.libro-tarjeta__cerrar .boton__icono {
+  width: 1.1rem;
+  height: 1.1rem;
+  stroke: currentColor;
+}
+
+.libro-tarjeta__portada-movil {
+  display: none;
+  width: 120px;
+  height: auto;
+  max-height: 170px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  margin: 0 auto 0.9rem;
+}
+
+.libro-tarjeta__titulo {
+  margin: 0 0 0.5rem;
+  font-family: var(--fuente-marca, "Cinzel Decorative", Georgia, serif);
+  font-size: 1.2rem;
+  line-height: 1.25;
+  text-align: center;
+  color: var(--libro-tinta);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.libro-tarjeta__separador {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.1rem;
+  color: var(--libro-dorado-oscuro);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.libro-tarjeta__separador::before,
+.libro-tarjeta__separador::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a86a, transparent);
+}
+
+.libro-tarjeta__columnas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+}
+
+.libro-tarjeta__columnas:has(.libro-tarjeta__sinopsis[hidden]) {
+  grid-template-columns: 1fr;
+}
+
+.libro-tarjeta__campo {
+  margin: 0 0 0.7rem;
+}
+
+.libro-tarjeta__campo:last-child {
+  margin-bottom: 0;
+}
+
+.libro-tarjeta__etiqueta {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-family: var(--fuente-base, sans-serif);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--libro-etiqueta);
+}
+
+.libro-tarjeta__valor {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--libro-tinta);
+}
+
+.libro-tarjeta__autores {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: var(--libro-tinta);
+}
+
+.libro-tarjeta__autores li {
+  margin-bottom: 0.15rem;
+}
+
+.libro-tarjeta__precio {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #9c6b1d;
+}
+
+.libro-tarjeta__sinopsis {
+  margin: 0;
+  padding-left: 1.4rem;
+  border-left: 1px solid #c9a86a;
+}
+
+.libro-tarjeta__sinopsis[hidden] {
+  display: none;
+}
+
+.libro-tarjeta__sinopsis p {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--libro-sinopsis);
+}
+
+.libro-tarjeta__sinopsis p::first-letter {
+  float: left;
+  font-size: 2.4em;
+  line-height: 0.85;
+  padding: 0.05em 0.08em 0 0;
+  color: #9c6b1d;
+}
+
+/* --- Móvil: sin libro 3D, solo la tarjeta --- */
+@media (max-width: 767px) {
+  .modal-libro {
+    max-width: 96vw;
   }
-  .modal-dialogo__portada-wrap {
-    flex: 0 0 auto;
-    width: 140px;
+  .libro-contenedor {
+    width: auto;
+    height: auto;
   }
-  .modal-dialogo__autores-lista {
-    list-style-position: inside;
-    margin-left: 0;
+  .libro-escena {
+    display: none;
+  }
+  .libro-tarjeta {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 92vw;
+    max-width: 92vw;
+    transform: translateY(40px) scale(0.94);
+    transform-origin: center bottom;
+  }
+  .modal-libro--abierto .libro-tarjeta {
+    transform: translateY(0) scale(1);
+  }
+  .modal-libro--cerrando .libro-tarjeta {
+    transform: translateY(40px) scale(0.94);
+  }
+  .libro-tarjeta__portada-movil {
+    display: block;
+  }
+  .libro-tarjeta__columnas {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .libro-tarjeta__sinopsis {
+    padding-left: 0;
+    padding-top: 1rem;
+    border-left: none;
+    border-top: 1px solid #c9a86a;
+  }
+}
+
+/* --- Movimiento reducido: sin giros, sin crecimiento ni destellos --- */
+@media (prefers-reduced-motion: reduce) {
+  .libro-entrada,
+  .libro-tomo,
+  .libro-tapa,
+  .libro-paginas,
+  .libro-pagina--izq,
+  .libro-paginas::after,
+  .libro-tarjeta {
+    animation: none !important;
+    transition: none !important;
+  }
+  .modal-libro--abierto .libro-tarjeta,
+  .modal-libro--cerrando .libro-tarjeta {
+    opacity: 1;
+  }
+}
+
+/* --- Colores forzados: solo la tarjeta, sin libro decorativo --- */
+@media (forced-colors: active) {
+  .libro-escena {
+    display: none;
+  }
+  .libro-tarjeta {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    opacity: 1;
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid CanvasText;
+    box-shadow: none;
   }
 }

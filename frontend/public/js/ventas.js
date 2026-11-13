@@ -485,6 +485,9 @@
       if (pVentaMensaje && typeof mostrarMensajeExito === 'function') {
         mostrarMensajeExito(pVentaMensaje, 'Venta N.º ' + respuesta.id + ' registrada correctamente.');
       }
+      if (window.Destellos && typeof window.Destellos.lanzar === 'function' && pVentaMensaje) {
+        window.Destellos.lanzar(pVentaMensaje, { cantidad: 50 });
+      }
       mostrarResumenConfirmado(respuesta);
 
       // Limpiar borrador y formulario

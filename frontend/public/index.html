@@ -9,9 +9,12 @@
   <link rel="stylesheet" href="css/catalogo.css">
   <link rel="stylesheet" href="css/ventas.css">
   <script src="js/api.js"></script>
+  <script src="js/destellos.js" defer></script>
   <script src="js/data.js" defer></script>
   <script src="js/storage.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/sinopsis.js" defer></script>
+  <script src="js/titulo-magico.js" defer></script>
   <script src="js/catalogo.js" defer></script>
   <script src="js/ventas.js" defer></script>
 </head>
@@ -113,31 +116,65 @@
             <button id="catalogo-siguiente" class="boton boton--secundario" type="button" disabled>Siguiente</button>
           </div>
 
-          <!-- Modal accesible para detalle del libro con autores -->
-          <dialog id="catalogo-modal" class="modal-dialogo" aria-labelledby="catalogo-modal-titulo">
-            <div class="modal-dialogo__contenido">
-              <div class="modal-dialogo__cabecera">
-                <h3 id="catalogo-modal-titulo" class="modal-dialogo__titulo" tabindex="-1"></h3>
-                <button id="catalogo-modal-cerrar" class="modal-dialogo__cerrar" type="button" aria-label="Cerrar detalle">
-                  <svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg>
-                </button>
-              </div>
-              <div class="modal-dialogo__cuerpo">
-                <div class="modal-dialogo__portada-wrap">
-                  <img id="catalogo-modal-portada" class="modal-dialogo__portada" src="" alt="">
-                </div>
-                <div class="modal-dialogo__datos">
-                  <p class="modal-dialogo__item"><strong>ISBN:</strong> <span id="catalogo-modal-isbn"></span></p>
-                  <p class="modal-dialogo__item"><strong>Editorial:</strong> <span id="catalogo-modal-editorial"></span></p>
-                  <p class="modal-dialogo__item"><strong>Género:</strong> <span id="catalogo-modal-genero"></span></p>
-                  <p class="modal-dialogo__item"><strong>Precio:</strong> <span id="catalogo-modal-precio" class="modal-dialogo__precio"></span></p>
-                  <p class="modal-dialogo__item"><strong>Stock disponible:</strong> <span id="catalogo-modal-stock"></span></p>
-                  <div class="modal-dialogo__autores-bloque">
-                    <strong>Autores:</strong>
-                    <ul id="catalogo-modal-autores" class="modal-dialogo__autores-lista"></ul>
+          <!-- Modal-libro accesible para el detalle del libro con autores -->
+          <dialog id="catalogo-modal" class="modal-dialogo modal-libro" aria-labelledby="catalogo-modal-titulo">
+            <div class="libro-contenedor">
+              <div class="libro-escena" aria-hidden="true">
+                <div class="libro-entrada">
+                  <div class="libro-tomo">
+                    <div class="libro-paginas">
+                      <div class="libro-pagina libro-pagina--izq"></div>
+                      <div class="libro-pagina libro-pagina--der"></div>
+                    </div>
+                    <div class="libro-tapa">
+                      <div class="libro-tapa__cara libro-tapa__frente">
+                        <img id="catalogo-modal-portada" class="libro-tapa__portada" src="" alt="">
+                      </div>
+                      <div class="libro-tapa__cara libro-tapa__dorso"></div>
+                    </div>
                   </div>
                 </div>
               </div>
+
+              <article class="libro-tarjeta" aria-label="Detalle del libro">
+                <button id="catalogo-modal-cerrar" class="libro-tarjeta__cerrar" type="button" aria-label="Cerrar detalle">
+                  <svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+                <img id="catalogo-modal-portada-movil" class="libro-tarjeta__portada-movil" src="" alt="">
+                <h3 id="catalogo-modal-titulo" class="libro-tarjeta__titulo" tabindex="-1"></h3>
+                <div class="libro-tarjeta__separador" aria-hidden="true">✦</div>
+                <div class="libro-tarjeta__columnas">
+                  <div class="libro-tarjeta__datos">
+                    <div class="libro-tarjeta__campo">
+                      <span class="libro-tarjeta__etiqueta">Autores</span>
+                      <ul id="catalogo-modal-autores" class="libro-tarjeta__autores"></ul>
+                    </div>
+                    <div class="libro-tarjeta__campo">
+                      <span class="libro-tarjeta__etiqueta">Editorial</span>
+                      <span id="catalogo-modal-editorial" class="libro-tarjeta__valor"></span>
+                    </div>
+                    <div class="libro-tarjeta__campo">
+                      <span class="libro-tarjeta__etiqueta">Género</span>
+                      <span id="catalogo-modal-genero" class="libro-tarjeta__valor"></span>
+                    </div>
+                    <div class="libro-tarjeta__campo">
+                      <span class="libro-tarjeta__etiqueta">ISBN</span>
+                      <span id="catalogo-modal-isbn" class="libro-tarjeta__valor"></span>
+                    </div>
+                    <div class="libro-tarjeta__campo">
+                      <span class="libro-tarjeta__etiqueta">Stock</span>
+                      <span id="catalogo-modal-stock" class="libro-tarjeta__valor"></span>
+                    </div>
+                    <div class="libro-tarjeta__campo">
+                      <span class="libro-tarjeta__etiqueta">Precio</span>
+                      <span id="catalogo-modal-precio" class="libro-tarjeta__valor libro-tarjeta__precio"></span>
+                    </div>
+                  </div>
+                  <section class="libro-tarjeta__sinopsis modal-dialogo__sinopsis" hidden>
+                    <p id="catalogo-modal-sinopsis"></p>
+                  </section>
+                </div>
+              </article>
             </div>
           </dialog>
         </section>

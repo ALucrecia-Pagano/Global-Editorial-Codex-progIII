@@ -33,6 +33,10 @@
   let modalPrecio;
   let modalStock;
   let modalAutores;
+  let modalSinopsis;
+  let modalSinopsisTexto;
+  let modalPortadaMovil;
+  let modalTarjeta;
 
   // Estado local en memoria
   let offset = 0;
@@ -41,6 +45,8 @@
   let cargando = false;
   let elementoOrigenModal = null;
   let catalogoIniciado = false;
+  let temporizadoresModal = [];
+  let cerrandoModal = false;
 
   const RUTA_FALLBACK = 'assets/img/portada-fallback.svg';
 
@@ -58,6 +64,25 @@
       return 'assets/img/portadas/' + libro.isbn.trim() + '.webp';
     }
     return RUTA_FALLBACK;
+  }
+
+  /**
+   * Fija el contador "Historias por descubrir" con el total real de la API.
+   * Se consulta una sola vez al iniciar y no cambia al buscar ni al paginar.
+   */
+  async function actualizarContadorCatalogo() {
+    const contador = document.querySelector('.bienvenida__cantidad');
+    if (!contador) {
+      return;
+    }
+    contador.textContent = '…';
+    try {
+      const libros = await Api.get('/libros/', { limit: 100 });
+      const total = Array.isArray(libros) ? libros.length : 0;
+      contador.textContent = total >= 100 ? '100+' : String(total);
+    } catch (err) {
+      contador.textContent = '—';
+    }
   }
 
   /**
@@ -276,6 +301,79 @@
   }
 
   /**
+   * Indica si el usuario pidió reducir el movimiento.
+   */
+  function prefiereMovimientoReducido() {
+    return typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  /**
+   * Indica si la ventana usa el diseño de escritorio (libro 3D).
+   */
+  function esEscritorio() {
+    return typeof window.matchMedia === 'function' &&
+      window.matchMedia('(min-width: 768px)').matches;
+  }
+
+  /**
+   * Cancela los temporizadores pendientes de la secuencia del modal.
+   */
+  function limpiarTemporizadoresModal() {
+    temporizadoresModal.forEach(function (id) {
+      window.clearTimeout(id);
+    });
+    temporizadoresModal = [];
+  }
+
+  function programarModal(fn, ms) {
+    temporizadoresModal.push(window.setTimeout(fn, ms));
+  }
+
+  /**
+   * Ejecuta la secuencia de apertura del libro 3D (o directa en móvil/reduced-motion).
+   */
+  function animarAperturaModal() {
+    if (!dialogModal) {
+      return;
+    }
+    dialogModal.classList.remove(
+      'modal-libro--entrando',
+      'modal-libro--abriendo',
+      'modal-libro--abierto',
+      'modal-libro--cerrando',
+      'modal-libro--cerrando-tapa'
+    );
+
+    if (prefiereMovimientoReducido()) {
+      dialogModal.classList.add('modal-libro--abriendo', 'modal-libro--abierto');
+      return;
+    }
+
+    if (!esEscritorio()) {
+      dialogModal.classList.add('modal-libro--abierto');
+      if (modalTarjeta && window.Destellos && typeof window.Destellos.lanzar === 'function') {
+        programarModal(function () {
+          window.Destellos.lanzar(modalTarjeta);
+        }, 350);
+      }
+      return;
+    }
+
+    dialogModal.classList.add('modal-libro--entrando');
+    programarModal(function () {
+      dialogModal.classList.remove('modal-libro--entrando');
+      dialogModal.classList.add('modal-libro--abriendo');
+    }, 600);
+    programarModal(function () {
+      dialogModal.classList.add('modal-libro--abierto');
+      if (modalTarjeta && window.Destellos && typeof window.Destellos.lanzar === 'function') {
+        window.Destellos.lanzar(modalTarjeta);
+      }
+    }, 1700);
+  }
+
+  /**
    * Abre la ficha de detalle de un libro consultando GET /libros/{id} (sin barra final).
    */
   async function abrirDetalle(id, elementoDisparador) {
@@ -291,10 +389,20 @@
       if (modalTitulo) {
         modalTitulo.textContent = detalle.titulo || 'Detalle del libro';
       }
+      const rutaPortada = resolverRutaPortada(detalle);
+      const textoAlt = 'Portada de «' + (detalle.titulo || '') + '»';
       if (modalPortada) {
-        modalPortada.src = resolverRutaPortada(detalle);
-        modalPortada.alt = 'Portada de «' + (detalle.titulo || '') + '»';
+        modalPortada.src = rutaPortada;
+        modalPortada.alt = textoAlt;
         modalPortada.onerror = function () {
+          this.onerror = null;
+          this.src = RUTA_FALLBACK;
+        };
+      }
+      if (modalPortadaMovil) {
+        modalPortadaMovil.src = rutaPortada;
+        modalPortadaMovil.alt = textoAlt;
+        modalPortadaMovil.onerror = function () {
           this.onerror = null;
           this.src = RUTA_FALLBACK;
         };
@@ -336,12 +444,29 @@
         }
       }
 
-      // Apertura de modal accesible
+      // Sinopsis de presentación (contenido del frontend, indexado por ISBN)
+      if (modalSinopsis && modalSinopsisTexto) {
+        const tieneSinopsis = !!window.SINOPSIS && typeof detalle.isbn === 'string' &&
+          Object.prototype.hasOwnProperty.call(window.SINOPSIS, detalle.isbn);
+        if (tieneSinopsis) {
+          modalSinopsisTexto.textContent = window.SINOPSIS[detalle.isbn];
+          modalSinopsis.hidden = false;
+        } else {
+          modalSinopsisTexto.textContent = '';
+          modalSinopsis.hidden = true;
+        }
+      }
+
+      // Apertura de modal accesible con la secuencia del libro 3D
+      limpiarTemporizadoresModal();
+      cerrandoModal = false;
       if (typeof dialogModal.showModal === 'function') {
         dialogModal.showModal();
       } else {
         dialogModal.setAttribute('open', '');
       }
+
+      animarAperturaModal();
 
       if (modalCerrar) {
         modalCerrar.focus();
@@ -352,12 +477,21 @@
   }
 
   /**
-   * Cierra el modal de detalle y restaura el foco en el disparador.
+   * Cierra el dialog y restaura el foco en el disparador.
    */
-  function cerrarDetalle() {
+  function finalizarCierreModal() {
+    limpiarTemporizadoresModal();
+    cerrandoModal = false;
     if (!dialogModal) {
       return;
     }
+    dialogModal.classList.remove(
+      'modal-libro--entrando',
+      'modal-libro--abriendo',
+      'modal-libro--abierto',
+      'modal-libro--cerrando',
+      'modal-libro--cerrando-tapa'
+    );
     if (typeof dialogModal.close === 'function') {
       dialogModal.close();
     } else {
@@ -366,6 +500,34 @@
     if (elementoOrigenModal && typeof elementoOrigenModal.focus === 'function') {
       elementoOrigenModal.focus();
     }
+  }
+
+  /**
+   * Cierra el modal de detalle con la secuencia inversa del libro 3D.
+   */
+  function cerrarDetalle() {
+    if (!dialogModal || cerrandoModal) {
+      return;
+    }
+    limpiarTemporizadoresModal();
+    dialogModal.classList.remove('modal-libro--entrando');
+
+    if (prefiereMovimientoReducido()) {
+      finalizarCierreModal();
+      return;
+    }
+
+    cerrandoModal = true;
+    dialogModal.classList.add('modal-libro--cerrando');
+    programarModal(function () {
+      if (esEscritorio()) {
+        dialogModal.classList.remove('modal-libro--abierto', 'modal-libro--abriendo');
+        dialogModal.classList.add('modal-libro--cerrando-tapa');
+        programarModal(finalizarCierreModal, 600);
+      } else {
+        finalizarCierreModal();
+      }
+    }, 300);
   }
 
   /**
@@ -397,10 +559,17 @@
     modalPrecio = document.getElementById('catalogo-modal-precio');
     modalStock = document.getElementById('catalogo-modal-stock');
     modalAutores = document.getElementById('catalogo-modal-autores');
+    modalSinopsis = document.querySelector('.modal-dialogo__sinopsis');
+    modalSinopsisTexto = document.getElementById('catalogo-modal-sinopsis');
+    modalPortadaMovil = document.getElementById('catalogo-modal-portada-movil');
+    modalTarjeta = document.querySelector('.libro-tarjeta');
 
     if (!divLista) {
       return;
     }
+
+    // Contador fijo "Historias por descubrir" (no depende de búsqueda ni paginación)
+    actualizarContadorCatalogo();
 
     // Eventos de búsqueda
     if (formBusqueda) {
@@ -459,7 +628,8 @@
           cerrarDetalle();
         }
       });
-      dialogModal.addEventListener('cancel', function () {
+      dialogModal.addEventListener('cancel', function (e) {
+        e.preventDefault();
         cerrarDetalle();
       });
     }

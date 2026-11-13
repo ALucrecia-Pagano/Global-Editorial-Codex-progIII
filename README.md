@@ -69,6 +69,8 @@ El script es idempotente (correrlo dos veces no duplica nada) y también acepta 
 - Selectores: los selectores de clientes y autores usan los listados `GET /clientes/` y `GET /autores/` (la consigna pide documentar esta elección).
 - Persistencia: el borrador de la venta vive en memoria y `localStorage` solo guarda el tema y el estado de la barra lateral.
 - Importes: los importes confirmados salen siempre de la respuesta de la API.
+- Sinopsis: las sinopsis son contenido de presentación del frontend (`js/sinopsis.js`, por ISBN), igual que las portadas; la API no tiene campo de descripción y el backend no se modifica. Si un libro no tiene sinopsis, la sección no se muestra.
+- Animaciones: el detalle se abre como un libro 3D (`css/catalogo.css`, `js/catalogo.js`), el título "Codex" tiene una estela de polvo dorado (`js/titulo-magico.js`) y los destellos son partículas en `<canvas>` (`js/destellos.js`). Todas respetan `prefers-reduced-motion: reduce` (sin giros, sin crecimiento ni destellos).
 
 ## Estado de los changes
 | Change | Nombre | Estado |

@@ -1604,3 +1604,40 @@ html:not(.js) .barra { display: flex; }
   .bienvenida__contenido { background: Canvas; color: CanvasText; }
   .formulario__opcion input:checked + label { border-color: Highlight; color: CanvasText; }
 }
+
+/* ==========================================================================
+   Título mágico: estela de polvo dorado sobre todo el encabezado
+   Dos capas <canvas> a pantalla completa del header (una por detrás de las letras
+   y otra por delante); el contenido del encabezado queda entre las dos.
+   ========================================================================== */
+.marca__libro,
+.marca__titulo,
+.marca__ornamento,
+.marca__lema {
+  position: relative;
+  z-index: 2;
+}
+
+.titulo-magico__capa {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.titulo-magico__capa--frente {
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titulo-magico__capa {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .titulo-magico__capa {
+    display: none;
+  }
+}
