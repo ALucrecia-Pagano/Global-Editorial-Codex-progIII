@@ -59,6 +59,12 @@ Aviso: al probar cambios del front, recargar con `Ctrl+Shift+R`.
 ## Datos de prueba
 El seed carga datos ficticios (1 cliente, 2 libros y 1 venta) y rechaza una base que ya tenga registros.
 
+Después del seed, cargar el catálogo de demostración (editoriales, géneros, autores y 10 libros, total 12 libros) a través de la API con:
+```bash
+python herramientas/cargar_catalogo.py --base http://127.0.0.1:8080/api
+```
+El script es idempotente (correrlo dos veces no duplica nada) y también acepta la URL pública: `--base https://<dominio>/api`.
+
 ## Decisiones técnicas
 - Selectores: los selectores de clientes y autores usan los listados `GET /clientes/` y `GET /autores/` (la consigna pide documentar esta elección).
 - Persistencia: el borrador de la venta vive en memoria y `localStorage` solo guarda el tema y el estado de la barra lateral.

@@ -42,20 +42,10 @@
   let elementoOrigenModal = null;
   let catalogoIniciado = false;
 
-  // Mapa de portadas conocidas del primer parcial
-  const PORTADAS_CONOCIDAS = {
-    1: 'assets/img/portadas/li-1.webp',
-    2: 'assets/img/portadas/li-2.webp',
-    3: 'assets/img/portadas/li-3.webp',
-    4: 'assets/img/portadas/li-4.webp',
-    5: 'assets/img/portadas/li-5.webp',
-    6: 'assets/img/portadas/li-6.webp'
-  };
-
   const RUTA_FALLBACK = 'assets/img/portada-fallback.svg';
 
   /**
-   * Resuelve la ruta inicial para la portada de un libro.
+   * Resuelve la ruta inicial para la portada de un libro a partir de su ISBN.
    */
   function resolverRutaPortada(libro) {
     if (!libro) {
@@ -64,9 +54,8 @@
     if (typeof libro.portada === 'string' && libro.portada.trim() !== '') {
       return libro.portada.trim();
     }
-    const numId = Number(libro.id);
-    if (!isNaN(numId) && Object.prototype.hasOwnProperty.call(PORTADAS_CONOCIDAS, numId)) {
-      return PORTADAS_CONOCIDAS[numId];
+    if (typeof libro.isbn === 'string' && libro.isbn.trim() !== '') {
+      return 'assets/img/portadas/' + libro.isbn.trim() + '.webp';
     }
     return RUTA_FALLBACK;
   }

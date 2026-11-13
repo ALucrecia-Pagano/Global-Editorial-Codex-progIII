@@ -154,6 +154,11 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 - **Cómo probar:**
   1. En navegador o curl: `curl.exe -i https://<dominio-publico>/api/health/ready` -> HTTP 200.
   2. En Shell de Easypanel del backend: verificar conexión a PostgreSQL y correr seed si la base está limpia.
+  3. Después de migrar y ejecutar el seed, cargar el catálogo de demostración (editoriales, géneros, autores y libros) contra la URL pública:
+     ```bash
+     python herramientas/cargar_catalogo.py --base https://<dominio>/api
+     ```
+     Registrar el comando y su salida en `DEPLOY.md`.
 - **Casos G que cubre:** **G-07** (despliegue en VPS, HTTPS activo, salud 200 y persistencia en base de datos).
 
 ---
@@ -165,6 +170,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 - **Fecha límite:** A definir
 - **Objetivo:** Conectar el catálogo de libros con la API usando `api.js`. Toda la lógica de catálogo vive en `frontend/public/js/catalogo.js` y sus estilos en `frontend/public/css/catalogo.css`. `css/catalogo.css` ya existe con la grilla compacta y el estilo de libro, y CH-03 agrega sus estilos debajo sin borrar lo existente. Manejar búsqueda en servidor, paginación, los 4 estados de la vista, libros sin género ("Sin clasificar"), detalle de autores al hacer clic en tarjeta (`GET /libros/{id}`), portadas compactas y portada de respaldo SVG.
 - **Criterios de aceptación:** En 1280 px entran al menos 4 tarjetas por fila, ninguna portada supera 320 px de alto, en 375 px entran 2 por fila; la tarjeta completa es clickeable para abrir el detalle (`GET /libros/{id}`) con cursor pointer, foco visible y Enter.
+- **Nota posterior (portadas por ISBN, con acuerdo de su autor):** fuera del alcance original de CH-03, la portada se resuelve por `assets/img/portadas/{isbn}.webp` (y `portada-fallback.svg` si el libro no tiene ISBN o la imagen no existe). Se eliminó el mapa `PORTADAS_CONOCIDAS` que asociaba las tapas por id de la base y asignaba imágenes equivocadas a los libros del seed.
 - **Archivos que puede tocar (autorizados):**
   - `frontend/public/js/catalogo.js` (creación del módulo).
   - `frontend/public/css/catalogo.css` (`css/catalogo.css` ya existe con la grilla compacta y el estilo de libro; CH-03 agrega sus estilos debajo sin borrar lo existente).
@@ -407,6 +413,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
        - Desacopla `frontend/public/js/data.js` para conservar únicamente lo que siga haciendo falta (como el mapeo de portadas estáticas conocidas).
        - Limpia en `frontend/public/js/app.js` las funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), las funciones obsoletas de persistencia (`iniciarPersistencia`, `mostrarErrorPersistencia`, los validadores `es*GuardadoValido`) y `registrarFormulariosMaqueta`.
        - Ajustes cosméticos finales en `frontend/public/css/styles.css` si fueran necesarios.
+       - Elimina las portadas `frontend/public/assets/img/portadas/li-*.webp`, ya reemplazadas por las portadas por ISBN (`{isbn}.webp`).
     2. Reúne, revisa y consolida todas las capturas y notas de prueba en la carpeta `evidencia/`.
     3. Completa el `README.md` (que ya existe con la base) con la URL pública, el estado final de los changes y la evidencia, sin borrar lo existente.
     4. Completa `DEPLOY.md` con URL pública, revisión Git, variables, proxy, puertos y verificación tras redespliegue.
