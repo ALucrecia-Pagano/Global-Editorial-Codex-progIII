@@ -12,6 +12,7 @@
   <script src="js/data.js" defer></script>
   <script src="js/storage.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/catalogo.js" defer></script>
   <script src="js/ventas.js" defer></script>
 </head>
 <body>
@@ -94,12 +95,51 @@
 
           <p id="catalogo-resultados" class="solo-lectores" role="status" aria-live="polite"></p>
 
+          <p id="catalogo-cargando" class="mensaje mensaje--info" role="status" hidden>Cargando libros del catálogo…</p>
+          <div id="catalogo-error" class="mensaje mensaje--error" role="alert" hidden>
+            <p id="catalogo-error-texto">Error de conexión con la API.</p>
+            <button id="catalogo-reintentar" class="boton boton--secundario" type="button">Reintentar</button>
+          </div>
           <p id="catalogo-sin-resultados" class="mensaje mensaje--vacio" hidden>No se encontraron libros que coincidan con la búsqueda.</p>
           <p id="catalogo-vacio" class="mensaje mensaje--vacio" hidden>Todavía no hay libros en el catálogo.</p>
 
           <div id="catalogo-lista" class="vista__lista">
-            <!-- Las tarjetas se renderizan desde el array `libros` (C-04) -->
+            <!-- Las tarjetas se renderizan dinámicamente desde GET /libros/ -->
           </div>
+
+          <div id="catalogo-paginacion" class="paginacion" hidden>
+            <button id="catalogo-anterior" class="boton boton--secundario" type="button" disabled>Anterior</button>
+            <span id="catalogo-pagina-info" class="paginacion__info"></span>
+            <button id="catalogo-siguiente" class="boton boton--secundario" type="button" disabled>Siguiente</button>
+          </div>
+
+          <!-- Modal accesible para detalle del libro con autores -->
+          <dialog id="catalogo-modal" class="modal-dialogo" aria-labelledby="catalogo-modal-titulo">
+            <div class="modal-dialogo__contenido">
+              <div class="modal-dialogo__cabecera">
+                <h3 id="catalogo-modal-titulo" class="modal-dialogo__titulo" tabindex="-1"></h3>
+                <button id="catalogo-modal-cerrar" class="modal-dialogo__cerrar" type="button" aria-label="Cerrar detalle">
+                  <svg class="boton__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+              </div>
+              <div class="modal-dialogo__cuerpo">
+                <div class="modal-dialogo__portada-wrap">
+                  <img id="catalogo-modal-portada" class="modal-dialogo__portada" src="" alt="">
+                </div>
+                <div class="modal-dialogo__datos">
+                  <p class="modal-dialogo__item"><strong>ISBN:</strong> <span id="catalogo-modal-isbn"></span></p>
+                  <p class="modal-dialogo__item"><strong>Editorial:</strong> <span id="catalogo-modal-editorial"></span></p>
+                  <p class="modal-dialogo__item"><strong>Género:</strong> <span id="catalogo-modal-genero"></span></p>
+                  <p class="modal-dialogo__item"><strong>Precio:</strong> <span id="catalogo-modal-precio" class="modal-dialogo__precio"></span></p>
+                  <p class="modal-dialogo__item"><strong>Stock disponible:</strong> <span id="catalogo-modal-stock"></span></p>
+                  <div class="modal-dialogo__autores-bloque">
+                    <strong>Autores:</strong>
+                    <ul id="catalogo-modal-autores" class="modal-dialogo__autores-lista"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </dialog>
         </section>
 
         <!-- Vista: Libros -->

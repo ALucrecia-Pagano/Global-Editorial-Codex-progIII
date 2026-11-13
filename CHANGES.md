@@ -38,7 +38,7 @@ El trabajo se reparte entre los 5 integrantes del grupo. Para evitar bloqueos, *
 |---|---|---|---|---|---|
 | **CH-01** | `imagen-frontend` | Amanda | `feat/CH-01-imagen-frontend` | ✅ Hecho | G-07 (local) |
 | **CH-02** | `primer-despliegue-easypanel` | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | A definir | G-07 (VPS) |
-| **CH-03** | `catalogo-y-detalle` | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | A definir | G-01 |
+| **CH-03** | `catalogo-y-detalle` | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | ✅ Hecho | G-01 |
 | **CH-04** | `altas-libros-y-clientes` | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | A definir | G-02, G-03 |
 | **CH-05** | `ventas-e-historial` | Amanda | `feat/CH-05-ventas-e-historial` | ✅ Hecho | G-04, G-05, G-06 |
 | **CH-06** | `verificacion-y-entrega` | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | A definir | G-01 a G-07 |
@@ -96,7 +96,7 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 |---|---|---|---|---|---|---|---|---|
 | **CH-01** | `imagen-frontend` | Ej. 4 | Amanda | `feat/CH-01-imagen-frontend` | `frontend/Dockerfile`, `.dockerignore`, `default.conf.template`, `env.example`, `public/js/api.js`, `public/index.html` (solo script) | *Ninguna* (no toca `app.js`) | G-07 (local) | ✅ Hecho |
 | **CH-02** | `primer-despliegue-easypanel` | Ej. 5 | Integrante 2 | `feat/CH-02-primer-despliegue-easypanel` | `DEPLOY.md` | *Ninguna* | G-07 (VPS) | A definir |
-| **CH-03** | `catalogo-y-detalle` | Ej. 1 | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css` (ya creado), `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 | A definir |
+| **CH-03** | `catalogo-y-detalle` | Ej. 1 | Integrante 3 | `feat/CH-03-catalogo-y-detalle` | `public/js/catalogo.js`, `public/css/catalogo.css` (ya creado), `public/assets/img/portada-fallback.svg`, `public/index.html` (solo script y `#catalogo`), `public/js/app.js` (solo borrar) | `normalizarTexto`, `coincideTitulo`, `textoResultadosCatalogo`, `PORTADAS_IDS_CONOCIDOS`, `resolverPortada`, `renderCatalogo`, `filtrarCatalogo`, `alEnviarBusqueda`, `iniciarFiltroCatalogo`, y llamada `iniciarFiltroCatalogo()` *(no borra funciones de nombres compartidas)* | G-01 | ✅ Hecho |
 | **CH-04** | `altas-libros-y-clientes` | Ej. 2 | Integrante 4 | `feat/CH-04-altas-libros-y-clientes` | `public/js/altas.js`, `public/css/altas.css`, `public/index.html` (solo script/link, `#libros`, `#clientes`), `public/js/app.js` (solo borrar) | `renderLibros`, `renderClientes`, `actualizarContadorLibros`, `llenarOpciones`, `poblarFormularioLibro`, `normalizarIsbn`, `validarLibro`, `refrescarVistasLibros`, `registrarHandlerAltaLibro`, `validarCliente`, `refrescarVistasClientes`, `registrarHandlerAltaCliente`, y llamadas en DOMContentLoaded (`poblarFormularioLibro`, `registrarHandlerAltaLibro`, `registrarHandlerAltaCliente`, `actualizarContadorLibros`) *(no borra funciones de nombres compartidas; pasan a CH-06)* | G-02, G-03 | A definir |
 | **CH-05** | `ventas-e-historial` | Ej. 3 | Amanda | `feat/CH-05-ventas-e-historial` | `public/js/ventas.js`, `public/css/ventas.css`, `public/index.html` (solo script/link, `#ventas`, `#historial`), `public/js/app.js` (solo borrar) | `renglonesBorrador`, `TEXTO_ERROR_CANTIDAD`, `esCantidadValida`, `buscarLibroPorId`, `renderSelectorVenta`, `renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `calcularTotalBorrador`, `actualizarTotalVenta`, `agregarRenglonBorrador`, `registrarHandlerAgregarDetalle`, `aplicarCantidadRenglon`, `renderRenglonesVenta`, `sincronizarCantidadesBorrador`, `calcularSiguienteIdVenta`, `validarVenta`, `construirVenta`, `registrarHandlerConfirmarVenta`, `numeroDeVenta`, `agregarCeldaTexto`, `renderHistorialVentas`, `escribirTituloConId`, `mostrarDetalleVenta`, y llamadas en DOMContentLoaded (`renderSelectorClientesVenta`, `renderSelectorLibrosVenta`, `registrarHandlerAgregarDetalle`, `renderRenglonesVenta`, `registrarHandlerConfirmarVenta`, `renderHistorialVentas`) | G-04, G-05, G-06 | ✅ Hecho |
 | **CH-06** | `verificacion-y-entrega` | Verif. | Integrante 5 | `feat/CH-06-verificacion-y-entrega` | `README.md`, `DEPLOY.md`, `evidencia/`, `public/js/storage.js`, `public/js/data.js`, `public/js/app.js`, `public/css/styles.css` (opcional) | Limpieza final en `app.js`: funciones compartidas de nombres (`obtenerNombreEditorial`, `obtenerNombreGenero`, `obtenerTextoGenero`, `obtenerNombresAutores`), `iniciarPersistencia`, `mostrarErrorPersistencia`, validadores `es*GuardadoValido`, y `registrarFormulariosMaqueta` | G-01 a G-07 | A definir |
@@ -158,7 +158,8 @@ Guía paso a paso para cualquier integrante o IA que ejecute un change:
 
 ---
 
-### CH-03 · catalogo-y-detalle
+### CH-03 · catalogo-y-detalle (✅ Hecho)
+- **Estado:** ✅ Hecho
 - **Responsable:** Integrante 3
 - **Rama:** `feat/CH-03-catalogo-y-detalle`
 - **Fecha límite:** A definir
