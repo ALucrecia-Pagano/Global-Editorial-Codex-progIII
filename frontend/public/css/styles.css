@@ -75,8 +75,8 @@
 :root[data-tema="claro"] {
   color-scheme: light;
 
-  --color-surface: #dccdf3;
-  --color-surface-2: #d0bdee;
+  --color-surface: #ece2f9;
+  --color-surface-2: #e2d4f6;
   --color-borde: #9479c4;
   --color-linea: #b49fdb;
   --color-borde-campo: #4f4475;
@@ -89,12 +89,28 @@
   --color-exito: #0f5530;
   --color-foco: #1b4fd8;
 
-  /* Lila tipo acuarela en lugar de blanco: más intenso arriba a la izquierda y más
-     claro abajo a la derecha. Contraste medido contra el tramo más oscuro (#c4b0e8). */
-  --degrade-superficie: linear-gradient(135deg, #c4b0e8 0%, #d6c6f1 40%, #ebe0f9 100%);
-  --degrade-sidebar: linear-gradient(180deg, #c8b4ea 0%, #dccdf3 55%, #ece2f9 100%);
-  --degrade-tarjeta: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
-  --degrade-tabla: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
+  /* Lila pastel tipo nube de acuarela en lugar de blanco: varias manchas suaves
+     (radial-gradient) sobre un degradé claro, así no es un solo tono parejo.
+     Contraste medido contra la mancha más oscura (~#cbb6ec). */
+  --degrade-superficie:
+    radial-gradient(ellipse 55% 50% at 10% 8%, rgba(182, 154, 228, 0.5), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 88% 22%, rgba(214, 192, 244, 0.55), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 28% 88%, rgba(236, 212, 242, 0.7), transparent 70%),
+    radial-gradient(ellipse 40% 38% at 72% 72%, rgba(200, 178, 238, 0.35), transparent 70%),
+    linear-gradient(135deg, #e6daf8 0%, #f0e8fb 50%, #f7f1fd 100%);
+  --degrade-sidebar:
+    radial-gradient(ellipse 90% 30% at 15% 6%, rgba(182, 154, 228, 0.5), transparent 70%),
+    radial-gradient(ellipse 80% 28% at 85% 48%, rgba(214, 192, 244, 0.5), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 30% 92%, rgba(236, 212, 242, 0.7), transparent 70%),
+    linear-gradient(180deg, #e6daf8 0%, #f0e8fb 55%, #f6effc 100%);
+  --degrade-tarjeta:
+    radial-gradient(ellipse 60% 55% at 8% 10%, rgba(190, 164, 232, 0.45), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 92% 90%, rgba(236, 212, 242, 0.65), transparent 70%),
+    linear-gradient(145deg, #ebe1f9 0%, #f2eafc 55%, #f7f1fd 100%);
+  --degrade-tabla:
+    radial-gradient(ellipse 60% 55% at 8% 10%, rgba(190, 164, 232, 0.45), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 92% 90%, rgba(236, 212, 242, 0.65), transparent 70%),
+    linear-gradient(145deg, #ebe1f9 0%, #f2eafc 55%, #f7f1fd 100%);
 
   --sombra-brillo: 0 0 0 1px rgba(120, 90, 180, 0.08), 0 0 14px rgba(120, 90, 180, 0.08), 0 14px 40px rgba(90, 60, 150, 0.14);
   --sombra-brillo-suave: 0 0 8px rgba(120, 90, 180, 0.08), 0 6px 18px rgba(90, 60, 150, 0.1);
@@ -1381,19 +1397,35 @@ html:not(.js) .vista + .vista {
 }
 
 :root[data-tema="claro"] {
-  --color-surface: #dccdf3;
-  --color-surface-2: #d0bdee;
+  --color-surface: #ece2f9;
+  --color-surface-2: #e2d4f6;
   --color-borde: #7d64ad;
   --color-linea: #7d64ad;
   --color-borde-campo: #4f4475;
   --color-text: #1c1530;
   --color-text-suave: #43385c;
   --color-accent: #4a2a9c;
-  --degrade-sidebar: linear-gradient(180deg, #c8b4ea 0%, #dccdf3 55%, #ece2f9 100%);
-  --degrade-tarjeta: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
-  --degrade-tabla: linear-gradient(145deg, #cdbbec 0%, #dccdf3 50%, #eee4fa 100%);
+  --degrade-sidebar:
+    radial-gradient(ellipse 90% 30% at 15% 6%, rgba(182, 154, 228, 0.5), transparent 70%),
+    radial-gradient(ellipse 80% 28% at 85% 48%, rgba(214, 192, 244, 0.5), transparent 70%),
+    radial-gradient(ellipse 90% 30% at 30% 92%, rgba(236, 212, 242, 0.7), transparent 70%),
+    linear-gradient(180deg, #e6daf8 0%, #f0e8fb 55%, #f6effc 100%);
+  --degrade-tarjeta:
+    radial-gradient(ellipse 60% 55% at 8% 10%, rgba(190, 164, 232, 0.45), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 92% 90%, rgba(236, 212, 242, 0.65), transparent 70%),
+    linear-gradient(145deg, #ebe1f9 0%, #f2eafc 55%, #f7f1fd 100%);
+  --degrade-tabla:
+    radial-gradient(ellipse 60% 55% at 8% 10%, rgba(190, 164, 232, 0.45), transparent 70%),
+    radial-gradient(ellipse 55% 50% at 92% 90%, rgba(236, 212, 242, 0.65), transparent 70%),
+    linear-gradient(145deg, #ebe1f9 0%, #f2eafc 55%, #f7f1fd 100%);
   --color-borde-boton: #4a2a9c;
   --sombra-brillo-suave: 0 6px 20px #6e3caa18;
+}
+
+/* Tema claro: la barra de arriba y la tarjeta del contador también llevan la nube lila. */
+:root[data-tema="claro"] .barra,
+:root[data-tema="claro"] .bienvenida__resumen {
+  background: var(--degrade-tarjeta);
 }
 
 .marca {
