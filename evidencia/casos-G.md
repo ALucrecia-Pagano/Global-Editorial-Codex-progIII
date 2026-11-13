@@ -29,6 +29,17 @@ Detalle del libro 3 (recortado):
 }
 ```
 
+Paginación desde la pantalla (13/11/2026, 20:52, revisión `497896d`, 8 libros por página):
+
+| Prueba | Pedido que hace el front | Resultado |
+|---|---|---|
+| Página 1 | `GET /api/libros/?limit=9&offset=0` | 8 tarjetas, «Página 1 (libros 1 a 8)», Siguiente activo, Anterior desactivado |
+| Siguiente | `GET /api/libros/?limit=9&offset=8` | 4 tarjetas, «Página 2 (libros 9 a 12)», Siguiente desactivado |
+| Anterior | `GET /api/libros/?limit=9&offset=0` | vuelve a la página 1 con 8 tarjetas |
+| Buscar estando en la página 2 | `GET /api/libros/?limit=9&offset=0&titulo=a` | el desplazamiento se reinicia a la página 1 |
+
+El front pide `limit + 1` (9) para saber si hay una página siguiente y muestra solo 8.
+
 ## G-02 · Alta de libro
 
 Hecho desde el formulario de la vista Libros, en la URL pública, el 13/11/2026 a las 17:20.
@@ -135,3 +146,11 @@ Redespliegue completo del 13/11/2026 a las 20:41: se implementó la revisión `5
 | Consola | — | — | Sin errores |
 
 Los datos siguen disponibles después de redesplegar los dos servicios: la base vive en el volumen de `calculadora_db`, que no se toca al implementar.
+
+## Venta desde la pantalla
+
+13/11/2026, 20:47: en la vista Ventas se eligió a Lucía Gómez y se agregaron *Cartas desde el sur* y *El mapa invisible*. Al agregar dos veces el mismo libro, el borrador sumó la cantidad en el mismo renglón en lugar de duplicarlo. La API respondió con la venta N.º 4 (2 × $ 19.800 + 2 × $ 22.300 = $ 84.200), que apareció en el Historial con su detalle.
+
+## Auditoría final en el celular (375 px)
+
+Catálogo, Libros, Clientes, Ventas e Historial sin desborde horizontal, sin errores en consola y sin respuestas 4xx/5xx al cargar.
