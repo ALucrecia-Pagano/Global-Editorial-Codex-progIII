@@ -50,6 +50,7 @@ Hecho desde el formulario de la vista Libros, en la URL pública, el 13/11/2026 
 
 3. ISBN repetido: `POST /api/libros/` con el mismo ISBN responde **409** con `"No se pudo guardar el libro: ISBN, relaciones o datos en conflicto"`. El front muestra el mensaje arriba del formulario y al lado del ISBN, y conserva lo que se había escrito.
 4. Sin recargar, el libro aparece en el catálogo (el contador pasa de 12 a 13) y en el selector de libros de Ventas. Como no tiene portada propia, se muestra la portada de respaldo.
+5. Terminada la prueba, el libro se borró con `DELETE /api/libros/13` (**204**) para que el catálogo de demostración quede con los 12 libros que tienen portada. La evidencia de arriba es la del momento del alta.
 
 ## G-03 · Alta de cliente
 
@@ -110,4 +111,4 @@ El historial tenía 2 ventas antes de los dos intentos y siguió con 2 después:
 
 La imagen del frontend se construyó en Easypanel a partir de `frontend/Dockerfile` (servicio `libreria-web`).
 
-Pendiente para CH-06: redesplegar `libreria-web` y `libreria-api` y verificar que la venta 3, los 13 libros y los 2 clientes siguen disponibles.
+Pendiente para CH-06: redesplegar `libreria-web` y `libreria-api` y verificar que la venta 3, los 12 libros y los 2 clientes siguen disponibles.
