@@ -222,7 +222,7 @@
       const img = document.createElement('img');
       img.className = 'tarjeta__portada-imagen';
       img.alt = 'Portada de «' + (libro.titulo || '') + '»';
-      img.loading = 'lazy';
+      img.loading = 'eager';
       img.decoding = 'async';
       img.src = resolverRutaPortada(libro);
 

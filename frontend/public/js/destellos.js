@@ -93,19 +93,47 @@
     return Math.max(0, entrada * salida);
   }
 
-  function dibujarEstrella(ctx, p, alpha) {
-    var r = p.tamano;
-    var rInterior = r * 0.42;
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = p.color;
+  /* Sprites: cada tipo se dibuja UNA vez en un canvas fuera del DOM y se
+     reutiliza con drawImage (sin shadowBlur ni save/restore por partícula). */
+  var TAM_LUCIERNAGA = 24;
+  var TAM_ESTRELLA = 16;
+  var TAM_POLVO = 4;
+  var sprites = null;
+
+  function lienzo(tam) {
+    var c = document.createElement('canvas');
+    c.width = tam;
+    c.height = tam;
+    return c;
+  }
+
+  function spriteLuciernaga() {
+    var c = lienzo(TAM_LUCIERNAGA);
+    var ctx = c.getContext('2d');
+    var m = TAM_LUCIERNAGA / 2;
+    var g = ctx.createRadialGradient(m, m, 0, m, m, m);
+    g.addColorStop(0, 'rgba(255, 234, 176, 1)');
+    g.addColorStop(0.14, 'rgba(255, 234, 176, 1)');
+    g.addColorStop(0.3, 'rgba(255, 234, 176, 0.45)');
+    g.addColorStop(0.6, 'rgba(255, 234, 176, 0.12)');
+    g.addColorStop(1, 'rgba(255, 234, 176, 0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, TAM_LUCIERNAGA, TAM_LUCIERNAGA);
+    return c;
+  }
+
+  function spriteEstrella(color) {
+    var c = lienzo(TAM_ESTRELLA);
+    var ctx = c.getContext('2d');
+    var m = TAM_ESTRELLA / 2;
+    var rInterior = m * 0.42;
+    ctx.fillStyle = color;
     ctx.beginPath();
     for (var i = 0; i < 8; i += 1) {
-      var radio = (i % 2 === 0) ? r : rInterior;
+      var radio = (i % 2 === 0) ? m : rInterior;
       var ang = (Math.PI / 4) * i - Math.PI / 2;
-      var px = Math.cos(ang) * radio;
-      var py = Math.sin(ang) * radio;
+      var px = m + Math.cos(ang) * radio;
+      var py = m + Math.sin(ang) * radio;
       if (i === 0) {
         ctx.moveTo(px, py);
       } else {
@@ -114,7 +142,39 @@
     }
     ctx.closePath();
     ctx.fill();
-    ctx.restore();
+    return c;
+  }
+
+  function spritePolvo(color) {
+    var c = lienzo(TAM_POLVO);
+    var ctx = c.getContext('2d');
+    var m = TAM_POLVO / 2;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(m, m, m, 0, Math.PI * 2);
+    ctx.fill();
+    return c;
+  }
+
+  function obtenerSprites() {
+    if (!sprites) {
+      sprites = {
+        luciernaga: spriteLuciernaga(),
+        estrellas: {},
+        polvo: {}
+      };
+      COLORES.forEach(function (color) {
+        sprites.estrellas[color] = spriteEstrella(color);
+        sprites.polvo[color] = spritePolvo(color);
+      });
+    }
+    return sprites;
+  }
+
+  function dibujarSprite(ctx, sprite, x, y, tam, alpha) {
+    var medio = tam / 2;
+    ctx.globalAlpha = alpha;
+    ctx.drawImage(sprite, x - medio, y - medio, tam, tam);
   }
 
   function actualizar(p, dt) {
@@ -141,31 +201,18 @@
     if (alpha <= 0) {
       return;
     }
+    var s = obtenerSprites();
     if (p.tipo === 'estrella') {
       var parpadeo = 0.55 + 0.45 * Math.sin(p.vida * 6 + p.fase);
-      dibujarEstrella(ctx, p, alpha * parpadeo);
+      dibujarSprite(ctx, s.estrellas[p.color], p.x, p.y, p.tamano * 2, alpha * parpadeo);
       return;
     }
     if (p.tipo === 'luciernaga') {
       var pulso = 0.5 + 0.5 * Math.sin(p.vida * 3 + p.fase);
-      ctx.save();
-      ctx.globalAlpha = alpha * (0.55 + 0.45 * pulso);
-      ctx.fillStyle = '#ffeab0';
-      ctx.shadowColor = '#ffeab0';
-      ctx.shadowBlur = 10;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radio, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      dibujarSprite(ctx, s.luciernaga, p.x, p.y, TAM_LUCIERNAGA, alpha * (0.55 + 0.45 * pulso));
       return;
     }
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radio, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    dibujarSprite(ctx, s.polvo[p.color], p.x, p.y, p.radio * 2, alpha);
   }
 
   function ubicarCanvas(elemento) {
@@ -199,7 +246,7 @@
     canvas.style.width = ancho + 'px';
     canvas.style.height = alto + 'px';
 
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     canvas.width = Math.round(ancho * dpr);
     canvas.height = Math.round(alto * dpr);
 

@@ -218,14 +218,17 @@ body::after {
    (va dentro del mismo filtro) hace que la luz de las estrellas se lea como un
    resplandor dorado. Es solo atmósfera: la galaxia va encima y manda. Es fija
    (inset: 0), así que no genera scroll horizontal, y no se anima. */
+/* Rendimiento: la foto ya viene desenfocada y oscurecida (160 px, < 20 KB); al
+   estirarse con cover se ve igual, sin filter en vivo. El tinte cálido lleva el
+   color a la mitad (equivalente al brightness(0.5) que antes lo afectaba). */
 html::before {
   inset: 0;
   z-index: -4;
   background:
-    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255, 176, 96, 0.22), transparent 75%),
-    url("../assets/img/banner-biblioteca.jpg") center / cover no-repeat;
-  filter: blur(12px) brightness(0.5);
-  transform: scale(1.1);
+    radial-gradient(ellipse 70% 60% at 50% 45%, rgba(128, 88, 48, 0.22), transparent 75%),
+    url("../assets/img/banner-biblioteca-fondo.webp") center / cover no-repeat;
+  transform: scale(1.1) translateZ(0);
+  will-change: transform;
 }
 
 /* El velo galáctico (opacity 0.65) deja adivinar la biblioteca detrás. Paleta
@@ -234,6 +237,8 @@ body::before {
   inset: 0;
   z-index: -3;
   opacity: 0.65;
+  transform: translateZ(0);
+  will-change: transform;
   background:
     radial-gradient(ellipse 55% 45% at 15% 20%, rgba(112, 66, 160, 0.36), transparent 70%),
     radial-gradient(ellipse 60% 50% at 85% 30%, rgba(48, 92, 180, 0.38), transparent 72%),
@@ -248,6 +253,8 @@ body::before {
 body::after {
   inset: -600px 0 0 -600px;
   z-index: -2;
+  transform: translateZ(0);
+  will-change: transform;
   background-image:
     radial-gradient(circle at 40px 60px, rgba(255, 255, 255, 0.9) 0 1px, transparent 1.6px),
     radial-gradient(circle at 110px 20px, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.6px),
@@ -1036,6 +1043,7 @@ html.js .tema-alternar {
   aspect-ratio: 2 / 3;
   overflow: hidden;
   border-radius: var(--radio-s);
+  background-color: #0e1623; /* reserva oscura (tono de la tarjeta) mientras decodifica */
 }
 
 .tarjeta__portada-imagen {
