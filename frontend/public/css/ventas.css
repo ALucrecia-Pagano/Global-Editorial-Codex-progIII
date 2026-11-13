@@ -18,6 +18,40 @@
   font-weight: 500;
 }
 
+/* Anterior / Siguiente (catálogo e historial): solo texto, sin recuadro, como el
+   enlace "Inicio" de la barra. nowrap evita que la palabra se corte en el celular. */
+.paginacion .boton.boton--secundario {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--color-accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.paginacion .boton.boton--secundario:hover:not(:disabled) {
+  background: transparent;
+  color: var(--color-text);
+}
+
+.paginacion .boton.boton--secundario:disabled {
+  color: var(--color-text-suave);
+  opacity: 0.6;
+  cursor: default;
+  text-decoration: none;
+}
+
+.paginacion .boton.boton--secundario:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 2px;
+}
+
+.paginacion__info {
+  text-align: center;
+}
+
 /* Indicador de importes estimados en el borrador */
 .resumen-venta__estimado {
   font-size: 0.8125rem;
