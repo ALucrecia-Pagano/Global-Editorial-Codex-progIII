@@ -8,7 +8,7 @@ Librería web que conecta el frontend del primer parcial (HTML, CSS y JavaScript
 - Profesores: Giuliano Espejo y Matías Torres
 - Grupo: Editorial Codex
 - Integrantes: Liendo Mateo, Avila Lucas, García Juan, Pagano Amanda, Valentini Tiziano
-- URL pública: Se completa con el despliegue (CH-02)
+- URL pública: https://calculadora-libreria-web.a2qkmo.easypanel.host/
 
 ## Estructura del repositorio
 ```text
@@ -76,7 +76,7 @@ El script es idempotente (correrlo dos veces no duplica nada) y también acepta 
 | Change | Nombre | Estado |
 |---|---|---|
 | CH-01 | `imagen-frontend` | Hecho |
-| CH-02 | `primer-despliegue-easypanel` | Pendiente |
+| CH-02 | `primer-despliegue-easypanel` | Hecho |
 | CH-03 | `catalogo-y-detalle` | Pendiente |
 | CH-04 | `altas-libros-y-clientes` | Pendiente |
 | CH-05 | `ventas-e-historial` | Hecho |

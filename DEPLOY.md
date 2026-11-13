@@ -1,26 +1,137 @@
-# Despliegue en VPS (Easypanel) · Editorial Codex
+# Registro de Despliegue en VPS (Easypanel) · Editorial Codex
 
-Registro del despliegue del frontend (Nginx) y del backend (FastAPI + PostgreSQL) en Easypanel.
+Este documento detalla la arquitectura, configuración, puesta en marcha y mantenimiento de los servicios de la **Librería Editorial Codex** desplegados en Easypanel, de acuerdo a las pautas del Ejercicio 5 de la consigna.
 
-## Servicios
+---
 
-- **frontend:** público, con certificado HTTPS y `API_UPSTREAM=calculadora_backend:8000`.
-- **backend:** privado, conectado a `calculadora_db` (base y usuario `libreria`).
-- **URL pública:** `https://<dominio>` (se completa al desplegar).
+## 1. Datos generales del entorno
 
-## Puesta en marcha
+- **Plataforma:** VPS administrada con Easypanel.
+- **Proyecto:** `calculadora` (compartido con la aplicación de la calculadora existente, cuyos servicios no se modifican).
+- **Repositorio fuente:** `https://github.com/ALucrecia-Pagano/Global-Editorial-Codex-progIII.git`
+- **Rama productiva:** `main`
+- **URL pública de la aplicación:** [https://calculadora-libreria-web.a2qkmo.easypanel.host/](https://calculadora-libreria-web.a2qkmo.easypanel.host/)
 
-1. En el backend: `alembic upgrade head` y luego `python -m scripts.seed` (solo con la base vacía).
-2. Verificar salud: `curl -i https://<dominio>/api/health/ready` → HTTP 200.
-3. **Después del seed, cargar el catálogo de demostración** contra la URL pública:
+---
+
+## 2. Arquitectura de servicios
+
+```text
+[ Navegador del cliente ]
+           │  HTTPS (443)
+           ▼
+[ Easypanel Reverse Proxy / SSL ]
+           │  HTTP (80)
+           ▼
+[ Servicio App: libreria-web ] (Nginx 1.30 Alpine)
+   ├── Sirve archivos estáticos de /frontend/public/
+   └── Proxy inverso en /api/* ──┐
+                                 │  Red interna Easypanel (puerto 8000)
+                                 ▼
+                    [ Servicio App: libreria-api ] (FastAPI en Python 3.12 Alpine)
+                                 │  asyncpg (puerto 5432)
+                                 ▼
+                    [ Servicio Database: db ] (PostgreSQL 17)
+```
+
+---
+
+## 3. Configuración de los servicios
+
+### 3.1 Base de datos: servicio `db` (PostgreSQL 17)
+- **Tipo:** Servicio Database existente en el proyecto `calculadora`.
+- **Host interno:** `calculadora_db`
+- **Puerto interno:** `5432`
+- **Base de datos creada:** `libreria`
+- **Rol / Usuario:** `libreria` (propietario de la base `libreria`).
+- **Seguridad:** La contraseña del rol se definió directamente desde la consola del servicio `db` mediante `ALTER ROLE libreria WITH PASSWORD '...';` y se inyecta de forma privada en el entorno del backend. Nunca se sube ni versiona en el repositorio.
+
+### 3.2 Backend: servicio App `libreria-api`
+- **Tipo:** Servicio App (privado; sin dominio público, el dominio asignado por defecto fue eliminado).
+- **Origen Git:** `https://github.com/ALucrecia-Pagano/Global-Editorial-Codex-progIII.git`
+- **Rama:** `main`
+- **Ruta de compilación (Build Path):** `/backend`
+- **Método de compilación:** `Dockerfile` (ruta relativa `Dockerfile`).
+- **Nombre interno en red Easypanel:** `calculadora_libreria-api`
+- **Puerto interno:** `8000`
+- **Variables de entorno:**
+  - `DATABASE_URL=postgresql+asyncpg://libreria:<contraseña>@calculadora_db:5432/libreria`
+  - `DEBUG=false`
+- **Migraciones:** Se ejecutan automáticamente al iniciar el contenedor mediante el comando de arranque:
+  `sh -c "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000"`
+- **Healthcheck:** Configurado en el Dockerfile consultando `http://127.0.0.1:8000/health/ready` cada 30 segundos.
+
+### 3.3 Frontend: servicio App `libreria-web`
+- **Tipo:** Servicio App (público).
+- **Origen Git:** `https://github.com/ALucrecia-Pagano/Global-Editorial-Codex-progIII.git`
+- **Rama:** `main`
+- **Ruta de compilación (Build Path):** `/frontend`
+- **Método de compilación:** `Dockerfile` (ruta relativa `Dockerfile`).
+- **Nombre interno en red Easypanel:** `calculadora_libreria-web`
+- **Variable de entorno:**
+  - `API_UPSTREAM=calculadora_libreria-api:8000`
+- **Configuración de dominio:**
+  - Dominio: `calculadora-libreria-web.a2qkmo.easypanel.host`
+  - Certificado SSL: Administrado automáticamente por Easypanel (Let's Encrypt).
+  - Destino interno: Protocolo `HTTP`, puerto `80`.
+
+---
+
+## 4. Puesta en marcha y carga de datos
+
+1. **Migraciones y datos base (Seed):**
+   Al levantar el contenedor `libreria-api`, Alembic verifica y aplica revisiones pendientes. La base `libreria` ya tenía aplicadas las migraciones y el seed desde el despliegue del parcial (2 libros, 1 cliente, ventas de prueba), y en el Global solo se agregaron los 10 libros de demostración con el script.
+2. **Carga del catálogo de demostración:**
+   Para poblar los 10 libros requeridos con autorías múltiples, géneros y portadas, se ejecutó el script idempotente provisto en el repositorio contra la API pública:
    ```bash
-   python herramientas/cargar_catalogo.py --base https://<dominio>/api
+   python herramientas/cargar_catalogo.py --base https://calculadora-libreria-web.a2qkmo.easypanel.host/api
    ```
-   El script es idempotente: reutiliza lo existente y solo crea lo que falta (extensiones editoriales, géneros, autores y 10 libros ficticios; el catálogo queda con 12 libros).
-4. Verificar el catálogo: `curl -s "https://<dominio>/api/libros/?limit=100"` → 12 libros.
+   El script detectó las entidades existentes, dio de alta las faltantes y dejó el catálogo con un total de 12 libros listos para evaluación.
 
-## Verificación tras redespliegue
+---
 
-- `GET /api/health/ready` responde `{"estado":"lista"}`.
-- El catálogo muestra las portadas por ISBN (`/assets/img/portadas/{isbn}.webp`) y la portada de respaldo cuando no hay imagen.
-- Los datos de demostración persisten en PostgreSQL (no se recargan en cada arranque del contenedor).
+## 5. Verificación del despliegue
+
+Pruebas ejecutadas directamente sobre el dominio público HTTPS:
+
+1. **Salud de la API y conectividad con la base:**
+   - Petición: `GET https://calculadora-libreria-web.a2qkmo.easypanel.host/api/health/ready`
+   - Respuesta: HTTP `200 OK`
+   - Cuerpo: `{"estado":"lista"}`
+2. **Catálogo y portadas en el navegador:**
+   - URL: `https://calculadora-libreria-web.a2qkmo.easypanel.host/#catalogo`
+   - Comportamiento: 12 tarjetas de libros renderizadas correctamente con sus portadas asociadas (`/assets/img/portadas/{isbn}.webp`) y portadas de respaldo CSS para los casos sin imagen.
+   - Contador de catálogo: Muestra 12 libros en total.
+3. **Consulta de detalle de libro por ID:**
+   - Petición: `GET https://calculadora-libreria-web.a2qkmo.easypanel.host/api/libros/10`
+   - Respuesta: HTTP `200 OK` con el libro "Lo que susurra el pozo", sus metadatos y sus dos autorías vinculadas.
+4. **Manejo de recursos inexistentes:**
+   - Petición: `GET https://calculadora-libreria-web.a2qkmo.easypanel.host/api/libros/999999`
+   - Respuesta: HTTP `404 Not Found` con mensaje `{"detail":"Libro no encontrado"}`.
+
+---
+
+## 6. Procedimiento de actualización y redespliegue
+
+El flujo de integración continua es manual y controlado desde el panel de Easypanel:
+1. Una vez aprobado y mergeado un Pull Request a la rama `main` en GitHub:
+   - Si el cambio afecta a `frontend/`: ingresar al servicio `libreria-web` y pulsar **Deploy** (o **Implementar**).
+   - Si el cambio afecta a `backend/`: ingresar al servicio `libreria-api` y pulsar **Deploy**.
+2. **Persistencia garantizada:** La base de datos PostgreSQL vive en el volumen del servicio `calculadora_db`, por lo que los redespliegues de los contenedores no borran ni reinician los datos de clientes, libros ni ventas.
+
+---
+
+## 7. Mantenimiento y limpieza del VPS
+
+- **Contenedor del parcial retirado:** El backend anterior corría como contenedor suelto (`docker run`) publicado en el puerto 8000 del VPS; el 13/11/2026 se detuvo y eliminó por SSH (`docker stop libreria && docker rm libreria`) y se borró su archivo de variables `/root/libreria.env`. Verificado: `docker ps` ya no lo lista y `localhost:8000` no responde. En el VPS solo quedan publicados Traefik (80/443) y el panel de Easypanel (3000); `libreria-api` expone 8000 únicamente en la red interna.
+
+---
+
+## 8. Problemas frecuentes y diagnóstico
+
+| Síntoma | Causa probable | Solución |
+|---|---|---|
+| Error en paso `COPY` durante el build en Easypanel | Ruta de compilación (**Build Path**) mal configurada en Source. | Verificar que el Build Path sea `/backend` para la API y `/frontend` para la web. Si se deja `/`, Docker no encuentra los archivos relativos. |
+| Error `502 Bad Gateway` al consultar `/api/*` | Variable `API_UPSTREAM` mal formada o backend apagado. | `API_UPSTREAM` debe ser exactamente `calculadora_libreria-api:8000` (sin `http://` ni barra final `/`). Revisar que el servicio `libreria-api` esté en estado Running. |
+| Error al conectar a PostgreSQL (`OperationalError` / asyncpg) | Caracteres especiales sin escapar en la contraseña de `DATABASE_URL`. | Si la contraseña del rol contiene caracteres como `@`, `:`, `/` o `#`, deben URL-encodearse o cambiarse por una clave alfanumérica mediante `ALTER ROLE`. |
+| Cambios en la interfaz no se reflejan tras redesplegar | Caché estática del navegador para archivos JS o CSS. | Forzar recarga completa con `Ctrl+Shift+R` (o `Ctrl+F5`) en el navegador. Nginx y el navegador pueden retener versiones cacheadas si solo se pulsa F5. |
