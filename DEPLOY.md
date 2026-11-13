@@ -11,7 +11,7 @@ Este documento detalla la arquitectura, configuración, puesta en marcha y mante
 - **Repositorio fuente:** `https://github.com/ALucrecia-Pagano/Global-Editorial-Codex-progIII.git`
 - **Rama productiva:** `main`
 - **URL pública de la aplicación:** [https://editorial-codex.a2qkmo.easypanel.host/](https://editorial-codex.a2qkmo.easypanel.host/)
-- **Revisión en producción al cerrar el dominio:** `442250f` (`libreria-web` ya implementado). CH-06 se publica al mergear `feat/CH-06-verificacion-y-entrega` y volver a implementar `libreria-web`. Los archivos estáticos pasan a `?v=20261114`.
+- **Revisión en producción:** `5ecf509` (CH-06 y la corrección del ISBN en el catálogo), implementada el 13/11/2026 en `libreria-api` y `libreria-web`. Los archivos estáticos se sirven con `?v=20261115`; si se cambia un CSS o JS, hay que subir ese número en todos los `<link>` y `<script>` de `index.html`.
 
 ---
 

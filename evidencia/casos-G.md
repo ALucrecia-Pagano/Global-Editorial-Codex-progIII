@@ -120,3 +120,18 @@ Revisión del 13/11/2026 a las 19:40, después de implementar `442250f` en `libr
 | Catálogo | `GET /api/libros/?limit=100` | 200 | 12 libros |
 | Clientes | `GET /api/clientes/?limit=100` | 200 | ids 1 y 2 |
 | Venta histórica | `GET /api/ventas/3` | 200 | total `60500.00`; el libro 4 sigue en `21000.00` |
+
+Redespliegue completo del 13/11/2026 a las 20:41: se implementó la revisión `5ecf509` primero en `libreria-api` y después en `libreria-web`, y se consultó la URL pública actual.
+
+| Prueba | Pedido | Estado | Resultado |
+|---|---|---|---|
+| Versión publicada | `index.html` | 200 | Estáticos con `?v=20261115` |
+| Salud tras redesplegar la API | `GET /api/health/ready` | 200 | `{"estado":"lista"}` |
+| Catálogo | `GET /api/libros/?limit=100` | 200 | 12 libros; el front muestra 12 tarjetas y el contador en 12 |
+| Clientes | `GET /api/clientes/?limit=100` | 200 | ids 1 y 2 |
+| Venta histórica | `GET /api/ventas/3` | 200 | total `60500.00`, precios unitarios `18500.00` y `21000.00` |
+| Historial | `GET /api/ventas/?limit=100` | 200 | 3 ventas |
+| Navegador | `localStorage` | — | Solo queda `libreria.preferencias.tema`; las claves viejas de libros, clientes y ventas se borraron |
+| Consola | — | — | Sin errores |
+
+Los datos siguen disponibles después de redesplegar los dos servicios: la base vive en el volumen de `calculadora_db`, que no se toca al implementar.
