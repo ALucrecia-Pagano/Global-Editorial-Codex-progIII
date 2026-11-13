@@ -254,6 +254,7 @@
         dl.appendChild(dd);
       }
 
+      agregarCampo('ISBN', libro.isbn || '—');
       agregarCampo('Editorial', libro.editorial ? libro.editorial.nombre : 'Sin editorial');
       agregarCampo('Género', libro.genero ? libro.genero.nombre : 'Sin clasificar');
       tarjeta.appendChild(dl);
